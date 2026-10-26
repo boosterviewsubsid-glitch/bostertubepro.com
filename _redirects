@@ -1,0 +1,65 @@
+/api/admin/stats /.netlify/functions/admin-stats 200
+/admin/sultan /admin-sultan.html 200
+/admin/sultan/ /admin-sultan.html 200
+/admin/tambah-poin /admin-tambah-poin.html 200
+/admin/tambah-poin/ /admin-tambah-poin.html 200
+/api/admin/tambah-poin-manual /.netlify/functions/admin-points 200
+/admin/komunikasi /admin-komunikasi.html 200
+/admin/komunikasi/ /admin-komunikasi.html 200
+/api/admin/komunikasi /.netlify/functions/support 200
+/api/admin/inbox /.netlify/functions/support 200
+/api/admin/inbox/:id/reply /.netlify/functions/support 200
+/api/admin/inbox/:id /.netlify/functions/support 200
+/api/support/* /.netlify/functions/support 200
+/api/my-reviews /.netlify/functions/review-history 200
+/api/tasks/:id/feedbacks /.netlify/functions/review-history 200
+/riwayat-review /riwayat-review.html 200
+/iklan-saya/feedback /feedback-iklan.html 200
+/api/tasks/:id/delete /.netlify/functions/task-moderation 200
+/api/tasks/:id/report /.netlify/functions/task-moderation 200
+/api/admin/moderasi /.netlify/functions/task-moderation 200
+/admin/moderasi /admin-moderasi.html 200
+/bantuan /bantuan.html 200
+# API (harus di atas fallback SPA, karena _redirects diproses sebelum netlify.toml)
+/api/auth/youtube          /.netlify/functions/youtube-auth      200
+/api/auth/callback         /.netlify/functions/youtube-callback  200
+/api/auth/google/callback  /.netlify/functions/youtube-callback  200
+/api/upload                /.netlify/functions/youtube-upload      200
+/api/*                     /.netlify/functions/:splat            200
+
+# Halaman hukum (URL bersih)
+/privacy    /privacy.html    200
+/privacy-policy  /privacy.html    200
+/privacy-policy/ /privacy.html    200
+/terms      /terms.html      200
+
+# Halaman aplikasi (light theme)
+/analytics       /analytics.html    200
+/audit           /audit.html        200
+/pengaturan      /pengaturan.html   200
+/tugas          /tugas.html        200
+/promosi/iklan-tugas /promosi.html    200
+/promosi         /promosi.html      200
+/fitur-promosi   /promosi.html      200
+/kompetitor      /kompetitor.html   200
+
+/upload /upload.html 200
+
+/settings/laporan /settings-laporan.html 200
+/settings/laporan/ /settings-laporan.html 200
+/admin/reports /settings/laporan 301!
+/billing /billing.html 200
+/billing/ /billing.html 200
+/pricing /billing 301!
+/pricing.html /billing 301!
+/settings/billing/ /billing 302!
+/bayar /billing 301!
+/bayar.html /billing 301!
+/settings/billing /billing 302!
+
+# Dashboard member (auth guard di /utils/btp-auth-guard.js)
+/dashboard  /index.html  200
+/dashboard/ /index.html  200
+
+# SPA fallback dashboard (paling akhir)
+/*          /index.html      200

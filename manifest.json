@@ -1,0 +1,12 @@
+{
+  "name": "BosterTubePro",
+  "short_name": "BosterTubePro",
+  "description": "BosterTubePro - Platform tambah views, jam tayang, subscriber YouTube aman & cepat",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f6ff",
+  "theme_color": "#7C5CFF",
+  "icons": [
+    { "src": "/b-logo.png", "sizes": "any", "type": "image/png" }
+  ]
+}

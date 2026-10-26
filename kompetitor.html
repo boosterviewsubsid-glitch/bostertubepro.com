@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<script src="/utils/btp-auth-guard.js"></script>
+<script src="/utils/points-meter.js"></script>
+<link rel="stylesheet" href="/utils/btp-widget-visibility.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kompetitor - BosterTubePro</title>
+<link rel="icon" type="image/png" href="/b-logo.png">
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="/utils/btp-theme.css">
+<script src="/utils/btp-mobile.js" defer></script>
+<script src="/utils/btp-bottom-nav.js" defer></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="/utils/credit.js"></script>
+<script src="/utils/btp-auth.js"></script>
+<script src="/utils/btp-ai-chat.js" defer></script>
+<script src="/utils/btp-page.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>body{font-family:'Inter',sans-serif}</style>
+<link rel="stylesheet" href="/utils/btp-header.css">
+<script src="/utils/btp-brand.js" defer></script>
+<script src="/utils/task-ads.js" defer></script>
+<style>
+#kpVideoModal{width:min(840px,94vw)}
+.kp-stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.kp-secondary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.kp-stat{display:flex;flex-direction:column;gap:6px;margin:0!important;min-width:0}.kp-stat b{font-size:24px;line-height:1.2;overflow-wrap:anywhere}.kp-stat span,.kp-stat small,.kp-source{font-size:11px;line-height:1.6}.kp-source{color:#6b7280;margin:8px 0 12px}.kp-dark .kp-source{color:#b7b9c9}
+.kp-earnings dl{margin:10px 0}.kp-earnings dl>div{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;margin:8px 0}.kp-earnings dd{font-weight:700;font-variant-numeric:tabular-nums}
+.kp-content-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 14px;border-bottom:1px solid #d1d5db;padding-bottom:14px}.kp-content-tabs button{padding:8px 10px;font-size:12px}.kp-content-tabs [aria-selected=true]{background:#5b21b6;color:#fff;border-color:#5b21b6}.kp-content-panel[hidden]{display:none}.kp-content-panel{min-height:120px}.kp-content-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px;justify-content:space-between}.kp-content-actions>span{flex:1;min-width:180px}.kp-description{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;line-height:1.8;margin:12px 0}
+.kp-chart{border:1px solid #9ca3af55;border-radius:12px;padding:14px;margin:12px 0}.kp-chart figcaption{font-size:12px;font-weight:700}.kp-chart-bars{height:120px;display:flex;align-items:flex-end;gap:4px;margin:16px 0}.kp-chart-bars>div{flex:1;background:#7c6bba;border-radius:3px 3px 0 0;min-width:1px}.kp-chart details{font-size:11px}.kp-chart table{width:100%;text-align:left}.kp-content-tabs button:focus-visible,.kp-content-panel button:focus-visible{outline:2px solid #8b5cf6;outline-offset:3px}
+@media(max-width:520px){.kp-stat-grid{gap:6px}.kp-stat{padding:8px!important}.kp-stat b{font-size:18px}.kp-stat span,.kp-stat small{font-size:10px}.kp-secondary-grid{grid-template-columns:1fr}.kp-video-modal{padding:14px}.kp-content-tabs button{font-size:11px}}
+</style></head>
+<body class="min-h-screen bg-gray-50 text-gray-900">
+<script>if (localStorage.getItem("btp_theme") === "dark") document.body.classList.add("kp-dark");</script>
+<div class="flex flex-col md:flex-row min-h-screen">
+<aside id="btpSidebar" class="w-[260px] max-w-[85vw] bg-[#121214] text-white flex flex-col fixed inset-y-0 left-0 z-50 h-screen overflow-y-auto p-4 -translate-x-full md:translate-x-0 transition-transform duration-200">
+<div class="flex items-center gap-2.5 mb-7 px-2"><div id="brandLogo" class="w-10 h-10 bg-white rounded-lg flex items-center justify-center overflow-hidden shrink-0"><img src="/b-logo.png" width="40" height="40" alt="Logo B merah BosterTubePro" class="w-10 h-10 object-contain"></div><span id="brandName" class="font-bold text-[14px] truncate">BosterTubePro</span></div>
+<nav class="space-y-1">
+<a href="/" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>📊</span> Dashboard</a>
+<a href="/analytics" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>📈</span> Analytics</a>
+<a href="/audit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>📄</span> Audit Video</a>
+<a href="/promosi" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>🚀</span> Promosi</a>
+<a href="/tugas" class="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>💼 Tugas Iklan</span><span class="badge-new" style="font-size:10px;background:#e6ddff;color:#6347b5;border-radius:5px;padding:2px 5px">Baru</span><span id="jumlahTugas" class="badge-count" data-task-count style="font-size:10px;white-space:nowrap">… tugas</span></a>
+<a href="/kompetitor" class="w-full flex items-center gap-3 bg-[#7c3aed] text-white px-3 py-2.5 rounded-xl text-[13px] font-bold"><span>👥</span> Kompetitor</a>
+<a href="/pengaturan" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>⚙️</span> Pengaturan</a>
+<a href="/billing" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>💳</span> Harga &amp; Billing</a>
+<a href="/bantuan" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>💬</span> Bantuan &amp; Pengaduan</a>
+<div class="mt-5 p-[1.5px] rounded-xl bg-gradient-to-br from-[#7C5CFF] to-[#FF6BA8]"><button type="button" onclick="location.href='/upload'" class="w-full bg-[#1E1E24] px-3 py-3 rounded-[10px] text-left"><p class="text-[13px] font-bold">🎥 Upload Video </p><p class="text-[11px] text-gray-400">Panjang & Short</p></button></div>
+<div class="mt-3 bg-[#1C1C22] border border-[#2A2A33] rounded-xl p-3"><p class="text-[11px] font-bold text-[#A78BFA]">AI Generator</p><p class="text-[10px] text-gray-400">Judul, deskripsi, thumbnail, tag & hashtag AI 3 pilihan</p></div>
+</nav>
+<div class="mt-auto"><div id="authStatus" class="bg-[#1E1E24] border border-[#2A2A33] px-3 py-2 rounded-xl text-[10px] text-gray-400 mb-3">🔴 Belum Login Google</div><div class="flex items-center gap-3"><div id="profileAvatar" class="w-8 h-8 rounded-full bg-[#2A2A33] overflow-hidden shrink-0"></div><div class="min-w-0"><p id="profileName" class="text-[12px] font-bold truncate">Belum login</p><p id="profileHandle" class="text-[10px] text-gray-400 truncate">Login Google untuk data channel</p></div></div></div>
+</aside><main class="ml-0 md:ml-[260px] flex-1 p-3 md:p-7 min-w-0">
+<section aria-label="BosterTubePro" class="brand-hero"><img src="/b-logo.png" width="32" height="32" alt="Logo B merah BosterTubePro"><div><p class="brand-version">BosterTubePro</p><p class="brand-channel" data-brand-channel>Channel YouTube kamu</p></div></section>
+<div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4 md:mb-6 gap-3 md:gap-4">
+  <div class="min-w-0"><h1 class="text-[18px] md:text-[22px] font-extrabold">👥 Analisa Kompetitor & Ide Konten</h1><p class="text-[11px] md:text-[13px] text-gray-500 break-words">Pilih kategori dan jumlah video terpopuler di Indonesia. 2 Poin per video.</p></div>
+  <div class="flex flex-wrap gap-2 md:shrink-0 items-center">
+    <span data-admin-badge hidden class="hidden bg-[#121214] text-yellow-300 border border-yellow-400/40 px-3 py-2.5 rounded-full text-[11px] font-extrabold tracking-wider shrink-0">👑 ADMIN</span>
+  </div>
+</div>
+
+<form id="kpForm" class="bg-white border border-gray-200 shadow-sm rounded-2xl p-3 md:p-5 mb-5 flex flex-col md:flex-row gap-3 md:items-end">
+  <label class="w-full md:flex-1 text-[11px] font-bold text-gray-600">Kategori Channel Kamu
+    <select id="kategoriNiche" class="dropdown-kategori mt-1 w-full border border-gray-300 bg-white px-3 py-2.5 rounded-xl text-[12px] text-black"><option value="1">Film & Animation</option><option value="2">Autos & Vehicles</option><option value="10" selected>Music / Musik</option><option value="15">Pets & Animals</option><option value="17">Sports</option><option value="19">Travel & Events</option><option value="20">Gaming</option><option value="22">People & Blogs</option><option value="23">Comedy</option><option value="24">Entertainment</option><option value="25">News & Politics</option><option value="26">Howto & Style</option><option value="27">Education</option><option value="28">Science & Technology</option><option value="29">Nonprofits & Activism</option></select></label>
+  <div class="flex items-center gap-2">
+  <button id="kpBtn" class="w-full md:w-auto bg-gradient-to-r from-[#7c3aed] to-[#2563eb] text-white px-5 py-2.5 rounded-xl text-[12px] font-extrabold shadow-md">Analisa (20 Poin)</button>
+  <button id="btnRefresh" type="button" title="Muat ulang sesuai batas paket (Gratis)" aria-label="Muat ulang sesuai batas paket (Gratis)" style="background:white; border:1px solid #ddd; padding:10px 16px; border-radius:10px; cursor:pointer;">🔄</button>
+  </div>
+</form>
+
+<section id="kpDiscovery" class="bg-white border border-gray-200 shadow-sm rounded-2xl p-3 md:p-5 mb-5" aria-labelledby="kpDiscoveryTitle">
+  <p id="kpDetected" class="text-[12px] font-semibold text-gray-600 mb-2" aria-live="polite">Mendeteksi kategori channel kamu dari 6 video terbaru…</p>
+  <div class="flex flex-wrap justify-between items-center gap-2 mb-4"><h2 id="kpDiscoveryTitle" class="text-[16px] font-extrabold">Top 10 Video di Niche Kamu Minggu Ini</h2><span id="kpFeedCost" class="real">GRATIS · 0 Poin</span></div>
+  <div id="kpTabs" role="tablist" aria-label="Urutan ide video" class="flex flex-wrap gap-2 mb-4">
+    <button id="kpTab-viral" type="button" role="tab" aria-selected="true" aria-controls="kpDiscoveryGrid" data-sort="viral" class="kp-tab">🔥 Viral</button>
+    <button id="kpTab-views" type="button" role="tab" aria-selected="false" aria-controls="kpDiscoveryGrid" data-sort="views" class="kp-tab">👁️ Viewer Tertinggi</button>
+    <button id="kpTab-magnet" type="button" role="tab" aria-selected="false" aria-controls="kpDiscoveryGrid" data-sort="magnet" class="kp-tab">📈 Subscriber Magnet</button>
+  </div>
+  <p id="kpDiscoveryNote" class="text-[11px] text-gray-500 mb-3" aria-live="polite">Menyiapkan ide sesuai niche kamu…</p>
+  <div class="mb-4">  <label class="w-full md:w-auto text-[11px] font-bold text-gray-600">Jumlah Video
+    <select id="jumlahVideo" class="mt-1 w-full border border-gray-300 bg-white px-3 py-2.5 rounded-xl text-[12px] text-black"><option value="1">1 Video (2 Poin)</option><option value="2">2 Video (4 Poin)</option><option value="5">5 Video (10 Poin)</option><option value="10" selected>10 Video (20 Poin)</option><option value="20">20 Video (40 Poin)</option><option value="30">30 Video (60 Poin) - MAX</option></select></label>
+
+  <div id="kpPlanAdvice" class="mt-3 p-3 rounded-lg border bg-yellow-50 border-yellow-200 text-gray-900" aria-live="polite"></div></div>
+  <div id="kpDiscoveryGrid" role="tabpanel" aria-labelledby="kpTab-viral" aria-busy="true" class="kp-discovery-grid"></div>
+  <button id="kpRetry" type="button" hidden class="kp-tiru mt-3">Coba lagi · Gratis</button>
+</section>
+<dialog id="kpVideoModal" aria-labelledby="kpModalTitle" class="kp-video-modal rounded-2xl border p-5 bg-white text-gray-900">
+  <form method="dialog" class="flex justify-end"><button aria-label="Tutup analisis" class="kp-tiru">Tutup ×</button></form>
+  <div id="kpVideoDetails"></div>
+</dialog>
+<div id="kpStatus" class="hidden mb-5 border rounded-2xl px-4 py-3 text-[12px] font-semibold"></div>
+<div id="kpResult" hidden>
+  <div class="bg-white border border-gray-200 shadow-sm rounded-2xl p-3 md:p-5 mb-5 flex flex-wrap md:flex-nowrap items-center gap-3 md:gap-4">
+    <img id="kpThumb" class="w-12 h-12 md:w-14 md:h-14 shrink-0 rounded-full object-cover bg-gray-100" alt="">
+    <div class="min-w-0 flex-1"><h2 id="kpTitle" class="text-[16px] md:text-[18px] font-extrabold truncate"></h2><p id="kpSub" class="text-[12px] text-gray-500 truncate"></p></div>
+    <a id="kpOpen" target="_blank" rel="noopener" class="w-full md:w-auto text-center border bg-white px-4 py-2 rounded-full text-[12px] font-bold shrink-0">Buka Channel ↗</a>
+  </div>
+  <div id="kpStats" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-5"></div>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
+    <div class="bg-white border border-gray-200 shadow-sm rounded-2xl p-3 md:p-5 lg:col-span-2 min-w-0">
+      <div class="flex flex-wrap justify-between items-center gap-1 mb-3"><h3 class="font-bold text-[13px] md:text-[14px]">🏆 Video Terlaris (50 upload terbaru)</h3><span class="real">REAL API</span></div>
+      <div id="kpTop"></div>
+    </div>
+    <div class="space-y-5 min-w-0">
+      <div class="bg-white border border-gray-200 shadow-sm rounded-2xl p-3 md:p-5"><h3 class="font-bold text-[14px] mb-3">🔑 Keyword Judul Terbanyak</h3><div id="kpKw" class="flex flex-wrap gap-1.5"></div></div>
+      <div class="bg-white border border-gray-200 shadow-sm rounded-2xl p-3 md:p-5" style="border-top:3px solid #7c3aed">
+        <div class="flex justify-between items-start gap-2 mb-1"><h3 class="font-bold text-[13px]">🔥 HASHTAG RPM TINGGI - AUTO GOOGLE ADS CPC REAL</h3>
+          <select id="kpGeo" class="border rounded-lg px-1.5 py-1 text-[10px] font-bold shrink-0" title="Negara data Keyword Planner"><option value="US">USA</option><option value="ID">Indonesia</option></select></div>
+        <p id="kpHtNote" class="text-[10px] text-gray-600 mb-3">Keyword kompetitor + Google Ads Keyword Planner (volume & CPC)</p>
+        <div id="kpHt" class="space-y-1.5 text-[11px] md:text-[12px]"></div>
+        <button id="kpHtCopy" type="button" disabled class="mt-3 w-full bg-[#7c3aed] text-white px-4 py-2.5 rounded-xl text-[12px] font-bold hover:brightness-110 disabled:opacity-40">📋 Copy Semua Hashtag Tinggi (<span data-cost="kp_hashtag_copy"></span> Poin)</button>
+      </div>
+      <div class="bg-white border border-gray-200 shadow-sm rounded-2xl p-3 md:p-5"><h3 class="font-bold text-[14px] mb-3">🗓️ Pola Upload</h3><div id="kpPola" class="text-[12px] space-y-1.5"></div></div>
+    </div>
+  </div>
+  <div class="bg-white border border-gray-200 shadow-sm rounded-2xl p-3 md:p-5" style="border-top:4px solid #7c3aed">
+    <div class="flex flex-col md:flex-row md:flex-wrap md:justify-between md:items-center gap-3 mb-3">
+      <div class="min-w-0"><h3 class="font-bold text-[14px]">💡 Generate Ide Konten dari Kompetitor (AI)</h3><p class="text-[11px] text-gray-500">AI membaca data di atas: kekuatan, celah yang belum digarap, pola judul, lalu 8 ide video siap pakai.</p></div>
+      <button id="kpIdeBtn" type="button" class="w-full md:w-auto bg-[#7c3aed] text-white px-5 py-2.5 rounded-xl text-[12px] font-bold hover:brightness-110">✨ Generate Ide (<span data-cost="kompetitor_ide"></span> Poin)</button>
+    </div>
+    <div id="kpIde"></div>
+  </div>
+</div>
+<footer class="btp-legal" style="margin-top:28px;padding:16px 0 4px;border-top:1px solid rgba(128,128,160,.25);text-align:center;font-size:12px;color:#8b8ba3"><a href="/privacy-policy" style="color:inherit">Kebijakan Privasi</a> | <a href="/terms" style="color:inherit">Syarat Layanan</a> | <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" style="color:inherit">YouTube ToS</a> | <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style="color:inherit">Google Privacy</a><p>Butuh bantuan? Hubungi Admin: <a href="mailto:boosterviewsubsid@gmail.com">boosterviewsubsid@gmail.com</a> · <a href="/bantuan">Bantuan</a></p></footer>
+</main>
+</div>
+<style>
+/* Tema halaman Kompetitor: default LIGHT (bg-gray-50, card putih, accent #7c3aed).
+   Dark mode opsional lewat Pengaturan > Tampilan (localStorage btp_theme = "dark" -> body.kp-dark). */
+.kp-discovery-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.kp-video-card{width:100%;text-align:left;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;background:transparent;transition:transform .15s}
+.kp-video-card:hover{transform:translateY(-3px)}.kp-video-card:focus-visible,.kp-tab:focus-visible{outline:3px solid #a78bfa;outline-offset:3px}
+.kp-video-card img,.kp-skeleton-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;background:#e5e7eb}
+.kp-video-card h3{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;font-weight:700;min-height:36px}
+.kp-tab{padding:8px 12px;border:1px solid #e5e7eb;border-radius:999px;font-size:12px;font-weight:700}
+.kp-tab[aria-selected=true]{background:#7c3aed;color:white;border-color:#7c3aed}
+.kp-video-modal{width:min(620px,94vw);max-height:90vh;overflow-y:auto}.kp-video-modal::backdrop{background:#111827aa}
+.kp-skeleton{border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;opacity:.65}.kp-skeleton-line{height:12px;background:#e5e7eb;margin:12px;border-radius:6px}
+@media(max-width:1200px){.kp-discovery-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:640px){.kp-discovery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
+.kp-dark .kp-video-modal{background:#1e1e2f;color:#e5e7eb}.kp-dark .kp-video-card,.kp-dark .kp-tab{border-color:#3b3b55}
+.kp-row:hover{background:#f5f3ff}
+.kp-tiru{border:1px solid #ddd6fe;background:#fff;color:#5b21b6;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:700;white-space:nowrap}
+.kp-tiru:hover{border-color:#7c3aed;background:#f5f3ff}.kp-tiru:disabled{opacity:.5}
+.kp-out{background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:10px 12px;margin-top:8px;font-size:12px;color:#111827}
+.kp-cpc{color:#b45309;font-weight:700}
+@media (max-width:768px){.kp-tiru{font-size:10px;padding:3px 7px;white-space:normal}.kp-out{padding:8px 10px;font-size:11px;word-break:break-word}}
+/* Dark mode (opsional) */
+html:has(body.kp-dark),body.kp-dark{background:#0f0f1a;color:#e5e7eb;color-scheme:dark}
+.kp-dark main .bg-white{background:#1e1e2f!important;color:#e5e7eb}
+.kp-dark main .border{border-color:#2d2d44!important}
+.kp-dark main .text-gray-500,.kp-dark main .text-gray-600,.kp-dark main .text-gray-700{color:#b4b4c8!important}
+.kp-dark main input,.kp-dark main select,.kp-dark main textarea{background:#14141f!important;color:#f3f4f6!important}
+.kp-dark main .text-black{color:#f3f4f6!important}
+.kp-dark main .bg-gray-100,.kp-dark main .bg-gray-50{background:#2a2a3d!important}
+.kp-dark main .hover\:bg-gray-50:hover{background:#26263a!important}
+.kp-dark main .bg-\[\#F5F3FF\]{background:#2b1f52!important}
+.kp-dark main .text-\[\#5B3FD9\]{color:#c4b5fd!important}
+.kp-dark main .text-red-600{color:#f87171!important}
+.kp-dark main .bg-red-50{background:#3b1520!important}.kp-dark main .border-red-200{border-color:#7f1d1d!important}
+.kp-dark .kp-discovery-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.kp-video-card{width:100%;text-align:left;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;background:transparent;transition:transform .15s}
+.kp-video-card:hover{transform:translateY(-3px)}.kp-video-card:focus-visible,.kp-tab:focus-visible{outline:3px solid #a78bfa;outline-offset:3px}
+.kp-video-card img,.kp-skeleton-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;background:#e5e7eb}
+.kp-video-card h3{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;font-weight:700;min-height:36px}
+.kp-tab{padding:8px 12px;border:1px solid #e5e7eb;border-radius:999px;font-size:12px;font-weight:700}
+.kp-tab[aria-selected=true]{background:#7c3aed;color:white;border-color:#7c3aed}
+.kp-video-modal{width:min(620px,94vw);max-height:90vh;overflow-y:auto}.kp-video-modal::backdrop{background:#111827aa}
+.kp-skeleton{border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;opacity:.65}.kp-skeleton-line{height:12px;background:#e5e7eb;margin:12px;border-radius:6px}
+@media(max-width:1200px){.kp-discovery-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:640px){.kp-discovery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
+.kp-dark .kp-video-modal{background:#1e1e2f;color:#e5e7eb}.kp-dark .kp-video-card,.kp-dark .kp-tab{border-color:#3b3b55}
+.kp-row:hover{background:#26263a}
+.kp-dark .kp-tiru{border-color:#3b3b55;background:#16162a;color:#ddd6fe}
+.kp-dark .kp-tiru:hover{border-color:#7c3aed;background:#2b1f52}
+.kp-dark .kp-out{background:#14141f;border-color:#2d2d44;color:#e5e7eb}
+.kp-dark .kp-cpc{color:#fbbf24}
+.real{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:800;letter-spacing:.04em;padding:2px 7px;border-radius:999px;background:#DCFCE7;color:#15803D;white-space:nowrap}</style>
+<script>
+document.querySelectorAll("[data-cost]").forEach((el) => (el.textContent = COSTS[el.dataset.cost]));
+const STOP = new Set("yang dan di ke dari ini itu untuk dengan the a an of to in on for is are by with my your how what why ft feat official video full new terbaru 2024 2025 2026 part eps episode vs ini aja ada jadi bisa buat pakai lagi cara tips | - & #shorts shorts".split(" "));
+const isoMin = (d) => { const m = /P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/.exec(d || "") || []; return (+m[1] || 0) * 1440 + (+m[2] || 0) * 60 + (+m[3] || 0) + (+m[4] || 0) / 60; };
+const short = (n) => { n = +n || 0; return n >= 1e9 ? (n / 1e9).toFixed(1) + " M" : n >= 1e6 ? (n / 1e6).toFixed(1) + " jt" : n >= 1e3 ? (n / 1e3).toFixed(1) + " rb" : String(Math.round(n)); };
+const HARI = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+let data = null;
+
+let generated = {}; // hasil Tiru per video: { "<videoId>:<tipe>": {...} }
+let topVids = [], topKw = [], hashtagList = [];
+
+// Input universal (sama dengan /api/kompetitor/universal): @handle, youtube.com/@xxx, youtube.com/channel/UCxxx,
+// youtube.com/user/xxx, youtube.com/c/xxx, youtu.be/xxx, youtube.com/watch?v=xxx, /shorts/xxx, /live/xxx, channel ID
+function parseYouTubeUrl(raw) {
+  let s = String(raw || "").trim(), m;
+  if (!s) return null;
+  if ((m = s.match(/^(UC[\w-]{22})$/))) return { type: "channelId", value: m[1] };
+  if ((m = s.match(/^@([\w.\-]{3,30})$/))) return { type: "handle", value: m[1] };
+  if (!/^https?:\/\//i.test(s) && /youtu/i.test(s)) s = "https://" + s;
+  try {
+    const u = new URL(s), host = u.hostname.replace(/^(www|m|music)\./, "");
+    const parts = u.pathname.split("/").filter(Boolean).map(decodeURIComponent);
+    if (host === "youtu.be" && /^[\w-]{11}$/.test(parts[0] || "")) return { type: "videoId", value: parts[0] };
+    if (host === "youtube.com" || host === "youtube-nocookie.com") {
+      const v = u.searchParams.get("v");
+      if (v && /^[\w-]{11}$/.test(v)) return { type: "videoId", value: v };
+      if (/^(shorts|live|embed|v)$/.test(parts[0] || "") && /^[\w-]{11}$/.test(parts[1] || "")) return { type: "videoId", value: parts[1] };
+      if (parts[0] === "channel" && /^UC[\w-]{22}$/.test(parts[1] || "")) return { type: "channelId", value: parts[1] };
+      if (/^@[\w.\-]{3,30}$/.test(parts[0] || "")) return { type: "handle", value: parts[0].slice(1) };
+      if (parts[0] === "user" && /^[\w.\-]{3,30}$/.test(parts[1] || "")) return { type: "username", value: parts[1] };
+      if (parts[0] === "c" && /^[\w.\-]{3,30}$/.test(parts[1] || "")) return { type: "handle", value: parts[1] };
+      if (parts.length === 1 && /^[\w.\-]{3,30}$/.test(parts[0]) && !/^(watch|results|feed|playlist)$/.test(parts[0])) return { type: "handle", value: parts[0] };
+    }
+    return null;
+  } catch (e) {}
+  if ((m = s.match(/^([\w.\-]{3,30})$/))) return { type: "handle", value: m[1] };
+  return null;
+}
+function setStatus(msg, type) {
+  const b = $("kpStatus");
+  if (!msg) return b.classList.add("hidden");
+  b.className = "mb-5 border rounded-2xl px-4 py-3 text-[12px] font-semibold " + (type === "err" ? "bg-red-50 border-red-200 text-red-600" : "bg-white text-gray-600");
+  b.textContent = msg;
+}
+
+$("kpForm").addEventListener("submit", e => {
+  e.preventDefault();
+  loadCompetitors(true);
+});
+
+function videoRows(d) {
+  return (d.videos || []).map((v) => ({
+    id: v.id, title: v.snippet?.title || "", thumb: v.snippet?.thumbnails?.medium?.url || v.snippet?.thumbnails?.default?.url || "",
+    publishedAt: v.snippet?.publishedAt || "", views: +v.statistics?.viewCount || 0, likes: +v.statistics?.likeCount || 0,
+    comments: +v.statistics?.commentCount || 0, minutes: isoMin(v.contentDetails?.duration),
+  }));
+}
+
+function render(d) {
+  const ch = d.channel, st = ch.statistics || {}, sn = ch.snippet || {};
+  const vids = videoRows(d), n = vids.length;
+  const sum = (k) => vids.reduce((a, v) => a + v[k], 0);
+  const avgViews = n ? sum("views") / n : 0, eng = sum("views") ? ((sum("likes") + sum("comments")) / sum("views")) * 100 : 0;
+  const dates = vids.map((v) => +new Date(v.publishedAt)).filter(Boolean).sort((a, b) => b - a);
+  const span = dates.length > 1 ? (dates[0] - dates[dates.length - 1]) / 864e5 : 0;
+  const perWeek = span > 0 ? ((dates.length - 1) / span) * 7 : null;
+  const durs = vids.map((v) => v.minutes).filter((m) => m > 0), avgMin = durs.length ? durs.reduce((a, b) => a + b, 0) / durs.length : null;
+  const shorts = vids.filter((v) => v.minutes > 0 && v.minutes <= 3).length;
+  data.summary = { perWeek, avgMin };
+
+  $("kpResult").hidden = false;
+  $("kpThumb").src = sn.thumbnails?.medium?.url || sn.thumbnails?.default?.url || "";
+  $("kpTitle").textContent = sn.title || "";
+  $("kpSub").textContent = [sn.customUrl, sn.country, sn.publishedAt && "sejak " + new Date(sn.publishedAt).getFullYear()].filter(Boolean).join(" · ");
+  $("kpOpen").href = sn.customUrl ? `https://youtube.com/${sn.customUrl}` : `https://youtube.com/channel/${ch.id}`;
+  const card = (label, val, sub) => `<div class="bg-white border rounded-2xl p-3 md:p-5"><div class="flex justify-between items-center"><p class="text-[11px] text-gray-500">${label}</p><span class="real">REAL API</span></div><p class="text-[22px] font-extrabold">${val}</p><p class="text-[10px] text-gray-600">${sub}</p></div>`;
+  $("kpStats").innerHTML = [
+    card("Subscriber", st.hiddenSubscriberCount ? "Disembunyikan" : num(st.subscriberCount || 0), "channels.statistics"),
+    card("Total Views", num(st.viewCount || 0), `${num(st.videoCount || 0)} video`),
+    card("Rata-rata Views", short(avgViews), `per video (${n} upload terbaru)`),
+    card("Engagement", eng.toFixed(2) + "%", "(likes + komen) / views"),
+    card("Upload / Minggu", perWeek == null ? "—" : perWeek.toFixed(1), "dari jarak publish terbaru"),
+    card("Durasi Rata-rata", avgMin == null ? "—" : Math.round(avgMin) + " menit", "video dengan durasi"),
+    card("Shorts vs Long", `${shorts} / ${n - shorts}`, "≤ 3 menit dihitung Shorts"),
+    card("Views / Subscriber", st.subscriberCount ? (avgViews / +st.subscriberCount * 100).toFixed(1) + "%" : "—", "rata-rata views ÷ subscriber"),
+  ].join("");
+
+  const top = [...vids].sort((a, b) => b.views - a.views).slice(0, 10);
+  topVids = top;
+  $("kpTop").innerHTML = top.length ? top.map((v, i) => `<div class="kp-row px-2 py-2 rounded-xl text-[12px]" data-vid="${esc(v.id)}">
+    <div class="flex items-start gap-2 md:gap-3">
+    <span class="w-4 md:w-5 text-gray-600 font-bold pt-1 shrink-0">${i + 1}</span><a href="https://youtu.be/${esc(v.id)}" target="_blank" rel="noopener" class="shrink-0"><img src="${esc(v.thumb)}" class="w-16 h-9 md:w-20 md:h-11 rounded object-cover bg-gray-100" alt="" loading="lazy"></a>
+    <div class="min-w-0 flex-1"><a href="https://youtu.be/${esc(v.id)}" target="_blank" rel="noopener" class="font-bold line-clamp-2 break-words hover:underline">${esc(v.title)}</a><p class="text-[10px] text-gray-600">${new Date(v.publishedAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })} · ${Math.round(v.minutes)} menit · ${num(v.likes)} likes · ${num(v.comments)} komen</p>
+      <div class="flex flex-wrap gap-1 md:gap-1.5 mt-1.5">
+        <button type="button" class="kp-tiru" data-tiru="judul" data-i="${i}">📋 Tiru Judul (${COSTS.kp_tiru_judul} Poin)</button>
+        <button type="button" class="kp-tiru" data-tiru="deskripsi" data-i="${i}">📝 Tiru Deskripsi (${COSTS.kp_tiru_deskripsi} Poin)</button>
+        <button type="button" class="kp-tiru" data-tiru="hashtag" data-i="${i}">#️⃣ Hashtag Tinggi (${COSTS.kp_tiru_hashtag} Poin)</button>
+      </div></div>
+    <span class="font-extrabold shrink-0 pt-1">${short(v.views)}</span></div>
+    <div class="kp-gen pl-0 md:pl-8 min-w-0"></div></div>`).join("") : `<p class="text-[12px] text-gray-600">Channel ini belum punya video publik.</p>`;
+
+  // Keyword judul: kata yang paling sering muncul, diberi bobot views
+  const kw = {};
+  vids.forEach((v) => new Set(v.title.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, " ").split(/\s+/).filter((w) => w.length > 2 && !STOP.has(w) && !/^\d+$/.test(w))).forEach((w) => { kw[w] = kw[w] || { n: 0, views: 0 }; kw[w].n++; kw[w].views += v.views; }));
+  const kws = Object.entries(kw).filter(([, x]) => x.n > 1).sort((a, b) => b[1].views - a[1].views).slice(0, 15);
+  topKw = kws.map(([w]) => w);
+  $("kpKw").innerHTML = kws.length ? kws.map(([w, x]) => `<span class="bg-[#F5F3FF] text-[#5B3FD9] px-2.5 py-1 rounded-full text-[11px] font-bold" title="${x.n} video · ${num(x.views)} views">${esc(w)} <span class="text-gray-600 font-medium">${x.n}×</span></span>`).join("") : `<p class="text-[12px] text-gray-600">Belum cukup data judul.</p>`;
+
+  // Hari & jam upload dengan rata-rata views tertinggi (jam WIB)
+  const byDay = {}, byHour = {};
+  vids.forEach((v) => { const t = new Date(new Date(v.publishedAt).getTime() + 7 * 36e5); const dd = t.getUTCDay(), hh = t.getUTCHours();
+    (byDay[dd] = byDay[dd] || []).push(v.views); (byHour[hh] = byHour[hh] || []).push(v.views); });
+  const best = (o) => Object.entries(o).map(([k, a]) => [k, a.reduce((x, y) => x + y, 0) / a.length, a.length]).sort((a, b) => b[1] - a[1])[0];
+  const bd = best(byDay), bh = best(byHour);
+  $("kpPola").innerHTML = n ? [
+    bd && `<p>📅 Hari terbaik: <b>${HARI[bd[0]]}</b> (rata-rata ${short(bd[1])} views, ${bd[2]} video)</p>`,
+    bh && `<p>⏰ Jam upload terbaik: <b>${String(bh[0]).padStart(2, "0")}:00 WIB</b> (rata-rata ${short(bh[1])} views)</p>`,
+    dates[0] && `<p>🆕 Upload terakhir: <b>${new Date(dates[0]).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}</b></p>`,
+    `<p>🎬 Format dominan: <b>${shorts > n - shorts ? "Shorts" : "Video panjang"}</b></p>`,
+  ].filter(Boolean).join("") : `<p class="text-gray-600">Belum ada video.</p>`;
+  $("kpIde").innerHTML = "";
+  loadHashtagList();
+  $("kpResult").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+$("kpIdeBtn").addEventListener("click", async () => {
+  if (!data) return;
+  if (!btpSession()) return toast("Login Google dulu untuk memakai AI Kompetitor", "err", { label: "Login", run: () => BTPAuth.login() });
+  if (!hasCredit("kompetitor_ide")) return;
+  const ch = data.channel, st = ch.statistics || {};
+  const vids = videoRows(data).sort((a, b) => b.views - a.views);
+  $("kpIdeBtn").disabled = true;
+  $("kpIde").innerHTML = `<p class="text-[12px] text-gray-500">⏳ AI sedang menganalisa ${vids.length} video kompetitor...</p>`;
+  try {
+    const res = await btpApi("/api/kompetitor-ai", { method: "POST", body: JSON.stringify({
+      myNiche: $("kategoriNiche").selectedOptions[0].textContent,
+      channel: { title: ch.snippet?.title, subs: +st.subscriberCount || 0, views: +st.viewCount || 0, videoCount: +st.videoCount || 0, country: ch.snippet?.country, perWeek: data.summary.perWeek, avgMinutes: data.summary.avgMin },
+      videos: vids,
+    }) });
+    const d = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(d.error || "AI gagal membuat ide");
+
+    renderIde(d);
+  } catch(err){if(window.BTPApiStatus?.isSoftError(err))return;
+    $("kpIde").innerHTML = `<p class="text-[12px] text-red-600 font-semibold">❌ ${esc(err.message)}</p>`;
+  } finally {
+    $("kpIdeBtn").disabled = false;
+  }
+});
+
+function renderIde(d) {
+  const box = (title, items, color) => items.length ? `<div class="rounded-xl p-4" style="background:${color}"><p class="font-bold text-[12px] mb-2">${title}</p><ul class="text-[12px] space-y-1 list-disc pl-4">${items.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>` : "";
+  $("kpIde").innerHTML = `
+    ${d.ringkasan ? `<p class="text-[13px] mb-4">${esc(d.ringkasan)}</p>` : ""}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-5">${box("💪 Kekuatan Kompetitor", d.kekuatan, "rgba(34,197,94,.12)")}${box("🎯 Celah / Peluang", d.celah, "rgba(234,179,8,.12)")}${box("🧲 Pola Judul Berhasil", d.pola_judul, "rgba(124,58,237,.18)")}</div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">${d.ide.map((i, n) => `<div class="border rounded-xl p-4 flex flex-col gap-2">
+      <div class="flex justify-between gap-2"><p class="font-extrabold text-[13px]">${n + 1}. ${esc(i.judul)}</p><span class="shrink-0 text-[10px] font-bold bg-gray-100 px-2 py-1 rounded-full h-fit">${esc(i.format || "Long")}</span></div>
+      <p class="text-[12px] text-gray-600 flex-1">${esc(i.alasan)}</p>
+      <div class="flex justify-between items-center gap-2">${i.keyword ? `<span class="text-[10px] font-bold text-[#5B3FD9]">🔑 ${esc(i.keyword)}</span>` : "<span></span>"}<button type="button" data-copy="${esc(i.judul)}" class="border bg-white px-3 py-1 rounded-full text-[11px] font-bold">📋 Copy Judul</button></div></div>`).join("")}</div>`;
+}
+$("kpIde").addEventListener("click", async (e) => {
+  const b = e.target.closest("[data-copy]");
+  if (!b) return;
+  await navigator.clipboard.writeText(b.dataset.copy);
+  toast("Judul tercopy!", "ok");
+});
+
+// ===== Tiru Judul / Deskripsi / Hashtag Tinggi per video (5 Poin, dipotong setelah hasil berhasil) =====
+const TIRU_COST = { judul: "kp_tiru_judul", deskripsi: "kp_tiru_deskripsi", hashtag: "kp_tiru_hashtag" };
+const money = (v, cur) => v == null ? "" : (cur && cur !== "USD" ? cur + " " : "$") + Number(v).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const copyBtn = (text, label = "📋 Copy") => `<button type="button" class="kp-tiru" data-copy="${esc(text)}">${label}</button>`;
+function adsNote(ads) {
+  if (!ads) return "";
+  if (!ads.configured) return `⚠️ Google Ads API belum tersambung (env belum diisi: ${esc((ads.missing || []).join(", "))}) — volume & CPC tidak ditampilkan, bukan dummy.`;
+  if (ads.error) return `⚠️ ${esc(ads.error)}`;
+  return `✅ Google Ads Keyword Planner REAL · ${esc(ads.geo || "")}${ads.cachedAt ? " · cache " + new Date(ads.cachedAt).toLocaleString("id-ID") : ""}`;
+}
+
+async function handleTiru(tipe, source, row, video) {
+  const costKey = TIRU_COST[tipe];
+  if (getCredits() <= 0) return showModalPoinHabis();
+  if (!hasCredit(costKey)) return;
+  if (!btpSession()) return toast("Login Google dulu untuk memakai fitur Tiru", "err", { label: "Login", run: () => BTPAuth.login() });
+  const out = row.querySelector(".kp-gen");
+  const btns = row.querySelectorAll("[data-tiru]");
+  btns.forEach((b) => (b.disabled = true));
+  const slot = document.createElement("div");
+  slot.className = "kp-out text-gray-600";
+  slot.textContent = `⏳ Membuat ${tipe === "hashtag" ? "hashtag RPM tinggi + CPC Google Ads" : tipe}...`;
+  out.querySelector(`[data-out="${tipe}"]`)?.remove();
+  slot.dataset.out = tipe;
+  out.appendChild(slot);
+  try {
+    const res = await btpApi("/api/generate/tiru", { method: "POST", body: JSON.stringify({
+      tipe, source, niche: $("kategoriNiche").selectedOptions[0].textContent, keywords: topKw, channel: data?.channel?.snippet?.title || "", geo: $("kpGeo").value,
+    }) });
+    const d = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(d.error || "Gagal membuat " + tipe);
+
+    generated[video.id + ":" + tipe] = d;
+    slot.className = "kp-out";
+    if (tipe === "judul") {
+      slot.innerHTML = `<p class="font-bold text-[11px] text-[#c4b5fd] mb-1.5">📋 Judul hasil tiru</p>` + d.items.map((t) => `<div class="flex justify-between items-center gap-2 py-1"><span>${esc(t)}</span>${copyBtn(t)}</div>`).join("");
+    } else if (tipe === "deskripsi") {
+      slot.innerHTML = `<div class="flex justify-between items-center mb-1.5"><p class="font-bold text-[11px] text-[#c4b5fd]">📝 Deskripsi hasil tiru</p>${copyBtn(d.text)}</div><pre class="whitespace-pre-wrap font-[inherit] text-[12px]">${esc(d.text)}</pre>`;
+    } else {
+      const cur = d.ads?.currency;
+      const tags = d.hashtags.map((h) => h.tag).join(" ");
+      slot.innerHTML = `<div class="flex justify-between items-center mb-1.5"><p class="font-bold text-[11px] text-[#c4b5fd]">#️⃣ Hashtag Tinggi</p>${copyBtn(tags)}</div>
+        <div class="flex flex-wrap gap-1.5">${d.hashtags.map((h) => `<span class="bg-[#F5F3FF] text-[#5B3FD9] px-2 py-1 rounded-full text-[11px] font-bold">${esc(h.tag)}${h.cpc != null ? ` <span class="kp-cpc">${esc(d.ads?.geo === "USA" ? "USA_" : "")}CPC_${money(h.cpc, cur)}</span>` : ""}${h.volume ? ` <span class="text-gray-600 font-medium">${num(h.volume)}/bln</span>` : ""}</span>`).join("")}</div>
+        <p class="text-[10px] text-gray-600 mt-2">${adsNote(d.ads)}</p>`;
+    }
+  } catch(err){if(window.BTPApiStatus?.isSoftError(err))return;
+    slot.className = "kp-out text-red-600 font-semibold";
+    slot.textContent = "❌ " + err.message;
+  } finally {
+    btns.forEach((b) => (b.disabled = false));
+  }
+}
+$("kpTop").addEventListener("click", async (e) => {
+  const c = e.target.closest("[data-copy]");
+  if (c) { await navigator.clipboard.writeText(c.dataset.copy); return toast("Tercopy!", "ok"); }
+  const b = e.target.closest("[data-tiru]");
+  if (!b) return;
+  const video = topVids[+b.dataset.i];
+  if (video) handleTiru(b.dataset.tiru, video.title, b.closest("[data-vid]"), video);
+});
+
+// ===== Blok 🔥 HASHTAG RPM TINGGI: keyword kompetitor + Keyword Planner (volume & CPC REAL). Lihat gratis, Copy Semua 1 Poin =====
+async function loadHashtagList() {
+  hashtagList = [];
+  $("kpHtCopy").disabled = true;
+  if (!topKw.length) { $("kpHt").innerHTML = `<p class="text-gray-600">Belum cukup keyword judul kompetitor.</p>`; return; }
+  $("kpHt").innerHTML = `<p class="text-gray-600">⏳ Mengambil volume & CPC dari Google Ads Keyword Planner...</p>`;
+  try {
+    const res = await fetch("/api/generate/tiru", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tipe: "hashtag_list", keywords: topKw, geo: $("kpGeo").value }) });
+    const d = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(d.error || "Gagal mengambil hashtag");
+    hashtagList = d.hashtags || [];
+    const cur = d.ads?.currency;
+    $("kpHtNote").innerHTML = adsNote(d.ads);
+    $("kpHt").innerHTML = hashtagList.map((h, i) => `<div class="flex flex-wrap justify-between gap-x-2 gap-y-0.5 border-b border-[#2d2d44] pb-1.5"><span class="font-bold text-[11px] md:text-[12px] break-all min-w-0">${i + 1}. ${esc(h.tag)}</span>
+      <span class="text-[11px] break-all ${h.cpc != null ? "kp-cpc" : "text-gray-600"}">${h.cpc != null ? `(Volume ${num(h.volume)} - CPC ${money(h.cpc, cur)})` : "(Volume - · CPC -)"}</span></div>`).join("");
+    $("kpHtCopy").disabled = !hashtagList.length;
+  } catch(err){if(window.BTPApiStatus?.isSoftError(err))return;
+    $("kpHt").innerHTML = `<p class="text-red-600 font-semibold">❌ ${esc(err.message)}</p>`;
+  }
+}
+$("kpGeo").addEventListener("change", () => data && loadHashtagList());
+$("kpHtCopy").addEventListener("click", async () => {
+  if (!hashtagList.length) return;
+  if (getCredits() <= 0) return showModalPoinHabis();
+  if (!useCredit("kp_hashtag_copy")) return;
+  await navigator.clipboard.writeText(hashtagList.map((h) => h.tag).join(" "));
+  toast(`${hashtagList.length} hashtag RPM tinggi tercopy! (-${COSTS.kp_hashtag_copy} Poin)`, "ok");
+});
+</script>
+<script src="/utils/competitor-discovery.js?v=competitor-plans-4"></script>
+</body>
+</html>

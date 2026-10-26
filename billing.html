@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<!-- Auth guard: logged-out visitors never see a (guest) balance here; send them to login first. -->
+<script src="/utils/btp-auth-guard.js"></script>
+<script src="/utils/points-meter.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Billing &amp; Poin - BosterTubePro</title>
+<link rel="icon" type="image/png" href="/b-logo.png">
+<meta name="color-scheme" content="light">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="/utils/credit.js"></script>
+<script src="/utils/btp-auth.js"></script>
+<script src="/utils/btp-qris-payment.js"></script>
+<script src="/utils/paypal-points.js?v=live-orders-2" defer></script>
+<script src="/utils/btp-bottom-nav.js" defer></script>
+<style>
+*{box-sizing:border-box}
+:root{color-scheme:light}
+html,body{margin:0;background:#f5f6ff;color:#121214;font-family:Inter,ui-sans-serif,system-ui,sans-serif}
+a{color:inherit}
+.bill{max-width:960px;margin:0 auto;padding:16px 16px 32px}
+.bill-top{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.bill-top img{width:36px;height:36px;border-radius:10px;background:#fff;object-fit:contain}
+.bill-top h1{font-size:18px;font-weight:800;margin:0;line-height:1.2}
+.bill-top h1 small{display:block;font-size:12px;font-weight:600;color:#6b7280}
+.bill-top .back{margin-left:auto;font-size:12px;font-weight:700;text-decoration:none;border:1px solid #dcdcf0;background:#fff;border-radius:999px;padding:8px 12px;white-space:nowrap}
+.balance{background:linear-gradient(135deg,#7C5CFF,#FF6BA8);color:#fff;border-radius:20px;padding:20px;margin-bottom:14px}
+.balance p{margin:0}
+.balance .label{font-size:13px;font-weight:700;opacity:.9}
+.balance .value{font-size:44px;font-weight:800;line-height:1.1;margin:4px 0;letter-spacing:-.5px;word-break:break-word}
+.balance .value small{font-size:18px;font-weight:700}
+.balance .sub{font-size:12px;opacity:.9}
+.balance button{margin-top:12px;min-height:46px;width:100%;border:0;border-radius:12px;background:#fff;color:#121214;font:800 14px Inter,sans-serif;cursor:pointer}
+.costs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+@media(max-width:420px){.costs{grid-template-columns:repeat(3,1fr)}}
+.costs div{background:#fff;border:1px solid #e4e4f2;border-radius:14px;padding:10px 8px;text-align:center}
+.costs strong{display:block;font-size:18px;font-weight:800;color:#7C5CFF}
+.costs span{font-size:11px;font-weight:600;color:#4b5563;line-height:1.3;display:block}
+.costs .free strong{color:#15803d}
+.costs-total{margin:0 0 18px;font-size:12px;font-weight:700;color:#4b5563;text-align:center}
+.costs-total strong{color:#7C5CFF}
+.admin-badge{display:inline-block;margin-left:6px;padding:3px 8px;border-radius:999px;background:#121214;color:#fde047;font-size:10px;font-weight:800;letter-spacing:.08em;vertical-align:middle}
+.section-title{font-size:15px;font-weight:800;margin:0 0 10px}
+.plans{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:640px){.plans{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:960px){.plans{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1180px){.bill{max-width:1240px}.plans{grid-template-columns:repeat(5,1fr)}}
+.plan{position:relative;background:#fff;border:1px solid #e4e4f2;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.plan.popular{border:2px solid #16a34a;box-shadow:0 6px 20px rgba(22,163,74,.15)}
+.plan .badge{position:absolute;top:-11px;left:16px;background:#16a34a;color:#fff;font-size:10px;font-weight:800;letter-spacing:.5px;border-radius:999px;padding:4px 10px}
+.plan h3{margin:4px 0 0;font-size:15px;font-weight:800}
+.plan .points{font-size:13px;font-weight:700;color:#7C5CFF}
+.plan .price{font-size:26px;font-weight:800;line-height:1.1}
+.plan .usd{font-size:13px;font-weight:600;color:#6b7280}
+.plan .feat{font-size:12px;color:#6b7280;margin:2px 0 6px}
+.plan .feat.ok{color:#15803d}
+.plan ul{list-style:none;margin:4px 0 8px;padding:0;display:grid;gap:5px;flex:1}
+.plan li{font-size:12.5px;line-height:1.4;color:#374151;padding-left:20px;position:relative}
+.plan li::before{content:'✓';position:absolute;left:0;color:#16a34a;font-weight:800}
+.plan li.edit-quota{color:#15803d;font-weight:600}
+.plan.sultan li.edit-quota{color:#1a1300}
+.plan .per{font-size:13px;font-weight:600;color:#6b7280}
+.plan.sultan{border:2px solid #b8860b;background:linear-gradient(160deg,#FFD700,#FFA500);color:#1a1300}
+.plan.sultan .badge{background:#1a1300;color:#FFD700}
+.plan.sultan .points,.plan.sultan .usd,.plan.sultan .per,.plan.sultan li{color:#1a1300}
+.plan.sultan li::before{color:#1a1300}
+.plan.sultan .btn-qris{background:linear-gradient(135deg,#000,#3d2e00);color:#FFD700;border:1px solid #b8860b}
+.plan.sultan .btn-paypal{background:#FFD700;color:#000;border:1px solid #1a1300}
+.quota{display:block;margin-top:6px;font-size:12px;font-weight:600;color:#374151}
+.plan button{width:100%;min-height:50px;border:0;border-radius:12px;font:800 14px Inter,sans-serif;cursor:pointer}
+.plan button:disabled{opacity:.6;cursor:wait}
+.btn-qris{background:#e5e7eb;color:#111827}
+.btn-paypal{background:#0070BA;color:#fff}
+.note{font-size:12px;color:#6b7280;line-height:1.6;margin:14px 0 0}
+#message{font-size:13px;font-weight:600;margin:12px 0 0;min-height:1em}
+#message:empty{display:none}
+.unlimited{background:#fff;border:2px solid #16a34a;border-radius:18px;padding:18px;font-size:14px;line-height:1.6}
+.unlimited strong{color:#15803d}
+/* PayPal: hanya pakai panel checkout dari komponen bersama, daftar paketnya tidak ditampilkan dobel */
+.paypal-host .paypal-section{margin:12px 0 0!important;padding:0!important;border:0!important;background:transparent!important}
+.paypal-host .paypal-section>h2,.paypal-host .paypal-section>p:not([data-status]),.paypal-host [data-plans]{display:none!important}
+.paypal-host [data-checkout]{margin:12px auto 0!important;max-width:520px!important}
+#topup{width:min(420px,calc(100vw - 24px));border:0;border-radius:20px;padding:20px;text-align:center}
+#topup::backdrop{background:rgba(0,0,0,.6)}
+#topup img{width:100%;max-width:260px;height:auto}
+#topup .close{float:right;border:1px solid #dcdcf0;background:#fff;border-radius:999px;padding:6px 12px;font-weight:700;cursor:pointer}
+#topup h2{font-size:17px;margin:8px 0}
+#topup p{font-size:12px;line-height:1.6;color:#4b5563}
+#topup-total{display:block;font-size:22px;margin:8px 0}
+.mutation-status{font-weight:700}
+.mutation-status.success{color:#15803d}
+.mutation-status.failed{color:#b42318}
+.mutation-status.pending{color:#b45309}
+#refunds{margin:14px 0 0;font-size:12px}
+#refunds summary{cursor:pointer;color:#6b7280;text-decoration:underline;display:inline}
+#refunds p{margin:6px 0;font-size:12px;color:#4b5563;line-height:1.5}
+.refund-label{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:#dcfce7;color:#15803d;font-size:11px;font-weight:800}
+#personal-summary{margin-bottom:18px}
+.admin-link{display:block;margin-bottom:14px;padding:12px 14px;border-radius:14px;background:#121214;color:#fde047;font-size:13px;font-weight:800;text-decoration:none;text-align:center}
+.admin-link[hidden]{display:none}
+footer{text-align:center;font-size:12px;color:#8b8ba3;padding:16px}
+</style>
+</head>
+<body>
+<main class="bill">
+  <header class="bill-top">
+    <img src="/b-logo.png" width="36" height="36" alt="Logo BosterTubePro">
+    <h1>Billing &amp; Poin<small>BosterTubePro</small></h1>
+    <a class="back" href="/">← Dashboard</a>
+  </header>
+
+  <a id="laporan-link" class="admin-link" href="/settings/laporan" hidden>📊 Buka Laporan Keuangan (Admin)</a>
+  <section id="personal-summary" class="unlimited" hidden aria-live="polite"></section>
+  <div id="billing-existing">
+  <section id="balance-box" class="balance" aria-labelledby="balance-label" hidden>
+    <p class="label" id="balance-label">Sisa Poin kamu</p>
+    <p class="value" id="balance" aria-live="polite">—</p>
+    <p class="sub" id="balance-sub">Memuat saldo…</p>
+    <button type="button" id="login-btn" hidden>Login Google untuk beli Poin</button>
+  </section>
+
+  <section class="costs" aria-label="Biaya poin per fitur">
+    <div><strong id="cost-channel">25</strong><span>Poin · Bedah Channel</span></div>
+    <div><strong id="cost-riset">2</strong><span>Poin · Riset</span></div>
+    <div><strong id="cost-generate">10</strong><span>Poin · Ide Konten SEO</span></div>
+    <div><strong>15</strong><span>Poin · Upload Animasi</span></div>
+    <div><strong>1</strong><span>Poin · Playlist</span></div>
+    <div class="free"><strong>0</strong><span>Cards · Gratis</span></div>
+    <div class="free"><strong>0</strong><span>End Screen · Gratis</span></div>
+    <div class="free"><strong>0</strong><span>Teks · Pangkas · Crop · Auto Lirik · Kuota Gratis</span></div>
+  </section>
+  <p id="edit-quota" class="costs-total" hidden aria-live="polite"></p>
+  <p class="costs-total">Upload 1 video (Animasi + Playlist + Cards + End Screen): total maks <strong>16 Poin</strong></p>
+
+  <section id="unlimited" class="unlimited" hidden>
+    <strong>✅ Akun kamu Poin Unlimited.</strong><br>Semua fitur bisa dipakai tanpa tagihan. Tidak perlu membeli poin — daftar harga di bawah hanya untuk referensi.
+  </section>
+
+  <section id="pricing" aria-labelledby="plans-title">
+    <h2 class="section-title" id="plans-title">Pilih Paket SEO</h2>
+    <div class="plans" id="plans"></div>
+    <p id="message" role="status" aria-live="polite"></p>
+    <div class="paypal-host"><paypal-points></paypal-points></div>
+    <p class="note">Pembayaran via PayPal Bisnis BoosterTubePro</p>
+    <p class="note"><strong>Poin tanpa kadaluarsa:</strong> poin yang dibeli tidak hangus dan tidak dihitung per bulan. Jika poin habis, kamu bebas memilih paket mana pun untuk membeli lagi.</p>
+    <p class="note">QRIS dibayar dalam Rupiah (harga tetap). PayPal ditagih dalam USD; kurs mengikuti PayPal atau bank kamu. Poin otomatis masuk setelah pembayaran terverifikasi.</p>
+    <p class="note"><strong>S&amp;K Kuota:</strong> Kuota fitur SEO dihitung per bulan dan reset otomatis tiap tanggal 1 (WIB). Setiap Top-up menambah kuota bulan berjalan. Animasi Subscribe SEO khusus Pro, Agency &amp; Sultan, biaya 15 Poin/video.</p>
+    <p class="note"><strong>Kuota Edit Video:</strong> Teks Manual, Video Pangkas, Crop Video &amp; Auto Lirik tidak memakai poin. Setiap paket mendapat kuota gratis per bulan (Starter 10x, Top-up 20x, Pro 30x, Agency 50x, Sultan unlimited per fitur) yang reset tiap tanggal 1 jam 00:00 WIB.</p>
+    <p class="note"><strong>Paket SULTAN:</strong> dibayar lewat QRIS atau PayPal seperti paket lain. 15.000 Poin dan kuota SEO unlimited aktif otomatis selama 30 hari.</p>
+    <details id="refunds" hidden><summary>Lihat riwayat refund</summary><div id="refund-list"></div></details>
+  </section>
+</div>
+</main>
+
+<dialog id="topup">
+  <form method="dialog"><button class="close" aria-label="Tutup pembayaran">Tutup</button></form>
+  <h2 id="checkout-title">Bayar QRIS</h2>
+  <p>Bayar sesuai total di bawah, termasuk kode unik pembayaran.</p>
+  <strong id="topup-total"></strong>
+  <img id="topup-qr" src="/qris-boostertube-statis.png?v=10" alt="QRIS resmi BOOSTERTUBE PRO" width="260" height="260">
+  <p>Pembayaran resmi hanya QRIS BOOSTERTUBE PRO — ELECTRONICS, NMID ID1026619617164 A01.</p>
+  <p id="topup-status" class="mutation-status pending" role="status">Menunggu Pembayaran</p>
+  <p id="topup-instructions"></p>
+</dialog>
+
+<footer><a href="/privacy-policy">Kebijakan Privasi</a> · <a href="/terms">Syarat Layanan</a> · <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer">YouTube ToS</a> · <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google Privacy</a> · <a href="/bantuan">Bantuan</a></footer>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const fmt = n => Number(n).toLocaleString('id-ID');
+  const idr = n => 'Rp ' + fmt(n);
+  const session = () => localStorage.getItem('btp_session') || '';
+  const message = text => { $('message').textContent = text; };
+  const ADMINS = ['boosterviewsubsid@gmail.com', 'insandoif5@gmail.com'];
+  const email = () => (localStorage.getItem('btp_user_email') || '').trim().toLowerCase();
+  const PACKAGES = {starter: 'qrisStarter', pro: 'qrisPro', agency: 'qrisAgency', points1000: 'qrisPoints1000', sultan: 'qrisSultan'};
+  // Harga cadangan; diganti data server dari /api/pricing-plans.
+  const SEO = 'Optimasi SEO Judul, Deskripsi & Tag';
+  let plans = [
+    {id: 'starter', name: 'Starter', points: 500, idr: 79000, usd: 4.99,
+      features: ['20x ' + SEO, '12x Thumbnail SEO', '5x Penghapus Watermark', '4x Penghapus Suara Bising', '4x Audit SEO Channel & Video']},
+    {id: 'points1000', name: 'Top-up', points: 1000, idr: 99000, usd: 6.99,
+      features: ['50x ' + SEO, '25x Thumbnail SEO', '10x Penghapus Watermark', '10x Penghapus Suara Bising', '10x Audit SEO Channel & Video']},
+    {id: 'pro', name: 'Pro', points: 2000, idr: 249000, usd: 14.99, badge: 'BEST SELLER',
+      features: ['120x ' + SEO, '60x Thumbnail SEO', '20x Penghapus Watermark', '20x Penghapus Suara Bising', '20x Audit SEO Channel & Video', '10x Animasi Subscribe SEO']},
+    {id: 'agency', name: 'Agency', points: 5000, idr: 499000, usd: 29.99,
+      features: ['300x ' + SEO, '120x Thumbnail SEO', '50x Penghapus Watermark', '40x Penghapus Suara Bising', '40x Audit SEO Channel & Video', '25x Animasi Subscribe SEO']},
+    {id: 'sultan', name: 'Sultan', points: 15000, idr: 1500000, usd: 93, badge: 'SULTAN - UNLIMITED',
+      features: ['Unlimited Optimasi SEO YouTube', 'Unlimited Thumbnail SEO', 'Unlimited Semua Fitur', 'Prioritas Support 24 Jam']},
+  ];
+  // Kuota edit video gratis per bulan (bukan poin), reset tanggal 1 WIB. Sama dengan EDIT_QUOTAS di src/config/plans.js.
+  const EDIT_QUOTA = {starter: 10, points1000: 20, pro: 30, agency: 50, sultan: null};
+  const EDIT_LABELS = ['Teks Manual', 'Video Pangkas', 'Crop Video', 'Auto Lirik'];
+  const editFeatures = id => EDIT_LABELS.map(label => EDIT_QUOTA[id] === null ? `GRATIS Unlimited ${label} / bulan` : `GRATIS ${EDIT_QUOTA[id]}x ${label} / bulan`);
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[c]);
+
+  function render() {
+    $('plans').innerHTML = plans.map(p => `<article class="plan${p.badge === 'BEST SELLER' ? ' popular' : ''}${p.id === 'sultan' ? ' sultan' : ''}">${p.badge ? `<span class="badge">${p.badge}</span>` : ''}
+      <h3>${p.name.toUpperCase()}</h3><p class="points">${fmt(p.points)} Poin</p>
+      <p class="price">${p.id === 'sultan' ? 'Rp ' + fmt(p.idr / 1000) + 'k' : idr(p.idr)} <span class="per">sekali bayar</span></p><p class="usd">atau $${Number(p.usd).toFixed(2)} via PayPal</p>
+      <ul><li>${fmt(p.points)} Poin tanpa kadaluarsa (untuk Animasi dll)</li>${editFeatures(p.id).map(f => `<li class="edit-quota">${esc(f)}</li>`).join('')}${p.features.map(f => `<li>${esc(f)}</li>`).join('')}</ul>
+      <button type="button" class="btn-qris" data-qris="${p.id}">QRIS ${idr(p.idr)}</button>
+      <button type="button" class="btn-paypal" data-paypal="${p.id}">PayPal $${Number(p.usd).toFixed(2)}</button></article>`).join('');
+  }
+  render();
+
+  fetch('/api/pricing-plans', {cache: 'no-store'}).then(r => r.ok ? r.json() : null).then(data => {
+    if (!data) return;
+    const byId = Object.fromEntries(data.plans.map(p => [p.id, p]));
+    plans = plans.map(p => {
+      const s = p.id === 'points1000' ? {points: data.topUp.points, price: data.topUp.idr, paypal: data.topUp.paypal} : p.id === 'sultan' ? data.sultan : byId[p.id];
+      return s ? {...p, points: s.points, idr: s.price, usd: s.paypal} : p;
+    });
+    render();
+  }).catch(() => {});
+
+  let unlimited = false;
+  async function loadAccount() {
+    if (!session()) {
+      $('balance').textContent = '—';
+      $('balance-sub').textContent = 'Login Google untuk melihat saldo poin kamu.';
+      $('login-btn').hidden = false;
+      $('balance-box').hidden = false;
+      return;
+    }
+    $('login-btn').hidden = true;
+    const r = await fetch('/api/billing', {headers: {'x-btp-session': session()}, cache: 'no-store'});
+    if (r.status === 401) { if (typeof endUserSession === 'function') endUserSession(); location.replace('/login?next=' + encodeURIComponent('/billing')); return; }
+    const b = await r.json();
+    if (!r.ok) throw Error(b.error || 'Saldo belum dapat dimuat');
+    unlimited = !!(b.isUnlimited || b.isAdmin);
+    // Ringkasan paket, saldo poin & info unlimited hanya untuk admin; user biasa cukup lihat daftar harga.
+    const isAdmin = b.isAdmin === true || ADMINS.includes(email());
+    $('balance-box').hidden = !isAdmin;
+    $('personal-summary').hidden = !isAdmin;
+    const used = b.quotaUsed || {}, limit = b.quotaLimit;
+    const q = (label, k) => label + ': ' + fmt(used[k] || 0) + '/' + (limit ? fmt(limit[k]) : '∞');
+    $('personal-summary').textContent = 'Paket Anda: ' + (b.plan?.name || 'Gratis').toUpperCase() + ' | Poin: ' + fmt(b.userPoints) + '/' + fmt(b.plan?.points || 0) + ' | Upload: ' + fmt(b.uploads_used || 0) + '/' + fmt(b.plan?.uploads || 0);
+    const quota = document.createElement('span');
+    quota.className = 'quota';
+    quota.textContent = 'Kuota bulan ini — ' + [q('Optimasi SEO', 'seo'), q('Thumbnail SEO', 'thumbnail'), q('Audit SEO', 'audit'), q('Watermark', 'watermark'), q('Suara Bising', 'noise'), q('Animasi', 'animation')].join(' · ');
+    $('personal-summary').append(quota);
+    $('laporan-link').hidden = b.canViewCuan !== true;
+    const refunds = (b.history || []).filter(h => h.refunded_at).slice(0, 10);
+    $('refund-list').replaceChildren(...refunds.map(h => {
+      const row = document.createElement('p'), label = document.createElement('span');
+      row.textContent = new Date(h.refunded_at).toLocaleString('id-ID') + ' · ' + h.action + ' · +' + fmt(h.cost) + ' Poin';
+      label.className = 'refund-label'; label.textContent = 'Refund - Proses SEO Gagal';
+      row.append(label); return row;
+    }));
+    $('refunds').hidden = !refunds.length;
+    if (b.costs) {
+      if (b.costs.dashboard_analyzeChannel) $('cost-channel').textContent = b.costs.dashboard_analyzeChannel;
+      if (b.costs.dashboard_competitorVideo) $('cost-riset').textContent = b.costs.dashboard_competitorVideo;
+      if (b.costs.dashboard_contentIdea) $('cost-generate').textContent = b.costs.dashboard_contentIdea;
+    }
+    $('unlimited').hidden = !(isAdmin && unlimited);
+    if (unlimited) {
+      $('balance').innerHTML = '∞ <small>Unlimited</small>' + (b.isAdmin || ADMINS.includes(email()) ? '<span class="admin-badge">ADMIN</span>' : '');
+      $('balance-sub').textContent = 'Poin unlimited · tanpa tagihan';
+    } else {
+      $('balance').innerHTML = fmt(b.userPoints) + ' <small>Poin</small>';
+      $('balance-sub').textContent = 'Paket aktif: ' + (b.plan?.name || 'Free');
+    }
+  }
+  // Sisa kuota edit video bulan ini (tampil untuk semua user yang login).
+  async function loadEditQuota() {
+    if (!session()) return;
+    const r = await fetch('/api/edit-quota', {headers: {'x-btp-session': session()}, cache: 'no-store'});
+    if (!r.ok) return;
+    const q = await r.json(), names = {teks_manual: 'Teks Manual', pangkas: 'Pangkas', crop: 'Crop', auto_lirik: 'Auto Lirik'};
+    const reset = new Date(q.resetAt).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', timeZone: 'Asia/Jakarta'});
+    $('edit-quota').textContent = 'Kuota Edit Video ' + q.planName + ' bulan ini — ' + Object.entries(names).map(([k, label]) => label + ' ' + (q.unlimited ? '∞' : fmt(q.features[k].remaining) + '/' + fmt(q.limit))).join(' · ') + (q.unlimited ? '' : ' · reset ' + reset);
+    $('edit-quota').hidden = false;
+  }
+  const refresh = () => loadAccount().catch(e => { $('balance-sub').textContent = e.message; if ($('balance-box').hidden) message(e.message); });
+  refresh();
+  loadEditQuota().catch(() => {});
+  window.addEventListener('credits-updated', refresh);
+
+  function login() {
+    sessionStorage.setItem('btp_login_return', '/billing');
+    location.assign('/api/auth/youtube');
+  }
+  $('login-btn').addEventListener('click', login);
+
+  let stopTopup = () => {};
+  async function payQris(id, button) {
+    const paket = PACKAGES[id];
+    const plan = plans.find(p => p.id === id);
+    button.disabled = true;
+    try {
+      const p = await BTPQris.create(paket);
+      const dialog = $('topup'), status = $('topup-status');
+      $('checkout-title').textContent = plan.name + ' - ' + fmt(plan.points) + ' Poin';
+      $('topup-total').textContent = 'Total bayar: ' + idr(p.amount);
+      $('topup-qr').hidden = false;
+      status.className = 'mutation-status pending';
+      status.textContent = 'Menunggu Pembayaran';
+      $('topup-instructions').textContent = `Scan QRIS di atas dan bayar tepat ${idr(p.amount)}. Tunggu 1-2 menit, sistem otomatis verifikasi dan poin langsung masuk. Jika 5 menit belum masuk, hubungi admin dengan bukti transfer.`;
+      dialog.showModal();
+      stopTopup();
+      stopTopup = BTPQris.poll(p.order_id, d => {
+        if (d.status === 'PAID') {
+          status.className = 'mutation-status success';
+          status.textContent = 'Pembayaran berhasil. Poin paket telah masuk.';
+          $('topup-qr').hidden = true;
+          refresh();
+        } else if (['FAILED', 'EXPIRED'].includes(d.status)) {
+          status.className = 'mutation-status failed';
+          status.textContent = 'Pembayaran kedaluwarsa atau ditolak. Jika sudah membayar, hubungi admin dengan bukti transfer.';
+          $('topup-qr').hidden = true;
+        }
+      }, () => { status.textContent = 'Status belum dapat dimuat. Sistem mencoba kembali…'; });
+      dialog.onclose = () => stopTopup();
+    } catch (e) { message(e.message); } finally { button.disabled = false; }
+  }
+
+  async function payPayPal(id, button) {
+    button.disabled = true;
+    try {
+      const checkout = document.querySelector('paypal-points');
+      if (!checkout?.plans) throw Error('Pilihan PayPal sedang dimuat. Coba lagi sebentar.');
+      await checkout.checkout(id);
+    } catch (e) { message(e.message); } finally { button.disabled = false; }
+  }
+
+  $('plans').addEventListener('click', event => {
+    const button = event.target.closest('button');
+    if (!button) return;
+    if (unlimited) { message('Akun ADMIN / Unlimited tidak perlu membeli poin — billing dilewati.'); return; }
+    message('');
+    if (!session()) { login(); return; }
+    if (button.dataset.qris) payQris(button.dataset.qris, button);
+    else if (button.dataset.paypal) payPayPal(button.dataset.paypal, button);
+  });
+})();
+</script>
+</body>
+</html>

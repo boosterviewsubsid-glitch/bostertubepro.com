@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<script src="/utils/output-language.js"></script>
+<script src="/utils/points-meter.js"></script>
+<link rel="stylesheet" href="/utils/btp-widget-visibility.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pengaturan - BosterTubePro</title>
+<link rel="icon" type="image/png" href="/b-logo.png">
+<meta name="color-scheme" content="light">
+<link rel="stylesheet" href="/utils/btp-theme.css">
+<script src="/utils/btp-mobile.js" defer></script>
+<script src="/utils/btp-bottom-nav.js" defer></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="/utils/credit.js"></script>
+<script src="/utils/btp-auth.js"></script>
+<script src="/utils/btp-ai-chat.js" defer></script>
+<script src="/utils/btp-page.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>#saldo-poin,#saldo{scroll-margin-top:24px}body{font-family:'Inter',sans-serif}</style>
+<link rel="stylesheet" href="/utils/btp-header.css">
+<link rel="stylesheet" href="/utils/pengaturan.css?v=akun-1">
+
+
+
+  <script type="module" crossorigin src="/assets/settings-DVwAvfOm.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/client-BUduEKwM.js">
+  <link rel="stylesheet" crossorigin href="/assets/settings-BoiLLzzK.css">
+</head>
+<body class="bg-[#f5f6ff]">
+<div class="flex flex-col md:flex-row min-h-screen">
+<aside id="btpSidebar" class="w-[260px] max-w-[85vw] bg-[#121214] text-white flex flex-col fixed inset-y-0 left-0 z-50 h-screen overflow-y-auto p-4 -translate-x-full md:translate-x-0 transition-transform duration-200">
+<div class="flex items-center gap-2.5 mb-7 px-2"><div id="brandLogo" class="w-10 h-10 bg-white rounded-lg flex items-center justify-center overflow-hidden shrink-0"><img src="/b-logo.png" width="40" height="40" alt="Logo B merah BosterTubePro" class="w-10 h-10 object-contain"></div><span id="brandName" class="font-bold text-[14px] truncate">BosterTubePro</span></div>
+<nav class="space-y-1">
+<p class="mt-4 mb-1 px-3 text-[10px] font-extrabold tracking-wider text-gray-500 uppercase">Utama</p>
+<a href="/" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>📊</span> Dashboard</a>
+<a href="/upload" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>🎥</span> Upload YouTube</a>
+<a href="/#bedahRisetAI" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>🧠</span> Bedah &amp; Riset AI</a>
+<p class="mt-4 mb-1 px-3 text-[10px] font-extrabold tracking-wider text-gray-500 uppercase">Bisnis</p>
+<a href="/billing" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>💳</span> Billing &amp; Beli Poin</a>
+<a href="/analytics" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>📈</span> Analytics</a>
+<a href="/kompetitor" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>👥</span> Kompetitor</a>
+<p class="mt-4 mb-1 px-3 text-[10px] font-extrabold tracking-wider text-gray-500 uppercase">Akun</p>
+<a href="/pengaturan?tab=akun" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>👤</span> Akun Saya</a>
+<a href="/pengaturan" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] bg-[#7C5CFF] font-bold"><span>⚙️</span> Pengaturan</a>
+<a href="/bantuan" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>💬</span> Bantuan</a>
+<button type="button" data-settings-logout class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-bold text-red-400 hover:text-red-300"><span>🚪</span> Logout</button>
+</nav>
+</aside>
+<main class="settings-main ml-0 md:ml-[260px] flex-1 min-w-0">
+<div class="flex justify-between items-center mb-3 gap-4">
+  <div class="min-w-0"><h1 class="text-[22px] font-extrabold">Pengaturan</h1><p class="text-[13px] text-gray-500">Kelola akun, channel, referal &amp; keamanan</p></div>
+  <div class="flex items-center gap-2 shrink-0"><span data-admin-badge hidden class="hidden bg-[#121214] text-yellow-300 border border-yellow-400/40 px-3 py-2.5 rounded-full text-[11px] font-extrabold tracking-wider shrink-0">👑 ADMIN</span></div>
+</div>
+
+<div class="tab-container bg-white border rounded-xl" role="tablist" aria-label="Pengaturan">
+<button id="tab-akun" class="set-tab tab-active rounded-lg" role="tab" aria-selected="true" aria-controls="panel-akun" data-settings-tab="akun">Akun Saya</button>
+<button id="tab-channel" class="set-tab rounded-lg" role="tab" aria-selected="false" aria-controls="panel-channel" tabindex="-1" data-settings-tab="channel">Kelola Channel</button>
+<button id="tab-referal" class="set-tab rounded-lg" role="tab" aria-selected="false" aria-controls="panel-referal" tabindex="-1" data-settings-tab="referal">Referal &amp; Keamanan</button>
+<button id="tab-google-api" hidden class="set-tab rounded-lg" role="tab" aria-selected="false" aria-controls="panel-google-api" tabindex="-1" data-settings-tab="google-api">API Key Google</button></div>
+
+<section id="panel-akun" role="tabpanel" aria-labelledby="tab-akun" class="settings-panel">
+<div class="account-profile"><div id="account-avatar" class="account-avatar" aria-hidden="true">G</div><div class="min-w-0"><p id="account-name" class="font-extrabold text-[16px] truncate">Akun Google</p><p class="text-[12px] text-gray-500">Email <span id="account-role" hidden class="role-badge">ADMIN</span></p><p id="account-email" class="font-semibold truncate">Login Google untuk melihat email</p></div></div>
+<div class="settings-row"><div><h2>Ganti Password</h2><p>Login BosterTubePro memakai akun Google. Password diganti langsung di pengaturan keamanan Google.</p></div><a class="settings-btn" href="https://myaccount.google.com/signinoptions/password" target="_blank" rel="noopener noreferrer">Ganti Password Google ↗</a></div>
+<div class="settings-row"><div><h2>Bahasa</h2><p>Bahasa default untuk hasil AI (judul, deskripsi, tag).</p></div><select id="account-language" aria-label="Bahasa" class="settings-select"><option value="id">🇮🇩 Indonesia</option><option value="en">🇺🇸 English</option></select></div>
+<div class="settings-row"><div><h2>Logout</h2><p>Keluar dari akun di perangkat ini.</p></div><button type="button" data-settings-logout class="settings-btn danger">🚪 Logout</button></div>
+</section>
+
+<section id="panel-channel" role="tabpanel" aria-labelledby="tab-channel" class="settings-panel" hidden>
+<h2>Channel Terhubung</h2><p>Saldo poin dipakai bersama oleh semua channel dalam akun ini.</p>
+<div id="settings-channels" role="status" class="channel-list"></div>
+<button id="add-channel" type="button" class="settings-btn primary">➕ Tambah Channel YouTube</button>
+<details class="mt-4"><summary class="font-bold cursor-pointer">Profil Sosmed Channel (untuk deskripsi SEO)</summary>
+<form id="channel-profile" class="my-3 space-y-3"><p>Link ini otomatis masuk ke deskripsi SEO Upload untuk channel aktif.</p><label class="block">WhatsApp Channel<input type="url" name="whatsapp" placeholder="https://wa.me/..." class="block w-full border rounded-lg p-3"></label><label class="block">Facebook<input type="url" name="facebook" placeholder="https://facebook.com/..." class="block w-full border rounded-lg p-3"></label><label class="block">Instagram<input type="url" name="instagram" placeholder="https://instagram.com/..." class="block w-full border rounded-lg p-3"></label><button type="submit" class="settings-btn primary">Simpan Profil Channel</button><p id="profile-status" role="status"></p></form></details>
+</section>
+
+<section id="panel-referal" role="tabpanel" aria-labelledby="tab-referal" class="settings-panel" hidden>
+<div id="saldo-poin" class="settings-row"><div id="saldo"><h2>Saldo</h2><p id="balance" class="balance-value">— Poin</p></div><a class="settings-btn" href="/billing">Riwayat &amp; Billing</a></div>
+<div class="referral-box" aria-labelledby="referral-title">
+<h2 id="referral-title">🎁 Link Referal</h2>
+<p>Kamu dapat 100 Poin per teman yang beli paket pertama. Teman kamu dapat 50 Poin bonus daftar.</p>
+<div class="flex gap-2 my-2"><input id="referral-link" readonly aria-label="Link referal" class="flex-1 min-w-0 border rounded-lg p-3" placeholder="Login untuk melihat tautan undangan"><button id="copy-referral" type="button" class="settings-btn primary" disabled>Salin Tautan</button></div>
+<p id="referral-status" role="status" class="text-sm"></p>
+<p id="referral-total" class="font-bold mt-2">Total Poin dari Referral: 0 Poin</p>
+</div>
+<div class="referral-box"><h2>🔐 Riwayat Login</h2><p>Sesi login yang masih aktif di akun ini. Logout menghapus sesi perangkat tersebut.</p><ul id="login-history" class="login-history" role="status"><li>Memuat riwayat login…</li></ul></div>
+<form id="manual-points-form" hidden class="manual-points-card mt-6 p-5 bg-blue-600 rounded-2xl shadow-lg">
+  <h3 class="text-white font-bold text-lg">🔧 ADMIN: Isi Poin Manual</h3>
+  <p class="text-blue-100 text-sm">Hanya untuk boosterviewsubsid@gmail.com</p>
+  <input id="manualEmail" type="email" required maxlength="254" aria-label="Email User" placeholder="Email User: contoh@gmail.com" class="w-full mt-3 p-3 rounded-lg border-0 outline-none" />
+  <input id="manualPoin" type="number" required min="1" max="2147483647" step="1" aria-label="Jumlah Poin" placeholder="Jumlah Poin: 50" class="w-full mt-2 p-3 rounded-lg border-0 outline-none" />
+  <input id="manualAlasan" maxlength="2000" aria-label="Alasan" placeholder="Alasan: QRIS BCA jam 14:32" class="w-full mt-2 p-3 rounded-lg border-0 outline-none" />
+  <button type="submit" class="mt-3 w-full bg-white text-blue-600 font-bold py-3 rounded-xl hover:bg-blue-50">ISI POIN SEKARANG</button>
+  <p id="manual-points-status" role="status" aria-live="polite"></p>
+</form>
+</section>
+<section id="panel-google-api" role="tabpanel" aria-labelledby="tab-google-api" hidden><div id="google-api-root"></div></section>
+<p id="message" role="status" class="text-sm text-red-600 mt-3"></p>
+<footer class="btp-legal" style="margin-top:28px;padding:16px 0 4px;border-top:1px solid rgba(128,128,160,.25);text-align:center;font-size:12px;color:#8b8ba3"><a href="/privacy" style="color:inherit">Kebijakan Privasi</a> | <a href="/terms" style="color:inherit">Syarat Layanan</a> | <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" style="color:inherit">YouTube ToS</a> | <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style="color:inherit">Google Privacy</a><p>Butuh bantuan? Hubungi Admin: <a href="mailto:boosterviewsubsid@gmail.com">boosterviewsubsid@gmail.com</a> · <a href="/bantuan">Bantuan</a></p></footer>
+</main>
+</div>
+<script src="/utils/settings-tabs.js?v=business-1"></script>
+<script src="/utils/settings-manual-points.js?v=2" defer></script>
+<script src="/utils/settings-account.js?v=1" defer></script>
+<script src="/utils/referrals.js?v=1" defer></script>
+<script src="/utils/channel-profile.js" defer></script>
+</body>
+</html>

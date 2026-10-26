@@ -1,0 +1,326 @@
+[build]
+  command = "pnpm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+  # Build UNLOCKED 2026-10-17 untuk publish fix kuota + rotasi API key.
+  # Untuk lock lagi (hemat credits), tambahkan kembali:
+  # ignore = "echo 'BUILD LOCKED - hemat credits, unlock manual' && exit 0"
+
+[build.environment]
+  NPM_FLAGS = "--prefer-offline"
+  # Redirect URI OAuth bukan rahasia (dikirim publik ke Google), jangan dianggap secret oleh scanner
+  SECRETS_SCAN_OMIT_KEYS = "GOOGLE_OAUTH_REDIRECT"
+
+[functions]
+  node_bundler = "esbuild"
+  # Timeout: function sinkron Netlify sudah berjalan hingga 60 detik (batas maksimum platform; tidak ada key
+  # timeout di file ini). Upload AI dibatasi ~52 detik agar tetap balas pesan ramah, dan transkrip audio
+  # berjalan sebagai background function (upload-transcribe-background, hingga 15 menit) + polling /api/transcribe.
+
+# Domain utama: boostertubepro.netlify.app -> bostertubepro.com (cookie login & redirect OAuth harus di host yang sama)
+[[redirects]]
+  from = "/api/admin/stats"
+  to = "/.netlify/functions/admin-stats"
+  status = 200
+
+[[redirects]]
+  from = "/audit-channel"
+  to = "/audit-channel.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/moderasi"
+  to = "/admin-moderasi.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/komunikasi"
+  to = "/admin-komunikasi.html"
+  status = 200
+
+[[redirects]]
+  from = "/bantuan"
+  to = "/bantuan.html"
+  status = 200
+
+[[redirects]]
+  from = "https://boostertubepro.netlify.app/*"
+  to = "https://bostertubepro.com/:splat"
+  status = 301
+  force = true
+
+# Login Google OAuth (Hubungkan Channel YouTube)
+[[redirects]]
+  from = "/api/auth/youtube"
+  to = "/.netlify/functions/youtube-auth"
+  status = 200
+
+# Authorized redirect URI Google OAuth (harus sama persis dengan Google Cloud Console)
+[[redirects]]
+  from = "/api/auth/callback"
+  to = "/.netlify/functions/youtube-callback"
+  status = 200
+
+[[redirects]]
+  from = "/api/auth/callback/google"
+  to = "/.netlify/functions/youtube-callback"
+  status = 200
+
+[[redirects]]
+  from = "/auth/callback"
+  to = "/.netlify/functions/youtube-callback"
+  status = 200
+
+[[redirects]]
+  from = "/api/auth/google/callback"
+  to = "/.netlify/functions/youtube-callback"
+  status = 200
+
+[[redirects]]
+  from = "/api/upload"
+  to = "/.netlify/functions/youtube-upload"
+  status = 200
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Halaman hukum (dibutuhkan verifikasi Google OAuth)
+[[redirects]]
+  from = "/privacy"
+  to = "/privacy.html"
+  status = 200
+
+[[redirects]]
+  from = "/privacy-policy"
+  to = "/privacy.html"
+  status = 200
+
+[[redirects]]
+  from = "/privacy-policy/"
+  to = "/privacy.html"
+  status = 200
+
+[[redirects]]
+  from = "/terms"
+  to = "/terms.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/verifikasi"
+  to = "/admin-verifikasi.html"
+  status = 200
+
+# Halaman aplikasi (light theme)
+[[redirects]]
+  from = "/login"
+  to = "/login.html"
+  status = 200
+
+[[redirects]]
+  from = "/analytics"
+  to = "/analytics.html"
+  status = 200
+
+[[redirects]]
+  from = "/audit"
+  to = "/audit.html"
+  status = 200
+
+[[redirects]]
+  from = "/pengaturan"
+  to = "/pengaturan.html"
+  status = 200
+
+[[redirects]]
+  from = "/promosi/iklan-tugas"
+  to = "/promosi.html"
+  status = 200
+
+[[redirects]]
+  from = "/promosi"
+  to = "/promosi.html"
+  status = 200
+
+[[redirects]]
+  from = "/fitur-promosi"
+  to = "/promosi.html"
+  status = 200
+
+[[redirects]]
+  from = "/kompetitor"
+  to = "/kompetitor.html"
+  status = 200
+
+[[redirects]]
+  from = "/tugas"
+  to = "/tugas.html"
+  status = 200
+
+[[redirects]]
+  from = "/upload"
+  to = "/upload.html"
+  status = 200
+
+[[redirects]]
+  from = "/tugas-iklan"
+  to = "/tugas.html"
+  status = 200
+
+[[redirects]]
+  from = "/pasang-iklan"
+  to = "/promosi.html"
+  status = 200
+
+# Harga & Billing pindah ke halaman /billing (ramah HP).
+[[redirects]]
+  from = "/settings/billing"
+  to = "/billing"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/settings/billing/"
+  to = "/billing"
+  status = 302
+  force = true
+
+# SPA fallback (paling akhir; file statis seperti /privacy.html, /sitemap.xml tetap dilayani apa adanya)
+# Dashboard member (auth guard di /utils/btp-auth-guard.js)
+[[redirects]]
+  from = "/dashboard"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Security headers (anti clickjacking, MIME sniffing, dll.) untuk semua halaman
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+# Revalidate QRIS images so replaced payment codes are not kept in browser caches.
+[[headers]]
+  for = "/qris-*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[dev]
+  targetPort = 8080
+
+# Refresh payment UI after a deploy; payment API responses already use no-store.
+[[headers]]
+  for = "/pengaturan*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/utils/paypal-points.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Revalidate task permissions and shared account status after deployments.
+[[headers]]
+  for = "/tugas*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/utils/task-ads.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/utils/credit.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Revalidate inbox documents and scripts after routing and permission changes.
+[[headers]]
+  for = "/admin/komunikasi*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/admin-komunikasi.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/utils/admin-support.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/utils/btp-auth.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Refresh billing documents and scripts after routing fixes.
+[[headers]]
+  for = "/settings/billing*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/billing.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/utils/billing.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Shell HP (header ☰, drawer, bottom nav) dan box Bedah & Riset AI: muat versi terbaru setelah deploy.
+[[headers]]
+  for = "/utils/btp-bottom-nav.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/utils/points-actions.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Auth guard halaman member: selalu versi terbaru setelah deploy.
+[[headers]]
+  for = "/utils/btp-auth-guard.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Always fetch the current global API handler and its loader after deployment.
+[[headers]]
+  for = "/utils/api-key-handler.js"
+  [headers.values]
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/utils/api-key-messages.js"
+  [headers.values]
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/utils/points-meter.js"
+  [headers.values]
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/settings-laporan.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/utils/cuan.*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

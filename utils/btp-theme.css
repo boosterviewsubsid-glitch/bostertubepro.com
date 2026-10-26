@@ -1,0 +1,14 @@
+/* Light theme bersama semua halaman (Dashboard, Analytics, Audit, Promosi, Kompetitor, Pengaturan).
+   Dimuat di <head> sebelum Tailwind CDN: warna dasar tampil sama sejak awal, dan kontrol bawaan browser
+   (input, select, scrollbar) tetap terang walau perangkat memakai dark mode. */
+:root { color-scheme: light; }
+html, body { background: #f5f6ff; color: #121214; font-family: 'Inter', sans-serif; }
+input, select, textarea { background-color: #fff; color: #121214; }
+aside { background: #121214; color: #fff; }
+
+/* Mobile (≤ 768px): font dasar lebih kecil, tanpa horizontal scroll */
+@media (max-width: 768px) {
+  html, body { overflow-x: hidden; }
+  body { font-size: 13px; }
+  .hide-mobile { display: none !important; }
+}

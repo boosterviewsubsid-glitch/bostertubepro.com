@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<link rel="stylesheet" href="/utils/btp-widget-visibility.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Pemakaian Gemini - BosterTubePro</title>
+<link rel="icon" type="image/png" href="/b-logo.png">
+<meta name="color-scheme" content="light">
+<link rel="stylesheet" href="/utils/btp-theme.css">
+<script src="/utils/btp-mobile.js" defer></script>
+<script src="/utils/btp-bottom-nav.js" defer></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="/utils/credit.js"></script>
+<script src="/utils/btp-auth.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>body{font-family:'Inter',sans-serif}</style>
+<link rel="stylesheet" href="/utils/btp-header.css">
+  <script type="module" crossorigin src="/assets/gemini-CLxvxLcX.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/client-BUduEKwM.js">
+  <link rel="stylesheet" crossorigin href="/assets/gemini-G5rDW-o-.css">
+</head>
+<body class="bg-[#f5f6ff]">
+<div class="flex flex-col md:flex-row min-h-screen">
+<aside class="w-[260px] bg-[#121214] text-white hidden md:flex flex-col fixed inset-y-0 left-0 z-50 h-screen overflow-y-auto p-4">
+<div class="flex items-center gap-2.5 mb-7 px-2"><div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center overflow-hidden shrink-0"><img src="/b-logo.png" width="40" height="40" alt="Logo B merah BosterTubePro" class="w-10 h-10 object-contain"></div><span class="font-bold text-[14px] truncate">BosterTubePro</span></div>
+<nav class="space-y-1">
+<a href="/" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>📊</span> Dashboard</a>
+<a href="/analytics" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>📈</span> Analytics</a>
+<a href="/audit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>📄</span> Audit Video</a>
+<a href="/promosi" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>🚀</span> Promosi</a>
+<a href="/tugas" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>💼</span> Tugas Iklan</a>
+<a href="/kompetitor" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>👥</span> Kompetitor</a>
+<a href="/billing" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>💳</span> Billing</a>
+<a href="/pengaturan" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>⚙️</span> Pengaturan</a>
+<a href="/pemakaian-gemini" aria-current="page" class="w-full flex items-center gap-3 bg-[#7C5CFF] px-3 py-2.5 rounded-xl text-[13px] font-bold"><span>✨</span> Pemakaian Gemini</a>
+</nav>
+</aside>
+<main class="ml-0 md:ml-[260px] flex-1 min-w-0 p-4 md:p-7">
+<div class="flex justify-between items-center mb-5 gap-4">
+  <div class="min-w-0"><h1 class="text-[22px] font-extrabold">✨ Pemakaian Gemini</h1><p class="text-[13px] text-gray-500">Khusus Admin</p></div>
+  <span data-admin-badge hidden class="hidden bg-[#121214] text-yellow-300 border border-yellow-400/40 px-3 py-2.5 rounded-full text-[11px] font-extrabold tracking-wider shrink-0">👑 ADMIN</span>
+</div>
+<p id="geminiNoAccess" hidden class="bg-white border rounded-2xl p-5 text-[13px] font-semibold text-gray-600">Halaman ini khusus Admin. <a href="/" class="text-[#7C5CFF] underline">Kembali ke Dashboard</a></p>
+<section id="admin-key-usage" hidden class="bg-white border rounded-2xl p-5 mb-5" aria-live="polite"></section>
+<script type="module" src="/utils/admin-keys-usage.js"></script>
+<div id="gemini-balance-root"></div>
+</main>
+</div>
+<script>
+// Khusus ADMIN pemilik; server (/.netlify/functions/gemini-balance) tetap menolak pengguna lain.
+(() => {
+  const admin = !!localStorage.getItem('btp_session') && (localStorage.getItem('btp_user_email') || '').trim().toLowerCase() === 'boosterviewsubsid@gmail.com';
+  document.getElementById('geminiNoAccess').hidden = admin;
+  if (!admin) document.getElementById('gemini-balance-root').remove();
+})();
+</script>
+</body>
+</html>

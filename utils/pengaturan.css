@@ -1,0 +1,136 @@
+/* Compact V18 settings layout; payment dialogs retain their existing dimensions. */
+.settings-main { padding: 16px; }
+.tab-container { display: flex; align-items: center; width: 350px; max-width: 100%; height: 28px; padding: 2px; margin-bottom: 12px; box-sizing: border-box; }
+.tab-container .set-tab { height: 24px; width: auto; padding: 0 12px; font-size: 11px; line-height: 24px; white-space: nowrap; }
+.tab-container .tab-active { background: #121214; color: #fff; }
+.settings-sections > * + * { margin-top: 12px; }
+.balance-card { min-height: 70px; padding: 8px 12px; }
+#qbNote { font-size: 10px; line-height: 12px; }
+.package-card { height: 180px; padding: 12px; display: flex; flex-direction: column; align-items: stretch; gap: 4px; min-width: 0; }
+.package-title { font-size: 12px; font-weight: 700; line-height: 16px; }
+.package-points { font-size: 16px; font-weight: 800; line-height: 20px; }
+.package-price { font-size: 13px; font-weight: 700; line-height: 18px; }
+.package-description { font-size: 9px; line-height: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.package-action { display: flex; align-items: center; justify-content: center; height: 24px; flex-shrink: 0; margin-top: auto; padding: 0 6px; font-size: 10px; font-weight: 700; }
+.package-note { font-size: 8px; line-height: 10px; }
+.package-badge { position: absolute; top: -8px; left: 50%; transform: translateX(-50%); max-width: calc(100% - 8px); padding: 1px 6px; white-space: nowrap; font-size: 8px; font-weight: 800; line-height: 12px; }
+.settings-main .btp-legal { margin-top: 16px !important; padding-top: 10px !important; font-size: 10px !important; }
+@media (max-width: 359px) { .tab-container .set-tab { padding: 0 8px; font-size: 10px; } }
+/* Shared geometry for both payment methods. */
+#qbPaket, .payment-grid { display:grid !important; grid-template-columns:repeat(4,minmax(0,1fr)) !important; gap:12px !important; margin-top:18px !important; }
+.package-card, .payment-card { box-sizing:border-box; position:relative; height:264px; min-width:0; padding:22px 14px 14px !important; border:1px solid #e5e7eb !important; border-radius:8px !important; background:#fff !important; box-shadow:0 1px 3px #1822340d !important; display:flex; flex-direction:column; gap:8px; }
+.package-card:hover, .payment-card:hover { border-color:#aeb8c8 !important; }
+.package-title {font-size:14px;line-height:20px}
+.package-points {font-size:22px;line-height:28px}
+.package-price {font-size:18px;line-height:24px;color:#7c3aed}
+.package-description {font-size:11px;line-height:16px}
+.package-action, .payment-card button {height:44px !important; min-height:44px; box-sizing:border-box; border:0; border-radius:6px !important; font-size:12px; line-height:16px; padding:0 8px !important; margin-top:auto !important; }
+.package-action {background:#7C3AED !important}
+.payment-card button {background:#0070BA !important}
+.package-badge, .payment-badge {position:absolute;top:-10px;left:50%;transform:translateX(-50%);white-space:nowrap;max-width:calc(100% - 8px);padding:3px 8px;border-radius:20px;background:#7c3aed;color:#fff;font-size:9px;line-height:14px;font-weight:700}
+.payment-badge {background:#0070ba}
+.paypal-section {padding:0 !important;border:0 !important;border-radius:0 !important;background:transparent !important}
+.payment-card h3 {font-size:14px;line-height:20px}
+.payment-card strong {font-size:22px !important}
+.mutation-card {background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 1px 3px #1822340d;color:#23354d;overflow:hidden}
+.mutation-heading {padding:20px 20px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.mutation-heading h2 {font-size:18px;font-weight:800;margin:0}
+.mutation-heading p {font-size:12px;color:#64748b;margin:6px 0 0}
+.mutation-tools {padding:8px 20px 18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.mutation-filters {display:flex;gap:5px;flex-wrap:wrap}
+.mutation-card button {cursor:pointer;font-size:12px;border:1px solid #e5e7eb;border-radius:6px;padding:8px 10px;background:#fff}
+.mutation-filters button[aria-pressed=true] {background:#23354d;color:white;border-color:#23354d}
+.mutation-card button:disabled {opacity:.5;cursor:wait}
+.mutation-card :focus-visible {outline:2px solid #0070ba;outline-offset:3px}
+.mutation-card input {border:1px solid #e5e7eb;border-radius:6px;padding:8px 12px;font-size:12px;min-width:220px}
+.mutation-scroll {overflow-x:auto}
+.mutation-card table {width:100%;border-collapse:collapse;font-size:12px;text-align:left}
+.mutation-card th {background:#f8fafc;color:#64748b;font-size:11px;font-weight:700}
+.mutation-card td,.mutation-card th {padding:14px 16px;border-top:1px solid #e5e7eb;white-space:nowrap}
+.mutation-card td small {display:block;color:#64748b;margin-top:4px}
+.mutation-actions {display:flex;gap:6px;align-items:center}
+.mutation-card .mutation-delete {color:#b42318;display:inline-flex;align-items:center;gap:5px}
+.mutation-status {display:inline-flex;border-radius:20px;padding:5px 9px;font-size:11px;font-weight:700}
+.mutation-status.success {background:#dcfce7;color:#166534}.mutation-status.failed {background:#fee2e2;color:#991b1b}.mutation-status.unverified {background:#fef3c7;color:#92400e}.mutation-status.pending {background:#fef3c7;color:#92400e}
+.mutation-message {padding:12px 20px;font-size:12px;color:#64748b}
+@media(max-width:767px){#qbPaket,.payment-grid {grid-template-columns:repeat(2,minmax(0,1fr)) !important}.mutation-tools input {width:100%}.package-card,.payment-card {height:280px}}
+@media(max-width:359px){#qbPaket,.payment-grid {grid-template-columns:minmax(0,1fr) !important}}
+
+#daftar-tugas-saya{margin-top:24px;padding:24px;border:1px solid #e5e7eb;border-radius:12px;background:white;box-shadow:0 2px 6px #29273505}#daftar-tugas-saya h2{font-size:20px;font-weight:700;margin-bottom:12px}#daftar-tugas-saya>p{font-size:13px;margin-bottom:18px}#daftar-tugas-saya a{color:#6441be;text-decoration:underline;text-underline-offset:3px}#daftar-tugas-saya .task-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}#daftar-tugas-saya .tugas-card{display:flex;flex-direction:column;gap:12px;border:1px solid #e5e7eb;border-radius:10px;padding:18px;overflow-wrap:anywhere}#daftar-tugas-saya h3{font-weight:700}#daftar-tugas-saya .tugas-card p,#daftar-tugas-saya .tugas-card a{font-size:13px;line-height:1.7}#daftar-tugas-saya button{padding:8px 12px;border:1px solid #e5e7eb;border-radius:8px;color:#9f253d}#daftar-tugas-saya a:focus-visible,#daftar-tugas-saya button:focus-visible{outline:2px solid #6d28d9;outline-offset:3px}@media(max-width:1100px){#daftar-tugas-saya .task-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){#daftar-tugas-saya .task-grid{grid-template-columns:1fr}}
+/* Restored QRIS settings: packages and mutation history share one panel. */
+#panel-saldo[hidden],#panel-channel[hidden]{display:none}
+#panel-saldo .package-card{background:#faf7ff !important;border-color:#ddd0fa !important;height:280px}
+.package-features{font-size:11px;line-height:1.7;margin:0;padding:0;list-style:none}
+.package-action{color:white;cursor:pointer}
+.extra-points{margin-top:14px;padding:10px 14px;border:1px solid #ddd0fa;border-radius:8px;color:#6d28d9;background:#fff;font-size:12px;font-weight:700;cursor:pointer}
+.points-details,#panel-channel{padding:18px;border:1px solid #e5e7eb;border-radius:8px;background:white;font-size:12px;line-height:1.8}
+.points-details summary{font-weight:700;cursor:pointer}
+#panel-channel h2{font-size:18px;font-weight:700}
+#panel-channel button{padding:8px 12px;margin:8px 8px 8px 0;border-radius:8px;background:#7c3aed;color:white;cursor:pointer}
+#settings-channels article{padding:12px 0;border-bottom:1px solid #e5e7eb}
+#topup{padding:24px;border-radius:16px;width:min(94vw,440px);border:1px solid #ddd0fa}
+#topup::backdrop{background:#121214aa}#topup img{margin:16px auto;max-width:100%;height:auto}#topup button{padding:10px;border-radius:8px;background:#7c3aed;color:white}#topup .payment-note{font-size:12px;margin:12px 0}
+
+#tab-google-api[hidden],#panel-google-api[hidden]{display:none!important}
+paypal-points [data-field]{height:48px;border:1px solid #cbd5df;border-radius:8px;margin:6px 0 16px;background:#fff}
+paypal-points [data-field]:focus-within{outline:2px solid #0070ba;outline-offset:2px}
+paypal-points [data-card-form] label{font-size:13px;font-weight:600;color:#344054}
+paypal-points [data-pay]:disabled{opacity:.55;cursor:wait}
+paypal-points [data-checkout][hidden],paypal-points [data-card-form][hidden]{display:none!important}
+
+.manual-points-card[hidden] { display:none; }
+.manual-points-card { border:2px solid #fde047; padding:20px; background:#2563eb; border-radius:16px; box-shadow:0 8px 20px #1e40af20; color:#fff; }
+.manual-points-card h3 { font-size:18px; font-weight:700; }
+.manual-points-card > p { color:#dbeafe; font-size:14px; }
+.manual-points-card input { display:block; box-sizing:border-box; width:100%; margin-top:8px; padding:12px; border:0; border-radius:8px; background:#fff; color:#182234; }
+.manual-points-card input:focus-visible { outline:3px solid #bfdbfe; outline-offset:2px; }
+.manual-points-card button { width:100%; margin-top:12px; padding:12px; border-radius:12px; background:#fff; color:#2563eb; font-weight:700; }
+.manual-points-card button:hover { background:#eff6ff; }
+.manual-points-card button:disabled { opacity:.65; cursor:wait; }
+#manual-points-status:not(:empty) { margin-top:12px; }
+
+/* Let the two payment actions and longer final-price badges fit on all screens. */
+#panel-saldo .package-card,.payment-card{height:auto;min-height:320px}
+#panel-saldo .package-price{font-size:26px;line-height:1.2;letter-spacing:-.03em}
+[data-secondary-price]{font-size:12px;color:#64748b}
+#panel-saldo .package-action{min-height:36px;height:auto;padding:8px 6px}
+#panel-saldo .package-action + .package-action{margin-top:0;background:#0070ba}
+#pricing-language{margin:8px;padding:8px 10px;border:1px solid #ddd0fa;border-radius:8px;background:white}
+.package-badge{white-space:normal;text-align:center;line-height:14px;width:max-content}
+
+/* Pengaturan tanpa paket harga: Akun Saya, Kelola Channel, Referal & Keamanan. */
+.tab-container { width: auto; height: auto; min-height: 36px; overflow-x: auto; }
+.tab-container .set-tab { height: 30px; line-height: 30px; padding: 0 14px; font-size: 12px; font-weight: 700; }
+.tab-container .set-tab[hidden] { display: none; }
+#panel-akun[hidden],#panel-referal[hidden],#panel-pembelian[hidden] { display: none; }
+.settings-panel { padding: 18px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; font-size: 13px; line-height: 1.6; }
+.settings-panel h2 { font-size: 15px; font-weight: 800; }
+.settings-panel p { color: #52525b; }
+.account-profile { display: flex; align-items: center; gap: 14px; padding-bottom: 16px; border-bottom: 1px solid #eceef5; }
+.account-avatar { display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; flex-shrink: 0; overflow: hidden; border-radius: 50%; background: linear-gradient(135deg,#7C5CFF,#FF6BA8); color: #fff; font-size: 26px; font-weight: 800; }
+.account-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.role-badge { margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: #121214; color: #fde047; font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+.role-badge[hidden] { display: none; }
+.settings-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 1px solid #f1f1f5; }
+.settings-row:last-child { border-bottom: 0; }
+.settings-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0 14px; border: 1px solid #ddd0fa; border-radius: 10px; background: #fff; color: #6d28d9; font-size: 12px; font-weight: 700; white-space: nowrap; cursor: pointer; text-decoration: none; }
+.settings-btn.primary { border-color: #7c3aed; background: #7c3aed; color: #fff; }
+.settings-btn.danger { border-color: #fecaca; background: #fee2e2; color: #b91c1c; }
+.settings-btn:disabled { opacity: .55; cursor: wait; }
+.settings-btn[hidden],[data-settings-logout][hidden] { display: none !important; }
+.settings-select { min-height: 40px; padding: 0 10px; border: 1px solid #ddd0fa; border-radius: 10px; background: #fff; font-weight: 600; }
+.balance-value { margin-top: 2px; color: #121214 !important; font-size: 22px; font-weight: 800; }
+.channel-list { margin: 12px 0; }
+.channel-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #e5e7eb; }
+.channel-thumb { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%; background: #fee2e2; color: #dc2626; object-fit: cover; }
+.channel-info { flex: 1; min-width: 0; }
+.channel-info p { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.channel-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+#panel-channel .channel-actions button, #panel-channel .settings-btn { margin: 0; padding: 0 12px; }
+#panel-channel .settings-btn.danger { background: #fee2e2; color: #b91c1c; }
+#panel-channel .settings-btn:not(.primary):not(.danger) { background: #fff; color: #6d28d9; }
+.referral-box { margin-top: 14px; padding: 14px; border: 1px solid #eceef5; border-radius: 10px; }
+.login-history { margin: 8px 0 0; padding: 0; list-style: none; }
+.login-history li { padding: 8px 0; border-bottom: 1px solid #f1f1f5; font-weight: 600; }
+.login-history li:last-child { border-bottom: 0; }
+@media (max-width: 520px) { .settings-row { flex-direction: column; align-items: stretch; } .channel-row { flex-wrap: wrap; } .channel-actions { width: 100%; justify-content: flex-start; } }

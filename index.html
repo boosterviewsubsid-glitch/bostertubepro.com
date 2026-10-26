@@ -1,0 +1,2104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<script src="/utils/btp-auth-guard.js"></script>
+<script src="/utils/points-meter.js"></script>
+<link rel="stylesheet" href="/utils/btp-widget-visibility.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BosterTubePro</title>
+<meta name="description" content="BosterTubePro - Platform audit channel, review thumbnail dan judul, serta belajar strategi konten YouTube">
+<link rel="icon" type="image/png" href="/b-logo.png">
+<meta name="color-scheme" content="light">
+<style>/* Light theme bersama semua halaman (Dashboard, Analytics, Audit, Promosi, Kompetitor, Pengaturan).
+   Dimuat di <head> sebelum Tailwind CDN: warna dasar tampil sama sejak awal, dan kontrol bawaan browser
+   (input, select, scrollbar) tetap terang walau perangkat memakai dark mode. */
+:root { color-scheme: light; }
+html, body { background: #f5f6ff; color: #121214; font-family: 'Inter', sans-serif; }
+input, select, textarea { background-color: #fff; color: #121214; }
+aside { background: #121214; color: #fff; }
+
+/* Mobile (≤ 768px): font dasar lebih kecil, tanpa horizontal scroll */
+@media (max-width: 768px) {
+  html, body { overflow-x: hidden; }
+  body { font-size: 13px; }
+  .hide-mobile { display: none !important; }
+}
+</style>
+<!-- Utility styles are embedded below; no CDN is needed. -->
+<script src="/utils/credit.js"></script>
+<script src="/utils/btp-auth.js"></script>
+
+
+<style>body{font-family:'Inter',sans-serif}</style>
+<style>
+*, ::before, ::after {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x:  ;
+  --tw-pan-y:  ;
+  --tw-pinch-zoom:  ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
+  --tw-ordinal:  ;
+  --tw-slashed-zero:  ;
+  --tw-numeric-figure:  ;
+  --tw-numeric-spacing:  ;
+  --tw-numeric-fraction:  ;
+  --tw-ring-inset:  ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur:  ;
+  --tw-brightness:  ;
+  --tw-contrast:  ;
+  --tw-grayscale:  ;
+  --tw-hue-rotate:  ;
+  --tw-invert:  ;
+  --tw-saturate:  ;
+  --tw-sepia:  ;
+  --tw-drop-shadow:  ;
+  --tw-backdrop-blur:  ;
+  --tw-backdrop-brightness:  ;
+  --tw-backdrop-contrast:  ;
+  --tw-backdrop-grayscale:  ;
+  --tw-backdrop-hue-rotate:  ;
+  --tw-backdrop-invert:  ;
+  --tw-backdrop-opacity:  ;
+  --tw-backdrop-saturate:  ;
+  --tw-backdrop-sepia:  ;
+  --tw-contain-size:  ;
+  --tw-contain-layout:  ;
+  --tw-contain-paint:  ;
+  --tw-contain-style:  ;
+}
+
+::backdrop {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x:  ;
+  --tw-pan-y:  ;
+  --tw-pinch-zoom:  ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
+  --tw-ordinal:  ;
+  --tw-slashed-zero:  ;
+  --tw-numeric-figure:  ;
+  --tw-numeric-spacing:  ;
+  --tw-numeric-fraction:  ;
+  --tw-ring-inset:  ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur:  ;
+  --tw-brightness:  ;
+  --tw-contrast:  ;
+  --tw-grayscale:  ;
+  --tw-hue-rotate:  ;
+  --tw-invert:  ;
+  --tw-saturate:  ;
+  --tw-sepia:  ;
+  --tw-drop-shadow:  ;
+  --tw-backdrop-blur:  ;
+  --tw-backdrop-brightness:  ;
+  --tw-backdrop-contrast:  ;
+  --tw-backdrop-grayscale:  ;
+  --tw-backdrop-hue-rotate:  ;
+  --tw-backdrop-invert:  ;
+  --tw-backdrop-opacity:  ;
+  --tw-backdrop-saturate:  ;
+  --tw-backdrop-sepia:  ;
+  --tw-contain-size:  ;
+  --tw-contain-layout:  ;
+  --tw-contain-paint:  ;
+  --tw-contain-style:  ;
+}/*
+! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com
+*//*
+1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
+2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
+*/
+
+*,
+::before,
+::after {
+  box-sizing: border-box; /* 1 */
+  border-width: 0; /* 2 */
+  border-style: solid; /* 2 */
+  border-color: #e5e7eb; /* 2 */
+}
+
+::before,
+::after {
+  --tw-content: '';
+}
+
+/*
+1. Use a consistent sensible line-height in all browsers.
+2. Prevent adjustments of font size after orientation changes in iOS.
+3. Use a more readable tab size.
+4. Use the user's configured `sans` font-family by default.
+5. Use the user's configured `sans` font-feature-settings by default.
+6. Use the user's configured `sans` font-variation-settings by default.
+7. Disable tap highlights on iOS
+*/
+
+html,
+:host {
+  line-height: 1.5; /* 1 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+  -moz-tab-size: 4; /* 3 */
+  -o-tab-size: 4;
+     tab-size: 4; /* 3 */
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 4 */
+  font-feature-settings: normal; /* 5 */
+  font-variation-settings: normal; /* 6 */
+  -webkit-tap-highlight-color: transparent; /* 7 */
+}
+
+/*
+1. Remove the margin in all browsers.
+2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.
+*/
+
+body {
+  margin: 0; /* 1 */
+  line-height: inherit; /* 2 */
+}
+
+/*
+1. Add the correct height in Firefox.
+2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
+3. Ensure horizontal rules are visible by default.
+*/
+
+hr {
+  height: 0; /* 1 */
+  color: inherit; /* 2 */
+  border-top-width: 1px; /* 3 */
+}
+
+/*
+Add the correct text decoration in Chrome, Edge, and Safari.
+*/
+
+abbr:where([title]) {
+  -webkit-text-decoration: underline dotted;
+          text-decoration: underline dotted;
+}
+
+/*
+Remove the default font size and weight for headings.
+*/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/*
+Reset links to optimize for opt-in styling instead of opt-out.
+*/
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+/*
+Add the correct font weight in Edge and Safari.
+*/
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+/*
+1. Use the user's configured `mono` font-family by default.
+2. Use the user's configured `mono` font-feature-settings by default.
+3. Use the user's configured `mono` font-variation-settings by default.
+4. Correct the odd `em` font sizing in all browsers.
+*/
+
+code,
+kbd,
+samp,
+pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; /* 1 */
+  font-feature-settings: normal; /* 2 */
+  font-variation-settings: normal; /* 3 */
+  font-size: 1em; /* 4 */
+}
+
+/*
+Add the correct font size in all browsers.
+*/
+
+small {
+  font-size: 80%;
+}
+
+/*
+Prevent `sub` and `sup` elements from affecting the line height in all browsers.
+*/
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+/*
+1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)
+2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)
+3. Remove gaps between table borders by default.
+*/
+
+table {
+  text-indent: 0; /* 1 */
+  border-color: inherit; /* 2 */
+  border-collapse: collapse; /* 3 */
+}
+
+/*
+1. Change the font styles in all browsers.
+2. Remove the margin in Firefox and Safari.
+3. Remove default padding in all browsers.
+*/
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit; /* 1 */
+  font-feature-settings: inherit; /* 1 */
+  font-variation-settings: inherit; /* 1 */
+  font-size: 100%; /* 1 */
+  font-weight: inherit; /* 1 */
+  line-height: inherit; /* 1 */
+  letter-spacing: inherit; /* 1 */
+  color: inherit; /* 1 */
+  margin: 0; /* 2 */
+  padding: 0; /* 3 */
+}
+
+/*
+Remove the inheritance of text transform in Edge and Firefox.
+*/
+
+button,
+select {
+  text-transform: none;
+}
+
+/*
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Remove default button styles.
+*/
+
+button,
+input:where([type='button']),
+input:where([type='reset']),
+input:where([type='submit']) {
+  -webkit-appearance: button; /* 1 */
+  background-color: transparent; /* 2 */
+  background-image: none; /* 2 */
+}
+
+/*
+Use the modern Firefox focus style for all focusable elements.
+*/
+
+:-moz-focusring {
+  outline: auto;
+}
+
+/*
+Remove the additional `:invalid` styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737)
+*/
+
+:-moz-ui-invalid {
+  box-shadow: none;
+}
+
+/*
+Add the correct vertical alignment in Chrome and Firefox.
+*/
+
+progress {
+  vertical-align: baseline;
+}
+
+/*
+Correct the cursor style of increment and decrement buttons in Safari.
+*/
+
+::-webkit-inner-spin-button,
+::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/*
+1. Correct the odd appearance in Chrome and Safari.
+2. Correct the outline style in Safari.
+*/
+
+[type='search'] {
+  -webkit-appearance: textfield; /* 1 */
+  outline-offset: -2px; /* 2 */
+}
+
+/*
+Remove the inner padding in Chrome and Safari on macOS.
+*/
+
+::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/*
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Change font properties to `inherit` in Safari.
+*/
+
+::-webkit-file-upload-button {
+  -webkit-appearance: button; /* 1 */
+  font: inherit; /* 2 */
+}
+
+/*
+Add the correct display in Chrome and Safari.
+*/
+
+summary {
+  display: list-item;
+}
+
+/*
+Removes the default spacing and border for appropriate elements.
+*/
+
+blockquote,
+dl,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+figure,
+p,
+pre {
+  margin: 0;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+legend {
+  padding: 0;
+}
+
+ol,
+ul,
+menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+Reset default styling for dialogs.
+*/
+dialog {
+  padding: 0;
+}
+
+/*
+Prevent resizing textareas horizontally by default.
+*/
+
+textarea {
+  resize: vertical;
+}
+
+/*
+1. Reset the default placeholder opacity in Firefox. (https://github.com/tailwindlabs/tailwindcss/issues/3300)
+2. Set the default placeholder color to the user's configured gray 400 color.
+*/
+
+input::-moz-placeholder, textarea::-moz-placeholder {
+  opacity: 1; /* 1 */
+  color: #9ca3af; /* 2 */
+}
+
+input::placeholder,
+textarea::placeholder {
+  opacity: 1; /* 1 */
+  color: #9ca3af; /* 2 */
+}
+
+/*
+Set the default cursor for buttons.
+*/
+
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+/*
+Make sure disabled buttons don't get the pointer cursor.
+*/
+:disabled {
+  cursor: default;
+}
+
+/*
+1. Make replaced elements `display: block` by default. (https://github.com/mozdevs/cssremedy/issues/14)
+2. Add `vertical-align: middle` to align replaced elements more sensibly by default. (https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210)
+   This can trigger a poorly considered lint error in some tools but is included by design.
+*/
+
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block; /* 1 */
+  vertical-align: middle; /* 2 */
+}
+
+/*
+Constrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)
+*/
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Make elements with the HTML hidden attribute stay hidden by default */
+[hidden]:where(:not([hidden="until-found"])) {
+  display: none;
+}
+.container {
+  width: 100%;
+}
+@media (min-width: 640px) {
+
+  .container {
+    max-width: 640px;
+  }
+}
+@media (min-width: 768px) {
+
+  .container {
+    max-width: 768px;
+  }
+}
+@media (min-width: 1024px) {
+
+  .container {
+    max-width: 1024px;
+  }
+}
+@media (min-width: 1280px) {
+
+  .container {
+    max-width: 1280px;
+  }
+}
+@media (min-width: 1536px) {
+
+  .container {
+    max-width: 1536px;
+  }
+}
+.fixed {
+  position: fixed;
+}
+.absolute {
+  position: absolute;
+}
+.relative {
+  position: relative;
+}
+.inset-0 {
+  inset: 0px;
+}
+.bottom-1 {
+  bottom: 0.25rem;
+}
+.bottom-2 {
+  bottom: 0.5rem;
+}
+.left-1 {
+  left: 0.25rem;
+}
+.left-2 {
+  left: 0.5rem;
+}
+.right-1 {
+  right: 0.25rem;
+}
+.top-1 {
+  top: 0.25rem;
+}
+.z-\[100\] {
+  z-index: 100;
+}
+.col-span-3 {
+  grid-column: span 3 / span 3;
+}
+.col-span-4 {
+  grid-column: span 4 / span 4;
+}
+.col-span-8 {
+  grid-column: span 8 / span 8;
+}
+.m-auto {
+  margin: auto;
+}
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+.mb-3 {
+  margin-bottom: 0.75rem;
+}
+.mb-4 {
+  margin-bottom: 1rem;
+}
+.mb-5 {
+  margin-bottom: 1.25rem;
+}
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+.mb-7 {
+  margin-bottom: 1.75rem;
+}
+.ml-1 {
+  margin-left: 0.25rem;
+}
+.ml-\[260px\] {
+  margin-left: 260px;
+}
+.mr-1 {
+  margin-right: 0.25rem;
+}
+.mt-1 {
+  margin-top: 0.25rem;
+}
+.mt-2 {
+  margin-top: 0.5rem;
+}
+.mt-3 {
+  margin-top: 0.75rem;
+}
+.mt-5 {
+  margin-top: 1.25rem;
+}
+.mt-auto {
+  margin-top: auto;
+}
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.block {
+  display: block;
+}
+.inline-block {
+  display: inline-block;
+}
+.flex {
+  display: flex;
+}
+.grid {
+  display: grid;
+}
+.hidden {
+  display: none;
+}
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+.h-12 {
+  height: 3rem;
+}
+.h-2 {
+  height: 0.5rem;
+}
+.h-8 {
+  height: 2rem;
+}
+.h-9 {
+  height: 2.25rem;
+}
+.h-\[100px\] {
+  height: 100px;
+}
+.h-\[200px\] {
+  height: 200px;
+}
+.h-\[52px\] {
+  height: 52px;
+}
+.h-\[68px\] {
+  height: 68px;
+}
+.h-full {
+  height: 100%;
+}
+.h-screen {
+  height: 100vh;
+}
+.max-h-\[95vh\] {
+  max-height: 95vh;
+}
+.w-12 {
+  width: 3rem;
+}
+.w-16 {
+  width: 4rem;
+}
+.w-8 {
+  width: 2rem;
+}
+.w-\[120px\] {
+  width: 120px;
+}
+.w-\[220px\] {
+  width: 220px;
+}
+.w-\[260px\] {
+  width: 260px;
+}
+.w-full {
+  width: 100%;
+}
+.min-w-0 {
+  min-width: 0px;
+}
+.max-w-\[640px\] {
+  max-width: 640px;
+}
+.flex-1 {
+  flex: 1 1 0%;
+}
+.shrink-0 {
+  flex-shrink: 0;
+}
+.transform {
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.grid-cols-12 {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.grid-cols-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.flex-col {
+  flex-direction: column;
+}
+.items-start {
+  align-items: flex-start;
+}
+.items-end {
+  align-items: flex-end;
+}
+.items-center {
+  align-items: center;
+}
+.justify-end {
+  justify-content: flex-end;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.gap-1 {
+  gap: 0.25rem;
+}
+.gap-2 {
+  gap: 0.5rem;
+}
+.gap-2\.5 {
+  gap: 0.625rem;
+}
+.gap-3 {
+  gap: 0.75rem;
+}
+.gap-4 {
+  gap: 1rem;
+}
+.space-y-0\.5 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.125rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.125rem * var(--tw-space-y-reverse));
+}
+.space-y-1 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.25rem * var(--tw-space-y-reverse));
+}
+.space-y-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+}
+.space-y-3 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
+}
+.space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+}
+.overflow-hidden {
+  overflow: hidden;
+}
+.overflow-y-auto {
+  overflow-y: auto;
+}
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+.whitespace-pre-line {
+  white-space: pre-line;
+}
+.break-words {
+  overflow-wrap: break-word;
+}
+.break-all {
+  word-break: break-all;
+}
+.rounded {
+  border-radius: 0.25rem;
+}
+.rounded-2xl {
+  border-radius: 1rem;
+}
+.rounded-\[10px\] {
+  border-radius: 10px;
+}
+.rounded-\[20px\] {
+  border-radius: 20px;
+}
+.rounded-full {
+  border-radius: 9999px;
+}
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+.rounded-xl {
+  border-radius: 0.75rem;
+}
+.rounded-t-lg {
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+.border {
+  border-width: 1px;
+}
+.border-2 {
+  border-width: 2px;
+}
+.border-b {
+  border-bottom-width: 1px;
+}
+.border-dashed {
+  border-style: dashed;
+}
+.border-\[\#2A2A33\] {
+  --tw-border-opacity: 1;
+  border-color: rgb(42 42 51 / var(--tw-border-opacity, 1));
+}
+.border-\[\#FDE68A\] {
+  --tw-border-opacity: 1;
+  border-color: rgb(253 230 138 / var(--tw-border-opacity, 1));
+}
+.border-amber-300 {
+  --tw-border-opacity: 1;
+  border-color: rgb(252 211 77 / var(--tw-border-opacity, 1));
+}
+.border-gray-300 {
+  --tw-border-opacity: 1;
+  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
+}
+.border-gray-600 {
+  --tw-border-opacity: 1;
+  border-color: rgb(75 85 99 / var(--tw-border-opacity, 1));
+}
+.border-gray-700 {
+  --tw-border-opacity: 1;
+  border-color: rgb(55 65 81 / var(--tw-border-opacity, 1));
+}
+.border-green-300 {
+  --tw-border-opacity: 1;
+  border-color: rgb(134 239 172 / var(--tw-border-opacity, 1));
+}
+.border-purple-300 {
+  --tw-border-opacity: 1;
+  border-color: rgb(216 180 254 / var(--tw-border-opacity, 1));
+}
+.border-purple-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(168 85 247 / var(--tw-border-opacity, 1));
+}
+.border-red-200 {
+  --tw-border-opacity: 1;
+  border-color: rgb(254 202 202 / var(--tw-border-opacity, 1));
+}
+.border-yellow-300 {
+  --tw-border-opacity: 1;
+  border-color: rgb(253 224 71 / var(--tw-border-opacity, 1));
+}
+.border-yellow-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(250 204 21 / var(--tw-border-opacity, 1));
+}
+.border-yellow-400\/30 {
+  border-color: rgb(250 204 21 / 0.3);
+}
+.border-yellow-400\/40 {
+  border-color: rgb(250 204 21 / 0.4);
+}
+.bg-\[\#0f0f13\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(15 15 19 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#121214\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(18 18 20 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#1C1C22\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(28 28 34 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#1E1E24\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 30 36 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#1e1e24\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 30 36 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#1e1e2f\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 30 47 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#2A2A33\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(42 42 51 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#7C5CFF\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(124 92 255 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#7c3aed\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(124 58 237 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#EDE8FF\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(237 232 255 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#F5F3FF\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 243 255 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#FEF3C7\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 243 199 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#f0f8ff\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(240 248 255 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#f5f3ff\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 243 255 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#f5f6ff\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 246 255 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#f8f7ff\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(248 247 255 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#ff0000\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 0 0 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#fff0f5\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 240 245 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#fff8f0\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 248 240 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#fffbea\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 251 234 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#fffbeb\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 251 235 / var(--tw-bg-opacity, 1));
+}
+.bg-black {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity, 1));
+}
+.bg-black\/60 {
+  background-color: rgb(0 0 0 / 0.6);
+}
+.bg-black\/70 {
+  background-color: rgb(0 0 0 / 0.7);
+}
+.bg-black\/80 {
+  background-color: rgb(0 0 0 / 0.8);
+}
+.bg-blue-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(37 99 235 / var(--tw-bg-opacity, 1));
+}
+.bg-gray-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1));
+}
+.bg-gray-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1));
+}
+.bg-gray-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1));
+}
+.bg-green-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(220 252 231 / var(--tw-bg-opacity, 1));
+}
+.bg-green-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(34 197 94 / var(--tw-bg-opacity, 1));
+}
+.bg-green-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(22 163 74 / var(--tw-bg-opacity, 1));
+}
+.bg-green-900\/20 {
+  background-color: rgb(20 83 45 / 0.2);
+}
+.bg-purple-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(250 245 255 / var(--tw-bg-opacity, 1));
+}
+.bg-purple-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(147 51 234 / var(--tw-bg-opacity, 1));
+}
+.bg-red-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 242 242 / var(--tw-bg-opacity, 1));
+}
+.bg-red-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(239 68 68 / var(--tw-bg-opacity, 1));
+}
+.bg-transparent {
+  background-color: transparent;
+}
+.bg-white {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+}
+.bg-yellow-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 249 195 / var(--tw-bg-opacity, 1));
+}
+.bg-yellow-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(234 179 8 / var(--tw-bg-opacity, 1));
+}
+.bg-gradient-to-br {
+  background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+}
+.bg-gradient-to-r {
+  background-image: linear-gradient(to right, var(--tw-gradient-stops));
+}
+.from-\[\#7C5CFF\] {
+  --tw-gradient-from: #7C5CFF var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(124 92 255 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+.to-\[\#FF6BA8\] {
+  --tw-gradient-to: #FF6BA8 var(--tw-gradient-to-position);
+}
+.object-contain {
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.p-1 {
+  padding: 0.25rem;
+}
+.p-1\.5 {
+  padding: 0.375rem;
+}
+.p-2 {
+  padding: 0.5rem;
+}
+.p-3 {
+  padding: 0.75rem;
+}
+.p-4 {
+  padding: 1rem;
+}
+.p-5 {
+  padding: 1.25rem;
+}
+.p-7 {
+  padding: 1.75rem;
+}
+.p-\[1\.5px\] {
+  padding: 1.5px;
+}
+.px-1 {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+.px-1\.5 {
+  padding-left: 0.375rem;
+  padding-right: 0.375rem;
+}
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.px-5 {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+.py-0\.5 {
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+}
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.py-10 {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.py-2\.5 {
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+}
+.py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+.text-left {
+  text-align: left;
+}
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+.text-\[10px\] {
+  font-size: 10px;
+}
+.text-\[11px\] {
+  font-size: 11px;
+}
+.text-\[12px\] {
+  font-size: 12px;
+}
+.text-\[13px\] {
+  font-size: 13px;
+}
+.text-\[14px\] {
+  font-size: 14px;
+}
+.text-\[16px\] {
+  font-size: 16px;
+}
+.text-\[20px\] {
+  font-size: 20px;
+}
+.text-\[22px\] {
+  font-size: 22px;
+}
+.text-\[7px\] {
+  font-size: 7px;
+}
+.text-\[8px\] {
+  font-size: 8px;
+}
+.text-\[9px\] {
+  font-size: 9px;
+}
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+.font-bold {
+  font-weight: 700;
+}
+.font-extrabold {
+  font-weight: 800;
+}
+.font-semibold {
+  font-weight: 600;
+}
+.uppercase {
+  text-transform: uppercase;
+}
+.tracking-wider {
+  letter-spacing: 0.05em;
+}
+.text-\[\#A78BFA\] {
+  --tw-text-opacity: 1;
+  color: rgb(167 139 250 / var(--tw-text-opacity, 1));
+}
+.text-\[\#B45309\] {
+  --tw-text-opacity: 1;
+  color: rgb(180 83 9 / var(--tw-text-opacity, 1));
+}
+.text-black {
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity, 1));
+}
+.text-blue-600 {
+  --tw-text-opacity: 1;
+  color: rgb(37 99 235 / var(--tw-text-opacity, 1));
+}
+.text-gray-300 {
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity, 1));
+}
+.text-gray-400 {
+  --tw-text-opacity: 1;
+  color: rgb(156 163 175 / var(--tw-text-opacity, 1));
+}
+.text-gray-500 {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
+}
+.text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity, 1));
+}
+.text-green-400 {
+  --tw-text-opacity: 1;
+  color: rgb(74 222 128 / var(--tw-text-opacity, 1));
+}
+.text-green-500 {
+  --tw-text-opacity: 1;
+  color: rgb(34 197 94 / var(--tw-text-opacity, 1));
+}
+.text-green-700 {
+  --tw-text-opacity: 1;
+  color: rgb(21 128 61 / var(--tw-text-opacity, 1));
+}
+.text-purple-700 {
+  --tw-text-opacity: 1;
+  color: rgb(126 34 206 / var(--tw-text-opacity, 1));
+}
+.text-red-400 {
+  --tw-text-opacity: 1;
+  color: rgb(248 113 113 / var(--tw-text-opacity, 1));
+}
+.text-red-500 {
+  --tw-text-opacity: 1;
+  color: rgb(239 68 68 / var(--tw-text-opacity, 1));
+}
+.text-red-600 {
+  --tw-text-opacity: 1;
+  color: rgb(220 38 38 / var(--tw-text-opacity, 1));
+}
+.text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+.text-yellow-300 {
+  --tw-text-opacity: 1;
+  color: rgb(253 224 71 / var(--tw-text-opacity, 1));
+}
+.text-yellow-400 {
+  --tw-text-opacity: 1;
+  color: rgb(250 204 21 / var(--tw-text-opacity, 1));
+}
+.text-yellow-800 {
+  --tw-text-opacity: 1;
+  color: rgb(133 77 14 / var(--tw-text-opacity, 1));
+}
+.underline {
+  text-decoration-line: underline;
+}
+.opacity-60 {
+  opacity: 0.6;
+}
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+.backdrop-blur-sm {
+  --tw-backdrop-blur: blur(4px);
+  backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+}
+.hover\:bg-\[\#F5F3FF\]:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 243 255 / var(--tw-bg-opacity, 1));
+}
+.hover\:text-white:hover {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+body{font-family:Inter,ui-sans-serif,system-ui,sans-serif}@media(max-width:768px){body>div.flex:not(#uploadModal){display:block}body>div.flex>aside{position:relative;width:100%;height:auto}body>div.flex>aside nav,body>div.flex>aside>.mt-auto{display:none}body>div.flex>aside>div:first-child{margin-bottom:0}body>div.flex>main{margin-left:0;padding:16px}main>div.flex.justify-between{flex-wrap:wrap}main>div.flex.justify-between>div:last-child{flex-wrap:wrap}}
+</style>
+<link rel="stylesheet" href="/utils/btp-header.css">
+<script src="/utils/btp-header.js"></script>
+<script src="/utils/btp-brand.js" defer></script>
+<link rel="stylesheet" href="/utils/review-missions.css">
+<script src="/utils/review-missions.js" defer></script>
+<script src="/utils/task-ads.js" defer></script>
+<link rel="stylesheet" href="/utils/channel-growth.css">
+<script src="/utils/channel-growth.js" defer></script>
+<script>
+if(location.pathname==='/') document.documentElement.classList.add('dashboard-clean');
+</script>
+<style>
+.dashboard-clean #dashboardChannelContent{display:none!important}
+.dashboard-points-header{display:flex;gap:8px;align-items:center;height:48px;margin-bottom:15px;border-bottom:1px solid #eee}
+.dashboard-points-header a,.dashboard-points-header button{display:inline-flex;align-items:center;justify-content:center;min-width:0;padding:8px 12px;border:1px solid #e5e7eb;border-radius:8px;background:#f3f4f6;color:#374151;font-size:12px;font-weight:700;white-space:nowrap}
+.dashboard-points-header :focus-visible{outline:2px solid #7c5cff;outline-offset:3px}
+.dashboard-points-header button:disabled{opacity:.5;cursor:default}
+.dashboard-page .growth-avatar,.dashboard-page #profileAvatar{width:48px;height:48px}
+.dashboard-page .growth-panel h1{font-size:18px}
+.dashboard-page .growth-chart,.dashboard-page #viewsChart{height:120px}
+.dashboard-page .growth-feed img{height:140px;aspect-ratio:auto}
+.dashboard-sidebar-account{margin-top:auto;padding-top:20px;justify-content:flex-start}
+.dashboard-sidebar-account #headerAccount{justify-content:flex-start}
+.dashboard-sidebar-account #profileName{color:white}
+.dashboard-sidebar-account #profileHandle{color:#9ca3af}
+.dashboard-page #headerThemeToggle,.dashboard-page .btp-upgrade,.dashboard-page #headerAccount:not([hidden])~#headerAuthButton{display:none!important}
+.dashboard-page .video-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.dashboard-page .video-card{display:block;min-width:0;padding:8px;border-radius:8px}
+.dashboard-page .video-card img{width:100%;height:140px;-o-object-fit:cover;object-fit:cover;margin-bottom:6px}
+.dashboard-page .video-title{font-size:10px;line-height:12px;font-weight:700}
+.dashboard-page .video-grid>p{grid-column:1/-1}
+@media(max-width:1024px){.dashboard-page .video-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:640px){.dashboard-page .video-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-points-header a,.dashboard-points-header button{padding:8px 10px}.dashboard-page aside .dashboard-sidebar-account{display:flex}}
+</style>
+<style>
+/* HP: urutan Dashboard = Banner Poin -> Bedah & Riset AI -> Channel & Perkembangan -> Video. Kartu Beli Poin, Logout atas
+   dan footer legal disembunyikan (pindah ke header ☰ drawer, Bottom Nav > Akun dan /billing). */
+.pb-mobile{display:none}
+@media(max-width:768px){
+.dashboard-page #pointsBanner{min-height:40px!important;padding:8px 8px 8px 14px!important;margin-bottom:12px!important;border-radius:999px!important}
+.dashboard-page #pointsBanner .pb-desktop{display:none}.dashboard-page #pointsBanner .pb-mobile{display:inline}
+.dashboard-page #pointsBannerCta{padding:5px 12px!important}
+.dashboard-page .dashboard-points-header,.dashboard-page #dashboardLogout,.dashboard-page aside .dashboard-sidebar-account{display:none!important}
+.dashboard-page main>footer.btp-legal{display:none!important}
+.dashboard-page main a[href^="/billing"]:not(#pointsBanner),.dashboard-page main a[href^="/pricing"],.dashboard-page main [data-buy-points],.dashboard-page .btp-upgrade{display:none!important}
+}
+</style>
+<script src="/utils/btp-bottom-nav.js" defer></script>
+</head>
+<body class="dashboard-page bg-[#f5f6ff]">
+<div class="flex">
+<aside class="w-[260px] bg-[#121214] text-white flex flex-col fixed h-screen p-4">
+<div class="flex items-center gap-2.5 mb-7 px-2"><div id="brandLogo" class="w-10 h-10 bg-white rounded-lg flex items-center justify-center overflow-hidden shrink-0"><img src="/b-logo.png" width="40" height="40" alt="Logo B merah BosterTubePro" class="w-10 h-10 object-contain"></div><span id="brandName" class="font-bold text-[14px] truncate">BosterTubePro</span></div>
+<nav class="space-y-1">
+<a href="/" class="w-full flex items-center gap-3 bg-[#7C5CFF] px-3 py-2.5 rounded-xl text-[13px] font-bold"><span>📊</span> Dashboard</a>
+<a href="/analytics" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>📈</span> Analytics</a>
+<a href="/audit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>📄</span> Audit Video</a>
+<a href="/promosi" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>🚀</span> Promosi</a>
+<a href="/tugas" class="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>💼 Tugas Iklan</span><span class="badge-new" style="font-size:10px;background:#e6ddff;color:#6347b5;border-radius:5px;padding:2px 5px">Baru</span><span id="jumlahTugas" class="badge-count" data-task-count style="font-size:10px;white-space:nowrap">… tugas</span></a>
+<a href="/kompetitor" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>👥</span> Kompetitor</a>
+<a href="/billing" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>💳</span> Billing</a>
+<a href="/pengaturan" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>⚙️</span> Pengaturan</a>
+<a href="/pemakaian-gemini" id="navPemakaianGemini" hidden class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>✨</span> Pemakaian Gemini</a>
+<script>(() => { const a = document.getElementById('navPemakaianGemini'); if (localStorage.getItem('btp_session') && (localStorage.getItem('btp_user_email') || '').trim().toLowerCase() === 'boosterviewsubsid@gmail.com') { a.hidden = false; a.style.display = 'flex'; } else a.style.display = 'none'; })();</script>
+<div class="mt-5 p-[1.5px] rounded-xl bg-gradient-to-br from-[#7C5CFF] to-[#FF6BA8]"><button type="button" onclick="openUpload()" class="w-full bg-[#1E1E24] px-3 py-3 rounded-[10px] text-left"><p class="text-[13px] font-bold">🎥 Upload Video </p><p class="text-[11px] text-gray-400">Panjang & Short</p></button></div>
+<div class="mt-3 bg-[#1C1C22] border border-[#2A2A33] rounded-xl p-3"><p class="text-[11px] font-bold text-[#A78BFA]">AI Generator</p><p class="text-[10px] text-gray-400">Judul, deskripsi, thumbnail, tag & hashtag AI 3 pilihan</p></div>
+</nav>
+<div class="dashboard-sidebar-account btp-account-header" aria-label="Profil channel">
+  <button type="button" id="headerThemeToggle" aria-label="Ganti tema" aria-pressed="false">Dark</button>
+  <div id="headerAccount" hidden>
+    <div id="profileAvatar" class="btp-avatar" aria-hidden="true"></div>
+    <div class="btp-account-label"><span id="profileName"></span><span id="profileHandle"></span></div>
+    <span id="authStatus" hidden></span>
+  </div>
+  <button type="button" id="headerAuthButton">Login Google</button>
+</div>
+</aside>
+<main class="dashboard-main ml-[260px] flex-1 p-7">
+<header class="dashboard-points-header" aria-label="Menu akun">
+  <button type="button" id="dashboardLogout" disabled>Logout</button>
+</header>
+<a id="pointsBanner" href="/billing" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 16px;padding:12px 16px;min-height:48px;border-radius:14px;background:linear-gradient(135deg,#7C5CFF,#FF6BA8);color:#fff;text-decoration:none;font-size:13px;font-weight:700"><span><span class="pb-desktop">Poin kamu:</span><span class="pb-mobile">💰 Poin:</span> <strong id="pointsBannerValue" style="font-size:16px">—</strong></span><span id="pointsBannerCta" style="background:#fff;color:#121214;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:800;white-space:nowrap"><span class="pb-desktop">Beli Poin →</span><span class="pb-mobile">Beli →</span></span></a>
+<script>
+(() => {
+  const value = document.getElementById('pointsBannerValue'), cta = document.getElementById('pointsBannerCta'), banner = document.getElementById('pointsBanner');
+  const update = () => {
+    const account = localStorage.getItem('btp_session') ? window.BTPPoints?.getSnapshot?.() : null;
+    if (account && (account.isUnlimited || account.isAdmin)) {
+      value.textContent = '∞ Unlimited'; cta.hidden = true; banner.removeAttribute('href');
+      return;
+    }
+    cta.hidden = false; banner.setAttribute('href', '/billing');
+    const points = account ? account.userPoints : (localStorage.getItem('btp_session') ? localStorage.getItem('boster_poin') : null);
+    value.textContent = points == null || points === '' ? '—' : Number(points).toLocaleString('id-ID');
+  };
+  update();
+  window.addEventListener('points-updated', update);
+  window.addEventListener('credits-updated', update);
+})();
+</script>
+<section id="channelGrowth" class="growth-panel" aria-label="Channel dan perkembangan" aria-live="polite"></section>
+<div id="dashboardChannelContent">
+<a href="/audit" class="block bg-white border rounded-2xl p-5 font-bold">AUDIT VIDEO →</a><channel-seo></channel-seo>
+<section aria-label="BosterTubePro" class="brand-hero"><img src="/b-logo.png" width="32" height="32" alt="Logo B merah BosterTubePro"><div><p class="brand-version">BosterTubePro</p><h2>Ruang tumbuh channel kamu</h2><p class="brand-channel"><span id="channelTitle" data-brand-channel>YouTube Analytics</span><span id="channelSub" hidden>Login Google untuk data channel</span></p></div></section>
+<div class="dashboard-actions"><div class="flex items-center gap-2 shrink-0"><span data-admin-badge hidden class="hidden bg-[#121214] text-yellow-300 border border-yellow-400/40 px-3 py-2.5 rounded-full text-[11px] font-extrabold tracking-wider shrink-0">👑 ADMIN</span><button id="refreshBtn" class="hidden bg-white border px-4 py-2.5 rounded-full text-[12px] font-bold">🔄 Refresh</button><a class='bg-gradient-to-r from-[#7C5CFF] to-[#FF6BA8] text-white px-5 py-2.5 rounded-full text-[12px] font-bold' href='/analytics' id='analyticsLengkapBtn'>📈 Analytics Lengkap</a><button onclick="openUpload()" class="bg-[#121214] text-white px-5 py-2.5 rounded-full text-[12px] font-bold">+ Upload Video</button></div></div>
+<div id="statusBar" class="hidden mb-5 bg-white border rounded-2xl px-4 py-3 text-[12px] font-semibold text-gray-600"></div>
+<div class="grid grid-cols-4 gap-4 mb-5">
+<div class="bg-white border rounded-2xl p-5"><p class="text-[11px] text-gray-500">Total Views</p><p id="statViews" class="text-[20px] font-extrabold">—</p><p id="statViewsSub" class="text-[11px] text-gray-400">Semua waktu</p></div>
+<div class="bg-white border rounded-2xl p-5"><p class="text-[11px] text-gray-500">Watch Time (30 hari)</p><p id="statWatch" class="text-[20px] font-extrabold">—</p><p id="statWatchSub" class="text-[11px] text-gray-400">YouTube Analytics API</p></div>
+<div class="bg-white border rounded-2xl p-5"><p class="text-[11px] text-gray-500">Subscribers</p><p id="statSubs" class="text-[20px] font-extrabold">—</p><p id="statSubsSub" class="text-[11px] text-gray-400">Total subscriber</p></div>
+<div class="bg-white border rounded-2xl p-5"><p class="text-[11px] text-gray-500">Total Video</p><p id="statVideos" class="text-[20px] font-extrabold">—</p><p id="statVideosSub" class="text-[11px] text-gray-400">Video publik di channel</p></div>
+</div>
+<div id="dashboardAnalysis" class="grid grid-cols-12 gap-4 mb-5">
+<div class="col-span-12 bg-white border rounded-2xl p-5"><div class="flex justify-between items-center mb-6"><h3 class="font-bold text-[13px]">Views per Video Terbaru</h3><span class="text-[11px] text-gray-400">12 upload terakhir</span></div><div id="viewsChart" class="h-[200px] flex items-end gap-3"><p class="m-auto text-[12px] text-gray-400">Belum ada data. Login Google dulu.</p></div></div>
+<div class="col-span-12 bg-white border rounded-2xl p-5"><h3 class="font-bold text-[13px] mb-4">Top Performing Videos</h3><div class="space-y-3"><div id="topVideos" class="video-grid"><p class="text-[12px] text-gray-400">Belum ada data.</p></div><button onclick="openUpload()" class="w-full mt-3 bg-[#121214] text-white py-3 rounded-xl text-[12px] font-bold">Upload Video Panjang / Short Baru</button></div></div>
+</div>
+<section class="bg-white border rounded-2xl p-5" aria-labelledby="latestVideosHeading">
+<h3 id="latestVideosHeading" class="font-bold text-[13px] mb-4">Video Terbaru</h3>
+<div id="latestVideos" class="video-grid"><p class="text-[12px] text-gray-400">Belum ada data. Login Google dulu.</p></div>
+</section>
+</div>
+<footer class="btp-legal" style="margin-top:28px;padding:16px 0 4px;border-top:1px solid rgba(128,128,160,.25);text-align:center;font-size:12px;color:#8b8ba3"><a href="/privacy-policy" style="color:inherit">Kebijakan Privasi</a> | <a href="/terms" style="color:inherit">Syarat Layanan</a> | <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" style="color:inherit">YouTube ToS</a> | <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style="color:inherit">Google Privacy</a></footer>
+</main>
+</div>
+<div id="uploadModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-3" onclick="closeUpload()">
+<div class="bg-white text-black w-full max-w-[640px] rounded-[20px] overflow-hidden max-h-[95vh] flex flex-col" onclick="event.stopPropagation()">
+<div class="p-5 border-b flex justify-between items-center"><div><h2 class="font-extrabold text-[16px]">Upload ke YouTube - AI Auto 5 Judul + Skor SEO</h2><p class="text-[11px] text-gray-500">Judul, Deskripsi, Tag, Hashtag, Thumbnail - Semua AI + Refresh</p></div><button onclick="closeUpload()" class="w-8 h-8 bg-gray-100 rounded-full shrink-0" aria-label="Tutup">✕</button></div>
+<div id="main" class="p-5 overflow-y-auto space-y-4 flex-1">
+<div class="bg-gray-100 rounded-full flex p-1"><button id="tabLong" onclick="switchTab('long')" class="flex-1 bg-black text-white py-2.5 rounded-full font-bold text-[12px]">🎬 Panjang 16:9</button><button id="tabShort" onclick="switchTab('short')" class="flex-1 py-2.5 rounded-full font-bold text-[12px] text-gray-500">📱 Short 9:16</button></div>
+<div id="loginBox">Gunakan Login Google di sidebar untuk menghubungkan akun.</div>
+<div id="uploadForm" class="space-y-4">
+<div id="dropZone" class="border-2 border-dashed border-gray-300 rounded-2xl p-5 text-center cursor-pointer"><input type="file" id="videoFile" accept="video/*" class="hidden"><p class="font-bold text-[12px]">📁 Drag & Drop Video</p><p id="fileName" class="text-[11px] text-gray-500">MP4 - AI Generate 3 Pilihan</p><video id="videoPreview" class="hidden w-full mt-2 rounded-xl" muted playsinline preload="auto"></video><canvas id="thumbCanvas" class="hidden"></canvas></div>
+<div class="border rounded-2xl p-3 bg-[#f5f3ff]"><label for="generateAI" class="text-[11px] font-extrabold">🎞️ Apakah video ini ingin di-generate dengan AI?</label>
+<select id="generateAI" class="w-full p-2 rounded-xl bg-[#1e1e2f] text-white border border-gray-600 text-[12px] font-bold mt-2">
+<option value="tidak" selected>Tidak - Upload Video Asli (Tanpa AI)</option>
+<option value="veo3">Ya - Generate dengan Veo 3 (9:16 Shorts)</option>
+<option value="veo3_16_9">Ya - Generate dengan Veo 3 (16:9 Panjang)</option>
+<option value="sora">Ya - Generate dengan Sora</option>
+</select>
+<p id="generateAIHint" class="text-[10px] text-gray-500 mt-1">✅ Upload video asli dari file kamu. Judul, deskripsi & hashtag AI tetap dibuat + skor SEO.</p>
+<div id="aiGenPreview" class="hidden mt-2 rounded-xl bg-[#0f0f13] text-white p-3 text-[11px] space-y-1"></div>
+</div>
+<p id="modalChannel" class="text-[11px] font-bold text-gray-600">📺 Channel: <span id="channelNameLabel" class="text-purple-700">— (login Google dulu)</span></p>
+<div id="aiAnalysis" class="hidden border rounded-2xl p-3 bg-[#fffbea]"><div class="flex justify-between mb-2"><label class="text-[11px] font-extrabold">🧠 AI Analisa Isi Video</label><span id="aiAnalysisStatus" class="text-[10px] text-gray-500"></span></div><div id="aiSummary" class="text-[11px] space-y-0.5"></div><div id="aiFrames" class="grid grid-cols-4 gap-2 mt-2"></div></div>
+
+<p id="aiPlaceholder" class="text-gray-400 text-sm text-center py-10">Judul, Deskripsi, Tag, Hashtag, Thumbnail akan muncul otomatis setelah kamu pilih file video</p>
+<div id="aiResults" class="hidden space-y-4"><!-- Tampilkan hasil AI + Skor SEO -->
+<div class="border rounded-2xl p-3 bg-[#f8f7ff]"><div class="flex justify-between mb-2"><label class="text-[11px] font-extrabold">🤖 Judul AI - 5 Pilihan (urut skor SEO)</label><button onclick="usePoin('judul')&&refreshTitles()" title="5 Poin (Admin gratis)" class="border bg-white px-2 py-1 rounded-full text-[10px] font-bold">🔄 Refresh</button></div><div id="titleCards" class="space-y-2"></div><input id="vTitle" maxlength="100" class="w-full border-2 border-purple-300 p-2 rounded-xl text-[12px] mt-2 font-bold"><div id="titleSeo" class="mt-1 text-right"></div></div>
+
+<div class="border rounded-2xl p-3 bg-[#fff8f0]"><div class="flex justify-between mb-2"><label class="text-[11px] font-extrabold">📝 Deskripsi AI - 3 Pilihan</label><button onclick="usePoin('deskripsi')&&refreshDescs()" title="5 Poin (Admin gratis)" class="border bg-white px-2 py-1 rounded-full text-[10px] font-bold">🔄 Refresh</button></div><div id="descCards" class="space-y-2"></div><textarea id="vDesc" class="w-full border p-2 rounded-xl text-[11px] h-[100px] mt-2"></textarea><div id="descSeo" class="mt-1 text-right"></div></div>
+
+<!-- THUMBNAIL STUDIO PRO V9 -->
+<div id="thumbStudio" class="border rounded-2xl p-3 bg-[#0f0f13] text-white">
+<div class="flex justify-between items-center mb-2"><label class="text-[12px] font-extrabold">🎨 Thumbnail Studio Pro - Hook + Kategori Lengkap</label><button onclick="refreshThumbs()" class="bg-white text-black px-2 py-1 rounded-full text-[10px] font-bold">🔄 Refresh AI</button></div>
+<div class="grid grid-cols-2 gap-3 bg-[#1e1e24] p-3 rounded-xl">
+<div>
+<label class="text-[10px] font-bold text-gray-300">💡 Hook Text (Teks Nge-Hook di Thumbnail)</label>
+<div class="flex gap-1 mt-1"><input id="hookText" maxlength="60" value="AYAH PAHLAWAN" class="flex-1 min-w-0 bg-black border border-gray-600 p-2 rounded-lg text-[13px] font-extrabold text-yellow-400 uppercase" placeholder="Contoh: AYAH PAHLAWAN, MISTERI PASAR..."><button onclick="resetHook()" title="Ambil dari judul AI" class="bg-black border border-gray-600 px-2 rounded-lg text-[10px] font-bold">↺</button></div>
+<div class="grid grid-cols-2 gap-2 mt-2">
+<select id="hookFont" class="bg-black border border-gray-600 p-1.5 rounded text-[10px]"><option value="Bebas Neue">Bebas Neue - Bold</option><option value="Anton">Anton - Bold</option><option value="Oswald">Oswald - ExtraBold</option><option value="Montserrat">Montserrat - Black</option></select>
+<select id="hookPos" class="bg-black border border-gray-600 p-1.5 rounded text-[10px]"><option value="bottom">Bawah (Best)</option><option value="top">Atas</option><option value="center">Tengah</option></select>
+</div>
+<div class="flex gap-2 mt-2 items-center">
+<label class="text-[9px]">Size:</label><input id="hookSize" type="range" min="40" max="120" value="92" class="flex-1 min-w-0"><span id="hookSizeLabel" class="text-[10px]">92</span>
+<input id="hookColor" type="color" value="#FFD400" class="w-8 h-8 rounded bg-transparent">
+<label class="text-[9px] ml-1 flex items-center gap-1">Stroke ON<input id="hookStroke" type="checkbox" checked></label>
+</div>
+</div>
+<div>
+<label class="text-[10px] font-bold text-gray-300">📂 Kategori YouTube Lengkap (Sesuai YouTube Studio)</label>
+<select id="vCategory" class="w-full bg-black border border-gray-600 p-2 rounded-lg text-[11px] mt-1">
+<option value="1">1 - Film &amp; Animation</option><option value="2">2 - Autos &amp; Vehicles</option><option value="10">10 - Music</option><option value="15">15 - Pets &amp; Animals</option><option value="17">17 - Sports</option><option value="19">19 - Travel &amp; Events</option><option value="20">20 - Gaming</option><option value="22" selected>22 - People &amp; Blogs</option><option value="23">23 - Comedy</option><option value="24">24 - Entertainment</option><option value="25">25 - News &amp; Politics</option><option value="26">26 - Howto &amp; Style</option><option value="27">27 - Education</option><option value="28">28 - Science &amp; Technology</option><option value="29">29 - Nonprofits &amp; Activism</option>
+</select>
+<div id="thumbCards" class="grid grid-cols-3 gap-2 mt-2"><p class="col-span-3 text-[10px] text-gray-400">Pilih video dulu untuk ambil frame.</p></div>
+</div>
+</div>
+<div class="mt-3 relative bg-black rounded-xl overflow-hidden">
+<canvas id="thumbEditorCanvas" width="1280" height="720" class="w-full aspect-video block"></canvas>
+<div class="absolute bottom-2 left-2 text-[9px] bg-black/60 px-2 py-1 rounded text-gray-300">16:9 • 1280x720 • Safe Area OK • <span id="thumbSizeInfo">-</span></div>
+</div>
+<div class="flex gap-2 mt-3">
+<button id="thumbDownloadBtn" onclick="downloadThumbnail()" class="flex-1 bg-[#1e1e24] border border-gray-600 py-2.5 rounded-xl text-[11px] font-bold">⬇️ Download JPG</button>
+<button id="thumbUploadBtn" onclick="uploadThumbnailDirect()" class="flex-1 bg-[#ff0000] py-2.5 rounded-xl text-[11px] font-bold">▶️ Upload ke YouTube</button>
+</div>
+<input id="thumbVideoId" placeholder="Video ID / link YouTube (otomatis terisi setelah upload)" class="w-full bg-black border border-gray-600 p-2 rounded-xl text-[11px] mt-2">
+<p id="thumbStatus" class="text-[10px] text-center text-gray-400 mt-1">Thumbnail dengan hook ikut terupload otomatis saat upload video.</p>
+</div>
+
+<div class="border rounded-2xl p-3 bg-[#f0f8ff]"><div class="flex justify-between mb-2"><label class="text-[11px] font-extrabold">🏷️ Tag AI - 3 Set</label><button onclick="refreshTags()" class="border bg-white px-2 py-1 rounded-full text-[10px] font-bold">🔄 Refresh</button></div><div id="tagCards" class="space-y-2"></div><input id="vTags" class="w-full border p-2 rounded-xl text-[11px] mt-2"></div>
+
+<div class="border rounded-2xl p-3 bg-[#fff0f5]"><div class="flex justify-between mb-2"><label class="text-[11px] font-extrabold">#️⃣ Hashtag AI - 3 Set</label><button onclick="refreshHashtags()" class="border bg-white px-2 py-1 rounded-full text-[10px] font-bold">🔄 Refresh</button></div><div id="hashtagCards" class="space-y-2"></div><input id="vHashtags" class="w-full border p-2 rounded-xl text-[11px] mt-2"><div id="hashtagSeo" class="mt-1 text-right"></div></div>
+</div>
+
+<div><select id="vPrivacy" class="w-full border p-2 rounded-xl text-[12px]"><option value="public">Public</option><option value="private">Private</option><option value="unlisted">Unlisted</option><option value="scheduled">Jadwalkan</option></select></div>
+<div id="scheduleBox" class="hidden"><input id="vSchedule" type="datetime-local" class="w-full border p-2 rounded-xl text-[12px]"></div>
+
+<div class="border-2 border-amber-300 rounded-2xl p-3 bg-[#fffbeb]">
+<label class="text-[11px] font-extrabold">🔎 Keterangan AI / Konten Diubah (Wajib YouTube 2026) <span class="text-red-500">*</span></label>
+<select id="aiDisclosure" class="w-full border-2 border-amber-300 p-2 rounded-xl text-[12px] mt-2 bg-white font-bold">
+<option value="" selected disabled>-- Pilih keterangan AI (wajib) --</option>
+<option value="original">✅ Bukan AI - Rekaman Asli</option>
+<option value="ai_generated">🤖 AI Generated - Dibuat sepenuhnya dengan AI</option>
+<option value="ai_altered">✏️ AI Altered - Rekaman asli diubah dengan AI</option>
+<option value="mixed">🔀 Mixed - Campuran rekaman asli &amp; AI</option>
+</select>
+<div id="aiDetailsBox" class="hidden mt-2 space-y-1 text-[11px]">
+<p class="text-[10px] font-bold text-gray-500">Centang detail konten (opsional):</p>
+<label class="flex items-center gap-2"><input type="checkbox" class="aiDetail" value="Orang nyata tampak mengatakan/melakukan hal yang tidak dilakukannya"> Orang nyata tampak mengatakan/melakukan hal yang tidak dilakukannya</label>
+<label class="flex items-center gap-2"><input type="checkbox" class="aiDetail" value="Rekaman peristiwa atau tempat nyata diubah"> Rekaman peristiwa atau tempat nyata diubah</label>
+<label class="flex items-center gap-2"><input type="checkbox" class="aiDetail" value="Adegan realistis yang tidak benar-benar terjadi"> Adegan realistis yang tidak benar-benar terjadi</label>
+<label class="flex items-center gap-2"><input type="checkbox" class="aiDetail" value="Suara/narasi dibuat dengan AI"> Suara/narasi dibuat dengan AI</label>
+</div>
+<div id="aiLabelPreview" class="mt-2 text-[11px] font-bold rounded-xl px-3 py-2 bg-gray-100 text-gray-500">⚠️ Belum dipilih - wajib dipilih sebelum upload</div>
+</div>
+
+<div id="progressBox" class="hidden"><div class="w-full bg-gray-200 rounded-full h-2"><div id="progressBar" class="bg-purple-600 h-2 rounded-full" style="width:0%"></div></div><p id="progressText" class="text-[11px] text-center">0%</p></div>
+<button id="uploadBtn" class="w-full bg-[#7c3aed] text-white py-3 rounded-xl font-bold text-[13px]">🚀 UPLOAD SEKARANG KE YOUTUBE</button>
+<p id="resultBox" class="text-[11px] text-center break-all"></p>
+</div>
+</div>
+</div>
+</div>
+<script>
+// Login lewat OAuth server BosterTubePro (lihat /utils/btp-auth.js)
+const CLIENT_ID = '708531408468-8ecbt56e9gebgu3oj4ljf5d58e95up9q.apps.googleusercontent.com';
+const SCOPES = 'https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly https://www.googleapis.com/auth/yt-analytics-monetary.readonly';
+const YT = 'https://www.googleapis.com/youtube/v3';
+let accessToken=null, tokenClient=null, currentTab='long', channelData=null, uploadsPlaylistId=null, playlistVideos=[], videoStats=[];
+function openUpload(){location.assign("/upload");}
+function closeUpload(){document.getElementById('uploadModal').classList.add('hidden');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeUpload();});
+
+// ===== Google Login (GIS Token Client) =====
+const loginBtn=document.getElementById('headerAuthButton'), dashLoginBtn=document.getElementById('headerAuthButton');
+loginBtn.innerText='⏳ Memuat Google...';
+loginBtn.onclick=dashLoginBtn.onclick=()=>alert('Google masih dimuat, tunggu sebentar...');
+function initGoogle(){
+ if(typeof google==='undefined'||!google.accounts||!google.accounts.oauth2){setTimeout(initGoogle,500);return;}
+ tokenClient=google.accounts.oauth2.initTokenClient({
+  client_id:CLIENT_ID,
+  scope:SCOPES,
+  callback:onToken,
+  error_callback:err=>{setStatus('Sesi Google perlu disambungkan ulang. Data YouTube belum dapat dimuat.','error');showGoogleReconnect();}
+ });
+ loginBtn.onclick=()=>btpSession()?BTPAuth.logout().then(()=>location.reload()):BTPAuth.login();
+ loginBtn.innerText='🔐 Login Google - SIAP';
+ dashLoginBtn.innerText='🔐 Login Google';
+ // Pakai ulang token dari sesi ini (mis. kembali dari halaman Analytics)
+ try{const t=JSON.parse(sessionStorage.getItem('btp_token')||'null');if(t&&t.token&&t.exp>Date.now())setTimeout(()=>onToken({access_token:t.token,expires_in:Math.round((t.exp-Date.now())/1000)+60}),0);}catch(e){}
+}
+function onToken(resp){
+   if(resp.error){alert('Login gagal: '+resp.error);return;}
+   accessToken=resp.access_token;
+   try{sessionStorage.setItem('btp_token',JSON.stringify({token:resp.access_token,exp:Date.now()+(+resp.expires_in||3600)*1000-60000}));}catch(e){}
+   document.getElementById('loginBox').classList.add('hidden');
+   document.getElementById('authStatus').innerHTML='🟢 Login OK';
+   document.getElementById('authStatus').className='bg-green-900/20 border border-yellow-400/30 px-3 py-2 rounded-xl text-[10px] text-green-400 mb-3';
+   window.BTPHeader?.render();
+   document.getElementById('refreshBtn').classList.remove('hidden');
+   loadAllData();
+}
+initGoogle();
+if(new URLSearchParams(location.search).get('upload')==='1'){history.replaceState(null,'','/');openUpload();}
+
+// ===== Helper YouTube API (selalu pakai Bearer accessToken) =====
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>n==null||n===''?'—':Number(n).toLocaleString('id-ID');
+const fmtShort=n=>new Intl.NumberFormat('id-ID',{notation:'compact',maximumFractionDigits:1}).format(Number(n)||0);
+const fmtDate=d=>new Date(d).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+function fmtDuration(iso){const m=/P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/.exec(iso||'')||[];const h=(+m[1]||0)*24+(+m[2]||0),mi=+m[3]||0,se=+m[4]||0;const p=n=>String(n).padStart(2,'0');return h?`${h}:${p(mi)}:${p(se)}`:`${mi}:${p(se)}`;}
+function bestThumb(t){t=t||{};return (t.medium||t.high||t.default||{}).url||'';}
+function setStatus(text,type){const b=$('statusBar');if(!text){b.classList.add('hidden');return;}b.classList.remove('hidden');b.className='mb-5 border rounded-2xl px-4 py-3 text-[12px] font-semibold '+(type==='error'?'bg-red-50 border-red-200 text-red-600':'bg-white text-gray-600');b.innerHTML=text;}
+function showGoogleReconnect(){
+ const reconnect=document.createElement('button');
+ reconnect.type='button';reconnect.className='ml-3 underline font-bold';
+ reconnect.textContent='Hubungkan ulang Google';reconnect.onclick=()=>BTPAuth.login();
+ $('statusBar').appendChild(reconnect);
+}
+async function ytGet(url,retried=false){
+ if(!accessToken) throw new Error('Belum login Google');
+ const res=await fetch(url,{headers:{'Authorization':'Bearer '+accessToken}});
+ const json=await res.json().catch(()=>({}));
+ // Token dari project Google lama (#1097258207184, sudah dihapus) = sesi tidak berlaku -> wajib login ulang
+ const stale=res.status===403&&/project.*(deleted|not found)|deleted_client|invalid_client/i.test(String(json.error&&json.error.message||''));
+ if((res.status===401||stale)&&!retried){
+  const renewed=await BTPAuth.refreshToken(true);
+  if(renewed){accessToken=renewed.token;return ytGet(url,true);}
+ }
+ if(res.status===401||stale){accessToken=null;try{sessionStorage.removeItem('btp_token');}catch(e){}dashLoginBtn.classList.remove('hidden');$('loginBox').classList.remove('hidden');throw new Error(stale?'Token Google lama sudah tidak berlaku. Klik Login Google untuk masuk ulang.':'Sesi Google habis, silakan login ulang');}
+ if(!res.ok) throw new Error((json.error&&json.error.message)||('HTTP '+res.status));
+ return json;
+}
+
+// ===== 1. Channel Info =====
+async function fetchChannel(){
+ const data=await ytGet(`${YT}/channels?part=snippet,statistics,contentDetails&mine=true`);
+ const ch=data.items&&data.items[0];
+ if(!ch) throw new Error('Akun Google ini belum punya channel YouTube');
+ channelData=ch; uploadsPlaylistId=ch.contentDetails.relatedPlaylists.uploads;
+ const sn=ch.snippet, st=ch.statistics, thumb=bestThumb(sn.thumbnails);
+ $('channelTitle').innerText=sn.title; $('profileName').innerText=sn.title;
+ $('profileHandle').innerText=localStorage.getItem('btp_user_email')||'';
+ $('channelSub').innerText=`${sn.customUrl?sn.customUrl+' · ':''}${fmt(st.subscriberCount)} subscriber · ${fmt(st.videoCount)} video`;
+ document.title="BosterTubePro";
+ if(thumb){$('profileAvatar').innerHTML=`<img src="${esc(thumb)}" class="w-full h-full object-cover" alt="">`;}
+ $('statViews').innerText=fmt(st.viewCount);
+ $('statSubs').innerText=st.hiddenSubscriberCount?'Disembunyikan':fmt(st.subscriberCount);
+ $('statVideos').innerText=fmt(st.videoCount);
+ return ch;
+}
+
+// ===== 2. List Video Terakhir (uploads playlist) =====
+async function fetchPlaylist(){
+ if(!uploadsPlaylistId){
+  const d=await ytGet(`${YT}/channels?part=contentDetails&mine=true`);
+  uploadsPlaylistId=d.items&&d.items[0]&&d.items[0].contentDetails.relatedPlaylists.uploads;
+  if(!uploadsPlaylistId) throw new Error('Playlist uploads tidak ditemukan');
+ }
+ const data=await ytGet(`${YT}/playlistItems?part=snippet,contentDetails&maxResults=20&playlistId=${encodeURIComponent(uploadsPlaylistId)}`);
+ playlistVideos=(data.items||[]).map(it=>({videoId:it.contentDetails.videoId,title:it.snippet.title,thumbnail:bestThumb(it.snippet.thumbnails),publishedAt:it.contentDetails.videoPublishedAt||it.snippet.publishedAt}));
+ return playlistVideos;
+}
+
+// ===== 3. Statistik Detail per Video =====
+async function fetchStats(ids){
+ ids=ids||playlistVideos.map(v=>v.videoId);
+ if(!ids.length) return [];
+ const data=await ytGet(`${YT}/videos?part=snippet,statistics,contentDetails,status&id=${ids.join(',')}`);
+ const byId={}; (data.items||[]).forEach(v=>byId[v.id]=v);
+ return ids.filter(id=>byId[id]).map(id=>{const v=byId[id];return{videoId:id,title:v.snippet.title,thumbnail:bestThumb(v.snippet.thumbnails),publishedAt:v.snippet.publishedAt,privacyStatus:v.status?.privacyStatus,publishAt:v.status?.publishAt,uploadStatus:v.status?.uploadStatus,viewCount:+v.statistics.viewCount||0,likeCount:v.statistics.likeCount,commentCount:v.statistics.commentCount,duration:v.contentDetails.duration};});
+}
+
+// Video terbaru = playlist + statistik
+async function fetchVideos(){
+ await fetchPlaylist();
+ videoStats=(await fetchStats()).filter(isVideoPublicForDashboard);
+ renderChart(videoStats); renderTop(videoStats); renderLatest(videoStats);
+ return videoStats;
+}
+
+// ===== Watch time 30 hari (YouTube Analytics API) =====
+async function fetchAnalytics(){
+ const end=new Date(), start=new Date(Date.now()-30*864e5), d=x=>x.toISOString().slice(0,10);
+ try{
+  const r=await ytGet(`https://youtubeanalytics.googleapis.com/v2/reports?ids=channel==MINE&startDate=${d(start)}&endDate=${d(end)}&metrics=views,estimatedMinutesWatched,subscribersGained,subscribersLost`);
+  const row=(r.rows&&r.rows[0])||[0,0,0,0];
+  $('statWatch').innerText=fmtShort(row[1]/60)+' Jam';
+  $('statWatchSub').innerText=fmt(row[0])+' views dalam 30 hari';
+  $('statViewsSub').innerText='+'+fmt(row[0])+' dalam 30 hari';
+  const net=row[2]-row[3];
+  $('statSubsSub').innerText=(net>=0?'+':'')+fmt(net)+' dalam 30 hari';
+  $('statSubsSub').className='text-[11px] '+(net>=0?'text-green-500':'text-red-400');
+  $('statViewsSub').className='text-[11px] text-green-500';
+ }catch(e){$('statWatch').innerText='—';$('statWatchSub').innerText='Analytics: '+e.message;}
+}
+
+// ===== Render =====
+function isVideoPublicForDashboard(video){
+ const status=video.privacyStatus||video.status?.privacyStatus;
+ if(status!=='public'||video.isScheduled) return false;
+ if(['deleted','failed','rejected'].includes(video.uploadStatus||video.status?.uploadStatus)) return false;
+ const now=Date.now();
+ if([video.publishedAt||video.snippet?.publishedAt,video.publishAt||video.status?.publishAt].some(date=>date&&new Date(date).getTime()>now)) return false;
+ const title=String(video.title||video.snippet?.title||'').toLowerCase();
+ return !title.includes('[private]')&&!title.includes('[pribadi]');
+}
+function renderChart(list){
+ const el=$('viewsChart'), items=list.filter(isVideoPublicForDashboard).slice(0,12).reverse();
+ if(!items.length){el.innerHTML='<p class="m-auto text-[12px] text-gray-400">Belum ada video.</p>';return;}
+ const max=Math.max(1,...items.map(v=>v.viewCount));
+ el.innerHTML=items.map(v=>{const top=v.viewCount===max;return `<div class="flex-1 h-full flex flex-col justify-end items-center gap-1" title="${esc(v.title)} — ${fmt(v.viewCount)} views"><span class="text-[10px] text-gray-500">${fmtShort(v.viewCount)}</span><div class="w-full ${top?'bg-[#7C5CFF]':'bg-[#EDE8FF]'} rounded-t-lg" style="height:${Math.max(2,v.viewCount/max*85)}%"></div></div>`;}).join('');
+}
+function renderTop(list){
+ renderVideoCards(list.filter(isVideoPublicForDashboard).sort((a,b)=>b.viewCount-a.viewCount).slice(0,6),'topVideos');
+}
+function renderLatest(list){
+ renderVideoCards(list.filter(isVideoPublicForDashboard).sort((a,b)=>new Date(b.publishedAt)-new Date(a.publishedAt)).slice(0,12),'latestVideos');
+}
+function renderVideoCards(top,target){
+ $(target).innerHTML=top.length?top.map((v,i)=>`<a href="https://youtu.be/${esc(v.videoId)}" target="_blank" class="video-card ${i===0?'bg-[#F5F3FF]':'bg-gray-50'} p-3 rounded-xl"><img src="${esc(v.thumbnail)}" class="w-16 h-9 rounded object-cover shrink-0" alt=""><p class="video-title"><span class="line-clamp-2">${esc(v.title)}</span><span class="text-gray-500 font-semibold">${fmtShort(v.viewCount)} views</span></p></a>`).join(''):'<p class="text-[12px] text-gray-400">Belum ada video.</p>';
+}
+
+// ===== Load semua data setelah login =====
+async function loadAllData(){
+ setStatus('⏳ Mengambil data dari YouTube API...');
+ $('viewsChart').innerHTML='<p class="m-auto text-[12px] text-gray-400">⏳ Mengambil data dari YouTube API...</p>';
+ $('topVideos').innerHTML='<p class="text-[12px] text-gray-400">⏳ Mengambil data dari YouTube API...</p>';
+ $('latestVideos').innerHTML='<p class="text-[12px] text-gray-400">⏳ Mengambil data dari YouTube API...</p>';
+ try{
+  await fetchChannel();
+  await fetchChannelName().catch(()=>{});
+  refreshAll();
+  await Promise.all([fetchVideos(),fetchAnalytics()]);
+  setStatus('');
+ }catch(e){
+  setStatus('❌ Gagal mengambil data YouTube: '+esc(e.message),'error');
+  $('viewsChart').textContent='Data video belum dapat dimuat.';
+  $('topVideos').textContent='Data video belum dapat dimuat.';
+  $('latestVideos').textContent='Data video belum dapat dimuat.';
+  if(!accessToken) showGoogleReconnect();
+ }
+}
+$('refreshBtn').onclick=()=>accessToken?loadAllData():BTPAuth.login();
+// ===== Upload Modal - AI 3 Pilihan =====
+
+let thumbFrames=[], selectedFrame=0, videoFileObj=null, currentFileName='', thumbJob=0, uploading=false;
+function switchTab(tab){currentTab=tab;$('tabLong').className=tab==='long'?'flex-1 bg-black text-white py-2.5 rounded-full font-bold text-[12px]':'flex-1 py-2.5 rounded-full font-bold text-[12px] text-gray-500';$('tabShort').className=tab==='short'?'flex-1 bg-black text-white py-2.5 rounded-full font-bold text-[12px]':'flex-1 py-2.5 rounded-full font-bold text-[12px] text-gray-500';refreshAll();}
+$('vPrivacy').onchange=(e)=>{$('scheduleBox').classList.toggle('hidden',e.target.value!=='scheduled');};
+$('dropZone').onclick=(e)=>{if(e.target.tagName!=='VIDEO') $('videoFile').click();};
+const dz=$('dropZone');
+['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('border-purple-500','bg-purple-50');}));
+['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('border-purple-500','bg-purple-50');}));
+dz.addEventListener('drop',e=>{const f=e.dataTransfer.files[0]; if(f && f.type.startsWith('video/')) handleFile(f); else if(f) alert('File harus video!');});
+let analyzeJob=0, channelName='', detected={topic:'',genre:'',tone:'Emosional',keywords:[],key:'other'};
+// ===== Channel name live dari YouTube API =====
+async function fetchChannelName(){
+ const d=await ytGet(`${YT}/channels?part=snippet&mine=true`);
+ channelName=(d.items&&d.items[0]&&d.items[0].snippet.title)||'';
+ $('channelNameLabel').innerText=channelName||'— (channel tidak ditemukan)';
+ return channelName;
+}
+function chName(){return channelName||'Channel Kami';}
+function chTag(){return channelName?'#'+channelName.replace(/[^\p{L}\p{N}]+/gu,''):'';}
+function cleanName(n){return (n||'').replace(/\.[^/.]+$/,'').replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim();}
+function baseTitle(){return toTitleCase(cleanName(currentFileName).replace(/\b(hd|1920|1080|720|30fps|60fps|mp4|mov|\d{3,})\b/gi,'').replace(/\s+/g,' ').trim())||'Video Baru';}
+function toTitleCase(s){return s.split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');}
+const STOP=new Set(['dan','yang','di','ke','dari','untuk','the','a','of','video','final','new','copy','hd','mp4','mov']);
+// ===== AI Analisa isi video (nama file + frame) =====
+function analyzeContent(fileName, videoElement){
+ const clean=cleanName(fileName), lower=clean.toLowerCase(), has=ws=>ws.some(w=>lower.includes(w));
+ if(has(['ayah','pahlawan','anak','cita','pengorbanan','keluarga'])) detected={key:'keluarga',topic:'keluarga ayah anak',genre:'Family',tone:'Emosional',keywords:['ayah','pahlawan','anak','keluarga','inspirasi']};
+ else if(has(['pasar','misteri','rara','nemu'])) detected={key:'misteri',topic:'misteri pasar',genre:'Mystery',tone:'Emosional',keywords:['misteri','pasar','cerita','penasaran']};
+ else detected={key:'other',topic:clean||'video baru',genre:'General',tone:'Emosional',keywords:[...new Set(lower.split(/\s+/).filter(w=>w.length>1&&!STOP.has(w)&&!/^\d+$/.test(w)))].slice(0,8)};
+ $('aiAnalysis').classList.remove('hidden');
+ $('aiSummary').innerHTML=`<p><b>Summary:</b> Video tentang ${esc(detected.topic)}</p><p><b>Genre:</b> ${esc(detected.genre)} · <b>Tone:</b> ${esc(detected.tone)}</p><p><b>Keywords:</b> ${detected.keywords.map(k=>`<span class="inline-block bg-white border rounded-full px-2 mr-1">${esc(k)}</span>`).join('')||'—'}</p>`;
+ $('aiFrames').innerHTML='';
+ $('vCategory').value=detected.key==='keluarga'?'22':detected.key==='misteri'?'24':$('vCategory').value;
+ if(videoElement) $('aiAnalysisStatus').innerText='⏳ Menganalisa frame...';
+ return detected;
+}
+// Klasifikasi Outdoor/Indoor sederhana: area atas terang & kebiruan/langit = Outdoor
+function classifyFrame(ctx,w,h){
+ const px=ctx.getImageData(0,0,w,Math.max(1,Math.floor(h/3))).data; let r=0,g=0,b=0,n=0;
+ for(let i=0;i<px.length;i+=4*16){r+=px[i];g+=px[i+1];b+=px[i+2];n++;}
+ r/=n;g/=n;b/=n; const bright=(r+g+b)/3;
+ return (bright>140&&b>=r-10)||(b>r+15&&b>110)||(g>r&&g>b&&bright>120)?'Outdoor':'Indoor';
+}
+async function analyzeFrames(){
+ const video=$('videoPreview'), job=++analyzeJob, box=$('aiFrames');
+ const d=isFinite(video.duration)&&video.duration>0?video.duration:3;
+ const times=[3,12,27,45].map(t=>Math.max(0,Math.min(t,d-0.1)));
+ const c=document.createElement('canvas'); c.width=320; c.height=Math.round(320*(video.videoHeight||180)/(video.videoWidth||320));
+ const ctx=c.getContext('2d',{willReadFrequently:true}); box.innerHTML='';
+ try{
+  for(const t of times){
+   await seekTo(video,t); if(job!==analyzeJob) return;
+   ctx.drawImage(video,0,0,c.width,c.height);
+   const label=classifyFrame(ctx,c.width,c.height), url=c.toDataURL('image/jpeg',0.7);
+   const div=document.createElement('div'); div.className='relative rounded-lg overflow-hidden border';
+   div.innerHTML=`<img src="${url}" class="w-full h-[52px] object-cover"><span class="absolute top-1 left-1 ${label==='Outdoor'?'bg-green-600':'bg-blue-600'} text-white text-[8px] px-1 rounded">${label}</span><span class="absolute bottom-1 right-1 bg-black/70 text-white text-[8px] px-1 rounded">${Math.round(t)}s</span>`;
+   box.appendChild(div);
+  }
+  video.currentTime=0; $('aiAnalysisStatus').innerText='✅ Analisa selesai';
+ }catch(e){if(job===analyzeJob) $('aiAnalysisStatus').innerText='⚠️ Gagal ambil frame';}
+}
+// ===== Generator dinamis berdasarkan topik & channel =====
+function generateTitlesAI(base, channelName, detectedTopic){
+ const ch=channelName||'Channel Kami';
+ if(detectedTopic==='keluarga') return [`${base} - Kisah Haru ${ch}`,`Pengorbanan Ayah untuk Cita-Cita Anak | ${ch}`,`${base} - Pesan Menyentuh untuk Ayah Pahlawan Hidupku`,`${base} | Bikin Nangis! Kisah Keluarga ${ch}`,`Ayah Adalah Pahlawan - ${base} | ${ch}`];
+ if(detectedTopic==='misteri') return [`MISTERI ${base.toUpperCase()} - ${ch} | Kisah Nyata`,`${base} - Jangan Salah Lagi! | ${ch}`,`Penasaran! ${base} Ternyata Begini | ${ch}`,`${base} - Cerita Misteri yang Bikin Merinding | ${ch}`];
+ return [`${base} | ${ch} - Cerita Inspiratif`,`${base} - Wajib Tonton Sampai Habis | ${ch}`,`Kisah ${base} yang Menyentuh Hati | ${ch}`,`${base} - Cerita Terbaru ${ch}`];
+}
+// Template tambahan (viral/terbaru 2025) supaya selalu ada 5 judul untuk diskor
+function extraTitlesAI(base, channelName){const ch=channelName||'Channel Kami';return [`${base} Terbaru 2025 - Viral di ${ch}`,`${base} Full Version Terbaru | ${ch} Official`,`Viral! ${base} yang Lagi Ramai Dibicarakan | ${ch}`];}
+function generateDescsAI(title, channelName, d){
+ const ch=channelName||'Channel Kami', kw=d.keywords.join(', ')||d.topic;
+ if(d.key==='keluarga') return [`${title}\n\nVideo ini bercerita tentang pengorbanan seorang ayah demi cita-cita anaknya. Kisah keluarga yang mengingatkan kita bahwa ayah adalah pahlawan dalam hidup kita.\n\n❤️ Bagikan ke ayah dan keluargamu.\n👍 Like, comment & subscribe ${ch}!`,`${title}\n\nUntuk setiap ayah yang berjuang dalam diam. Semoga kisah ini menginspirasi dan menguatkan keluarga kita semua.\n\nTopik: ${kw}\n🔔 Subscribe ${ch} untuk cerita inspiratif lainnya.`,`${title}\n\nTulis di kolom komentar: apa pesan terbaik dari ayahmu? 🙏\n\nTerima kasih sudah menonton ${ch}. Jangan lupa like & share!`];
+ if(d.key==='misteri') return [`${title}\n\nSebuah misteri di pasar yang bikin penasaran. Tonton sampai akhir untuk tahu kebenarannya!\n\n🔍 Topik: ${kw}\n🔔 Subscribe ${ch} untuk cerita misteri lainnya.`,`${title}\n\nKisah nyata yang jarang diketahui orang. Menurutmu apa yang sebenarnya terjadi? Tulis teorimu di komentar!\n\n👍 Like & subscribe ${ch}.`,`${title}\n\nJangan sampai salah lagi! Cerita misteri pasar ini penuh kejutan.\n\nTerima kasih sudah menonton ${ch}. Share ke temanmu yang suka cerita misteri!`];
+ return [`${title}\n\nVideo tentang ${d.topic}. Semoga menginspirasi dan bermanfaat.\n\nTopik: ${kw}\n👍 Like, comment & subscribe ${ch}!`,`${title}\n\nTonton sampai habis dan bagikan pendapatmu di kolom komentar.\n\n🔔 Subscribe ${ch} untuk video terbaru.`,`${title}\n\nTerima kasih sudah menonton ${ch}! Jangan lupa share video ini ke teman dan keluarga.`];
+}
+function generateTagsAI(title, channelName, d){
+ const ch=(channelName||'').toLowerCase(), t=tagBase(title).toLowerCase(), kw=d.keywords;
+ const extra=d.key==='keluarga'?['kisah ayah','ayah pahlawan','cerita keluarga','video inspirasi','kisah haru']:d.key==='misteri'?['misteri pasar','kisah nyata','cerita misteri','video misteri','bikin penasaran']:['cerita inspiratif','video viral','video terbaru'];
+ const sh=currentTab==='short'?['shorts','fyp']:[];
+ return [[t,...kw,ch,...sh],[...kw.slice(0,3),...extra,ch,...sh],[t,...extra.slice(0,3),...kw.slice(-2),ch,...sh]].map(a=>[...new Set(a.filter(Boolean))].join(', '));
+}
+function generateHashtagsAI(channelName, d){
+ const kw=d.keywords.map(k=>'#'+k.replace(/[^\p{L}\p{N}]+/gu,'')).filter(h=>h.length>1), ch=chTag(), sh=currentTab==='short'?'#Shorts ':'';
+ const extra=d.key==='keluarga'?['#kisahharu','#inspirasi','#ayahhebat']:d.key==='misteri'?['#kisahnyata','#ceritamisteri','#viral']:['#inspirasi','#viral'];
+ return [[...kw.slice(0,3),ch,'#fyp'],[...kw.slice(0,2),...extra.slice(0,2),ch,'#fyp'],[...extra,...kw.slice(-2),ch]].map(a=>sh+[...new Set(a.filter(Boolean))].join(' '));
+}
+function pickRandom(arr,n){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a.slice(0,n);}
+// Tag dasar: tanpa "#Shorts" & tanpa karakter < > yang ditolak YouTube
+function tagBase(t){return t.replace(/#\w+/g,'').replace(/[<>]/g,'').replace(/\s+/g,' ').trim();}
+// ===== Skor SEO (Judul, Deskripsi, Hashtag) =====
+function getNiche(){
+ return detected.keywords[0]||detected.topic||'';
+}
+const hitungSkorSEO=(judul)=>{
+ const niche=getNiche(); let skor=0;
+ if(judul.length>=40&&judul.length<=70) skor+=30;
+ if(niche&&judul.toLowerCase().includes(niche.toLowerCase())) skor+=20;
+ if(/(viral|terbaru|2025|official|full album|nostalgia)/i.test(judul)) skor+=20;
+ if(judul.split(' ').length>=6) skor+=15;
+ if(!/[!@#$%^&*()]{2,}/.test(judul)) skor+=15;
+ return Math.min(skor,98);
+};
+// Deskripsi: skor dari panjang (ideal 250-5000 karakter) + keyword niche + ajakan subscribe
+function hitungSkorDeskripsi(desc){
+ const len=desc.trim().length, niche=getNiche().toLowerCase(); let skor=len>=500?60:len>=250?45:len>=120?25:10;
+ if(len>5000) skor=10;
+ if(niche&&desc.toLowerCase().includes(niche)) skor+=20;
+ if(/subscribe|like|komentar|comment|share/i.test(desc)) skor+=10;
+ if((desc.match(/\n/g)||[]).length>=3) skor+=8;
+ return Math.min(skor,98);
+}
+// Hashtag niche RPM/CPM tinggi (keuangan, bisnis, teknologi, edukasi, musik)
+const RPM_TINGGI=/^#(bisnis|business|keuangan|finance|investasi|invest|saham|crypto|kripto|asuransi|properti|kpr|pinjaman|bank|uang|cuan|marketing|digitalmarketing|teknologi|tech|gadget|edukasi|education|belajar|tutorial|kesehatan|health|lagulawas|nostalgia|fullalbum|official|musik|music|kisahnyata|inspirasi)$/i;
+function hitungHashtag(str){
+ const tags=(str.match(/#[\p{L}\p{N}_]+/gu)||[]), rpm=tags.filter(t=>RPM_TINGGI.test(t)).length;
+ const skor=Math.min(98,rpm*25+(tags.length>=3&&tags.length<=15?20:0));
+ return {skor,rpm,total:tags.length};
+}
+function seoBadge(skor,label){return `<span class="px-2 py-1 rounded text-xs font-bold ${skor>=80?'bg-green-500':skor>=60?'bg-yellow-500':'bg-red-500'} text-white whitespace-nowrap">${label||`SEO ${skor}/100`}</span>`;}
+const SCORERS={
+ vTitle:t=>{const k=hitungSkorSEO(t);return {skor:k,html:seoBadge(k)};},
+ vDesc:t=>{const k=hitungSkorDeskripsi(t);return {skor:k,html:seoBadge(k,`SEO ${k}/100 • ${t.trim().length} karakter`)};},
+ vHashtags:t=>{const h=hitungHashtag(t);return {skor:h.skor,html:seoBadge(h.skor,`RPM tinggi ${h.rpm}/${h.total} hashtag`)};},
+};
+function updateSeoBadges(){
+ [['vTitle','titleSeo'],['vDesc','descSeo'],['vHashtags','hashtagSeo']].forEach(([inp,out])=>{const v=$(inp).value; $(out).innerHTML=v?SCORERS[inp](v).html:'';});
+}
+['vTitle','vDesc','vHashtags'].forEach(id=>$(id).addEventListener('input',updateSeoBadges));
+function copyText(text,btn){navigator.clipboard.writeText(text).then(()=>{btn.textContent='✅';setTimeout(()=>{btn.textContent='📋';},1200);}).catch(()=>alert('Gagal copy'));}
+function renderCards(containerId, items, inputId){
+ const container=$(containerId); container.innerHTML='';
+ const scorer=SCORERS[inputId];
+ // Urutkan otomatis dari skor tertinggi ke terendah
+ if(scorer) items=items.map(t=>({t,s:scorer(t).skor})).sort((a,b)=>b.s-a.s).map(x=>x.t);
+ items.forEach((text,idx)=>{
+  const div=document.createElement('div'); div.className=`border-2 ${idx===0?'border-purple-500 bg-purple-50':'border-gray-700 bg-white'} rounded-xl p-2 cursor-pointer text-[11px]`;
+  div.innerHTML=`<div class='flex justify-between items-start gap-2'><span class='badge text-[9px] text-gray-400 font-bold'>AI PILIHAN ${idx+1} ${idx===0?'• TERPILIH':''}</span><span class='flex items-center gap-1 shrink-0'>${scorer?scorer(text).html:''}<span class='check'>${idx===0?'✅':''}</span></span></div><div class='mt-1 flex justify-between items-start gap-2'><div class='whitespace-pre-line min-w-0 break-words'>${esc(text.length>120?text.substring(0,120)+'...':text)}</div><button type='button' class='copyBtn shrink-0 border bg-white px-1.5 py-0.5 rounded text-[10px]' title='Copy'>📋</button></div>`;
+  div.querySelector('.copyBtn').onclick=(e)=>{e.stopPropagation();copyText(text,e.currentTarget);};
+  div.onclick=()=>{
+   $(inputId).value=text;
+   [...container.children].forEach((c,i)=>{c.className=c.className.replace('border-purple-500 bg-purple-50','border-gray-700 bg-white'); c.querySelector('.badge').textContent=`AI PILIHAN ${i+1}`; c.querySelector('.check').textContent='';});
+   div.className=div.className.replace('border-gray-700 bg-white','border-purple-500 bg-purple-50'); div.querySelector('.badge').textContent=`AI PILIHAN ${idx+1} • TERPILIH`; div.querySelector('.check').textContent='✅';
+   if(inputId==='vTitle'){refreshDescs();refreshTags();}
+   if(inputId==='vDesc' && $('aiDisclosure')) applyDisclosure();
+   updateSeoBadges();
+  };
+  container.appendChild(div);
+ });
+ if(items[0]) $(inputId).value=items[0];
+ updateSeoBadges();
+}
+function refreshTitles(){const ai=generateTitlesAI(baseTitle(),channelName,detected.key), list=[...ai,...pickRandom(extraTitlesAI(baseTitle(),channelName),Math.max(1,5-ai.length))].map(t=>currentTab==='short'?t+' #Shorts':t).map(t=>t.substring(0,100));renderCards('titleCards',pickRandom(list,5),'vTitle');firstAITitle=$('vTitle').value||'';if(!hookEdited){$('hookText').value=hookFromTitle(firstAITitle);renderStudio();}}
+function refreshDescs(){const title=$('vTitle').value||baseTitle();renderCards('descCards',pickRandom(generateDescsAI(title,channelName,detected).map(t=>t+(currentTab==='short'?'\n\n#Shorts':'')),3),'vDesc');if($('aiDisclosure'))applyDisclosure();}
+function refreshTags(){renderCards('tagCards',pickRandom(generateTagsAI($('vTitle').value||baseTitle(),channelName,detected),3),'vTags');}
+function refreshHashtags(){renderCards('hashtagCards',pickRandom(generateHashtagsAI(channelName,detected),3),'vHashtags');}
+function refreshAll(){refreshTitles();refreshDescs();refreshTags();refreshHashtags();}
+// Ambil 3 frame secara berurutan (seek satu per satu, bukan sekaligus)
+let seekQueue=Promise.resolve();
+function seekTo(video,t){const p=seekQueue.then(()=>seekOnce(video,t));seekQueue=p.catch(()=>{});return p;}
+function seekOnce(video,t){return new Promise((res,rej)=>{const ok=()=>{cleanup();res();};const bad=()=>{cleanup();rej(new Error('seek gagal'));};const cleanup=()=>{video.removeEventListener('seeked',ok);video.removeEventListener('error',bad);};video.addEventListener('seeked',ok);video.addEventListener('error',bad);video.currentTime=t;});}
+async function generateThumbnailsFromVideo(random){
+ const job=++thumbJob; const video=$('videoPreview'); const cards=$('thumbCards');
+ cards.innerHTML='<p class="col-span-3 text-[10px] text-gray-500">⏳ Mengambil frame...</p>';
+ const d=isFinite(video.duration)&&video.duration>0?video.duration:3;
+ // Frame 0.5s, 1.2s, 2.5s; Refresh = frame acak di seluruh video
+ const base=random?[d*(0.05+Math.random()*0.25), d*(0.35+Math.random()*0.25), d*(0.65+Math.random()*0.3)]:[0.5,1.2,2.5];
+ const times=base.map(t=>Math.max(0,Math.min(t,d-0.05)));
+ const frames=[];
+ try{
+  for(const t of times){
+   await seekTo(video,t); if(job!==thumbJob) return;
+   const c=document.createElement('canvas'); c.width=1280; c.height=720;
+   drawCover(c.getContext('2d'),video,video.videoWidth||1280,video.videoHeight||720,1280,720);
+   frames.push(c);
+  }
+ }catch(e){if(job===thumbJob) cards.innerHTML='<p class="col-span-3 text-[10px] text-red-500">❌ Gagal ambil frame video.</p>'; return;}
+ if(job!==thumbJob) return;
+ video.currentTime=0; thumbFrames=frames; selectedFrame=0; renderThumbFrames(); renderStudio();
+}
+// Gambar sumber memenuhi canvas (crop tengah) — video Short 9:16 tetap jadi 1280x720
+function drawCover(ctx,src,sw,sh,w,h){const sc=Math.max(w/sw,h/sh),dw=sw*sc,dh=sh*sc;ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);ctx.drawImage(src,(w-dw)/2,(h-dh)/2,dw,dh);}
+function renderThumbFrames(){
+ const container=$('thumbCards'); container.innerHTML='';
+ thumbFrames.forEach((c,idx)=>{
+  const div=document.createElement('div'); div.className=`border-2 ${idx===selectedFrame?'border-yellow-400':'border-gray-700'} rounded-xl overflow-hidden cursor-pointer relative`;
+  div.innerHTML=`<img src='${c.toDataURL('image/jpeg',0.6)}' class='w-full aspect-video object-cover'><div class='absolute top-1 left-1 bg-black/70 text-white text-[7px] px-1 rounded'>FRAME ${idx+1}</div>`;
+  div.onclick=()=>{selectedFrame=idx; [...container.children].forEach((ch,i)=>ch.className=ch.className.replace(i===idx?'border-gray-700':'border-yellow-400',i===idx?'border-yellow-400':'border-gray-700')); renderStudio();};
+  container.appendChild(div);
+ });
+}
+// ===== Thumbnail Studio Pro =====
+const HOOK_STOP=new Set(['pesan','untuk','kisah','cerita','yang','dan','di','ke','dari','ini','itu','video','baru','terbaru','wajib','tonton','sampai','habis','bikin','nangis','penasaran','ternyata','begini','adalah','hidupku','the','a','of','to','for','and','shorts']);
+// "Pesan Untuk Ayah Pahlawan" -> "AYAH PAHLAWAN": ambil segmen utama judul, buang kata umum, ambil 2 kata kunci terakhir
+function hookFromTitle(title){
+ const seg=(title||'').replace(/#\S+/g,'').split(/\s[-|–—:]\s|[|!?]/)[0].trim();
+ const words=seg.split(/\s+/).map(w=>w.replace(/[^\p{L}\p{N}-]/gu,'')).filter(Boolean);
+ const key=words.filter(w=>!HOOK_STOP.has(w.toLowerCase()));
+ return (key.length?key:words).slice(-2).join(' ').toUpperCase();
+}
+let hookEdited=false, firstAITitle='';
+function resetHook(){hookEdited=false; $('hookText').value=hookFromTitle(firstAITitle||$('vTitle').value); renderStudio();}
+function wrapLines(ctx,text,maxW){const words=text.split(/\s+/).filter(Boolean),lines=[];let cur='';for(const w of words){const t=cur?cur+' '+w:w;if(ctx.measureText(t).width>maxW&&cur){lines.push(cur);cur=w;}else cur=t;}if(cur)lines.push(cur);return lines;}
+const HOOK_FONTS={'Bebas Neue':'400','Anton':'400','Oswald':'700','Montserrat':'900'};
+let thumbBlob=null, sizeTimer=0, thumbVer=0;
+function renderStudio(){
+ const c=$('thumbEditorCanvas'), ctx=c.getContext('2d'), W=1280, H=720;
+ const bg=thumbFrames[selectedFrame];
+ if(bg) ctx.drawImage(bg,0,0); else {const g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#4c1d95');g.addColorStop(1,'#111827');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
+ const text=($('hookText').value||'').toUpperCase().trim(), size=+$('hookSize').value, pos=$('hookPos').value, font=$('hookFont').value;
+ $('hookSizeLabel').innerText=size;
+ if(text){
+  ctx.font=`${HOOK_FONTS[font]||'900'} ${size}px "${font}", Impact, "Arial Black", sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.lineJoin='round';
+  const pad=60, lines=wrapLines(ctx,text,W-pad*2), lh=size*1.08, total=lh*lines.length;
+  const y=pos==='top'?pad+lh/2:pos==='center'?(H-total)/2+lh/2:H-pad-total+lh/2;
+  lines.forEach((ln,i)=>{const yy=y+i*lh;
+   ctx.shadowColor='rgba(0,0,0,0.6)'; ctx.shadowBlur=18; ctx.shadowOffsetY=6;
+   if($('hookStroke').checked){ctx.lineWidth=Math.max(6,size*0.13); ctx.strokeStyle='#000'; ctx.strokeText(ln,W/2,yy); ctx.shadowColor='transparent';}
+   ctx.fillStyle=$('hookColor').value; ctx.fillText(ln,W/2,yy); ctx.shadowColor='transparent';});
+ }
+ thumbBlob=null; thumbVer++; clearTimeout(sizeTimer); sizeTimer=setTimeout(()=>studioBlob().then(b=>{$('thumbSizeInfo').innerText=(b.size/1024/1024).toFixed(1)+' MB';}).catch(()=>{$('thumbSizeInfo').innerText='> 2 MB';}),250);
+}
+const updateThumbPreview=renderStudio;
+// Hasil canvas -> JPG (maks 2MB sesuai batas YouTube)
+async function studioBlob(){
+ if(thumbBlob) return thumbBlob; const c=$('thumbEditorCanvas'), ver=thumbVer;
+ for(const q of [0.9,0.85,0.75,0.6]){const b=await new Promise(r=>c.toBlob(r,'image/jpeg',q)); if(b&&b.size<2*1024*1024){if(ver===thumbVer) thumbBlob=b; return b;}}
+ throw new Error('Thumbnail terlalu besar');
+}
+async function uploadThumbnail(videoId,blob){
+ if(!accessToken) throw new Error('Belum login Google');
+ const tr=await fetch(`https://www.googleapis.com/upload/youtube/v3/thumbnails/set?videoId=${encodeURIComponent(videoId)}&uploadType=media`,{method:'POST',headers:{Authorization:'Bearer '+accessToken,'Content-Type':'image/jpeg'},body:blob});
+ if(!tr.ok){const t=await tr.text(); throw new Error((tr.status===403?'channel belum terverifikasi untuk custom thumbnail: ':'')+t.substring(0,150));}
+}
+function parseVideoId(v){v=(v||'').trim();const m=v.match(/(?:youtu\.be\/|v=|shorts\/|embed\/)([\w-]{11})/);return m?m[1]:v;}
+['hookText','hookSize','hookColor'].forEach(id=>$(id).addEventListener('input',()=>{if(id==='hookText')hookEdited=true;renderStudio();}));
+['hookFont','hookPos','hookStroke','hookColor'].forEach(id=>$(id).addEventListener('change',renderStudio));
+// Font Google dimuat async — gambar ulang setelah siap
+Object.entries(HOOK_FONTS).forEach(([f,w])=>document.fonts&&document.fonts.load(`${w} 92px "${f}"`).then(renderStudio).catch(()=>{}));
+async function downloadThumbnail(){try{const b=await studioBlob();const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='thumbnail-'+(($('hookText').value||'bubu-kavi').replace(/[^\p{L}\p{N}]+/gu,'-').toLowerCase()||'bubu-kavi')+'.jpg';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}catch(e){alert('Gagal download: '+e.message);}}
+async function uploadThumbnailDirect(){
+ let vid=parseVideoId($('thumbVideoId').value);
+ if(!vid){vid=parseVideoId(prompt('Masukkan Video ID / link YouTube untuk pasang thumbnail (contoh: dQw4w9WgXcQ) atau kosongkan untuk upload nanti bersama video:')||''); if(!vid){alert('Thumbnail siap, akan auto upload saat upload video!');return;} $('thumbVideoId').value=vid;}
+ if(!accessToken){alert('Login Google dulu!');return;}
+ const btn=$('thumbUploadBtn'); btn.disabled=true; $('thumbStatus').innerText='⏳ Upload thumbnail...';
+ try{await uploadThumbnail(vid,await studioBlob()); $('thumbStatus').innerHTML=`✅ Thumbnail terpasang: <a class="underline" target="_blank" href="https://youtu.be/${esc(vid)}">youtu.be/${esc(vid)}</a>`;}
+ catch(e){$('thumbStatus').innerText='⚠️ Gagal: '+e.message;}
+ btn.disabled=false;
+}
+function refreshThumbs(){if(videoFileObj) generateThumbnailsFromVideo(true); else alert('Pilih video dulu!');}
+function handleFile(f){
+ videoFileObj=f; currentFileName=f.name; $('aiPlaceholder').classList.add('hidden'); $('aiResults').classList.remove('hidden'); analyzeJob++; analyzeContent(f.name,$('videoPreview')); refreshTitles(); refreshDescs(); refreshTags(); refreshHashtags(); $('fileName').innerText=f.name+` (${(f.size/1024/1024).toFixed(1)} MB) - AI Generate...`;
+ thumbFrames=[]; selectedFrame=0; hookEdited=false;
+ const video=$('videoPreview'); if(video.src) URL.revokeObjectURL(video.src); video.src=URL.createObjectURL(f); video.load();
+ video.onloadedmetadata=()=>{switchTab(video.videoHeight>video.videoWidth?'short':'long'); $('fileName').innerText=f.name+` (${(f.size/1024/1024).toFixed(1)} MB) - ✅ AI siap`;};
+ video.onloadeddata=async()=>{video.onloadeddata=null; await generateThumbnailsFromVideo(); analyzeFrames();};
+ video.classList.remove('hidden');
+}
+$('videoFile').onchange=(e)=>{const f=e.target.files[0]; if(f) handleFile(f);};
+// ===== Pilihan Generate Video AI (default: Tidak - video asli) =====
+const GEN_AI={veo3:{name:'Veo 3',ratio:'9:16 Shorts'},veo3_16_9:{name:'Veo 3',ratio:'16:9 Panjang'},sora:{name:'Sora',ratio:''}};
+function renderGenerateAI(){
+ const v=$('generateAI').value, box=$('aiGenPreview'), hint=$('generateAIHint');
+ if(v==='tidak'){
+  box.classList.add('hidden'); box.innerHTML='';
+  hint.innerText='✅ Upload video asli dari file kamu. Judul, deskripsi & hashtag AI tetap dibuat + skor SEO.';
+  return;
+ }
+ const g={...GEN_AI[v]}; if(!g.ratio) g.ratio=currentTab==='short'?'9:16 Shorts':'16:9 Panjang';
+ const title=$('vTitle').value||baseTitle(), hook=$('hookText').value||'';
+ hint.innerText=`🤖 Mode AI: ${g.name} (${g.ratio}). Upload file hasil generate di kotak video di atas.`;
+ box.innerHTML=`<p class="font-extrabold text-yellow-400">🎬 Preview Video AI - ${esc(g.name)} • ${esc(g.ratio)}</p><p><b>Prompt:</b> ${esc(title)}${hook?` — hook: "${esc(hook)}"`:''}. Sinematik, pencahayaan dramatis, rasio ${esc(g.ratio)}.</p><p class="text-gray-400">Keterangan AI otomatis diset ke "AI Generated".</p>`;
+ box.classList.remove('hidden');
+}
+$('generateAI').onchange=()=>{
+ if($('generateAI').value!=='tidak' && (!$('aiDisclosure').value||$('aiDisclosure').value==='original')){$('aiDisclosure').value='ai_generated'; applyDisclosure();}
+ renderGenerateAI();
+};
+$('vTitle').addEventListener('input',()=>{if($('generateAI').value!=='tidak') renderGenerateAI();});
+// ===== V10 Keterangan AI (Altered Content Disclosure) =====
+const AI_LABELS={original:'Bukan AI - Rekaman Asli',ai_generated:'AI Generated - Konten dibuat sepenuhnya dengan AI',ai_altered:'AI Altered - Rekaman asli diubah dengan AI',mixed:'Mixed - Campuran rekaman asli dan konten AI'};
+const AI_MARK='🔎 Keterangan:';
+function aiDetails(){return [...document.querySelectorAll('.aiDetail:checked')].map(c=>c.value);}
+function disclosureText(){const v=$('aiDisclosure').value; if(!v||v==='original') return ''; const d=aiDetails(); return `${AI_MARK} ${AI_LABELS[v]}.`+(d.length?'\n'+d.map(x=>'✔️ '+x).join('\n'):'');}
+function stripDisclosure(desc){const i=(desc||'').indexOf(AI_MARK); return i<0?desc:desc.substring(0,i).replace(/\s+$/,'');}
+function withDisclosure(desc){const base=stripDisclosure(desc||''), t=disclosureText(); return t?(base?base+'\n\n':'')+t:base;}
+function applyDisclosure(){
+ const v=$('aiDisclosure').value, p=$('aiLabelPreview');
+ $('aiDetailsBox').classList.toggle('hidden',!v||v==='original');
+ if(!v){p.className='mt-2 text-[11px] font-bold rounded-xl px-3 py-2 bg-gray-100 text-gray-500'; p.textContent='⚠️ Belum dipilih - wajib dipilih sebelum upload';}
+ else if(v==='original'){p.className='mt-2 text-[11px] font-bold rounded-xl px-3 py-2 bg-green-100 text-green-700 border border-green-300'; p.textContent='✅ Label: Bukan AI - tidak ada keterangan ditambahkan ke deskripsi';}
+ else{p.className='mt-2 text-[11px] font-bold rounded-xl px-3 py-2 bg-yellow-100 text-yellow-800 border border-yellow-300 whitespace-pre-line'; p.textContent='🟡 Label YouTube: Konten diubah/sintetis\n'+disclosureText();}
+ $('vDesc').value=withDisclosure($('vDesc').value);
+}
+$('aiDisclosure').onchange=applyDisclosure;
+document.querySelectorAll('.aiDetail').forEach(c=>c.onchange=applyDisclosure);
+refreshAll(); renderStudio();
+$('uploadBtn').onclick=async()=>{
+ if(uploading) return;
+ const file=videoFileObj; if(!file){alert('Pilih video!');return;} if(!accessToken){alert('Login dulu!');return;}
+ // Poin: Video 10, Shorts 5 (admin gratis). Dicek dulu, dipotong setelah upload berhasil
+ const poinType=currentTab==='short'?'uploadshort':'upload'; if(!hasCredit(poinType)) return;
+ const aiDisclosure=$('aiDisclosure').value; if(!aiDisclosure){alert('Pilih Keterangan AI dulu (wajib YouTube 2026)!'); $('aiDisclosure').focus(); return;}
+ let title=($('vTitle').value||cleanName(file.name)).trim(); let desc=stripDisclosure($('vDesc').value||''); let hashtags=$('vHashtags').value.trim(); if(hashtags && !desc.includes(hashtags)) desc+='\n\n'+hashtags;
+ let tags=$('vTags').value.split(',').map(s=>s.trim().replace(/^#/,'').replace(/[<>]/g,'')).filter(Boolean); let privacy=$('vPrivacy').value; let category=$('vCategory').value; let publishAt=null;
+ if(privacy==='scheduled'){const s=$('vSchedule').value; if(!s){alert('Pilih jadwal!');return;} const dt=new Date(s); if(dt<=new Date()){alert('Jadwal harus di masa depan!');return;} publishAt=dt.toISOString(); privacy='private';}
+ if(currentTab==='short' && !title.toLowerCase().includes('#shorts')) title+=' #Shorts'; if(currentTab==='short' && !desc.toLowerCase().includes('#shorts')) desc+='\n\n#Shorts';
+ const aiText=disclosureText(); if(aiDisclosure!=='original' && aiText){desc=desc.substring(0,4990-aiText.length)+'\n\n'+aiText;}
+ title=title.replace(/[<>]/g,'').substring(0,100); desc=desc.replace(/[<>]/g,'').substring(0,5000);
+ console.log('[AI Disclosure Audit]',{aiDisclosure,label:AI_LABELS[aiDisclosure],details:aiDetails(),containsSyntheticMedia:aiDisclosure!=='original',disclosureText:aiText,file:file.name,time:new Date().toISOString()});
+ let thumbBlob; try{thumbBlob=await studioBlob();}catch(e){alert('Thumbnail gagal dibuat: '+e.message);return;}
+ uploading=true; $('uploadBtn').disabled=true; $('uploadBtn').classList.add('opacity-60');
+ const done=()=>{uploading=false; $('uploadBtn').disabled=false; $('uploadBtn').classList.remove('opacity-60');};
+ $('progressBox').classList.remove('hidden'); $('progressBar').style.width='0%'; $('progressText').innerText='0%'; $('resultBox').innerText='⏳ Upload...';
+ try{
+  const metadata={snippet:{title,description:desc,tags,categoryId:category},status:{privacyStatus:privacy,selfDeclaredMadeForKids:false,containsSyntheticMedia:aiDisclosure!=='original', ...(publishAt?{publishAt}:{})}};
+  const initRes=await fetch('https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status',{method:'POST',headers:{Authorization:'Bearer '+accessToken,'Content-Type':'application/json; charset=UTF-8','X-Upload-Content-Type':file.type||'video/*','X-Upload-Content-Length':String(file.size)},body:JSON.stringify(metadata)});
+  if(!initRes.ok){if(initRes.status===401){accessToken=null; $('loginBox').classList.remove('hidden'); dashLoginBtn.classList.remove('hidden');} throw new Error(await initRes.text());}
+  const uploadUrl=initRes.headers.get('Location'); if(!uploadUrl) throw new Error('URL upload tidak ditemukan');
+  const xhr=new XMLHttpRequest(); xhr.open('PUT',uploadUrl,true); xhr.setRequestHeader('Content-Type',file.type||'video/*');
+  xhr.upload.onprogress=(e)=>{if(e.lengthComputable){const pct=Math.round(e.loaded/e.total*100); $('progressBar').style.width=pct+'%'; $('progressText').innerText=pct+'%';}};
+  xhr.onerror=()=>{$('resultBox').innerText='❌ Gagal: koneksi terputus'; done();};
+  xhr.onload=async()=>{
+   if(xhr.status>=200 && xhr.status<300){
+    const res=JSON.parse(xhr.responseText); const vid=encodeURIComponent(res.id); let msg=`✅ Berhasil! <a href='https://youtu.be/${vid}' target='_blank' class='text-blue-600 underline'>https://youtu.be/${vid}</a><br>`;
+    $('thumbVideoId').value=res.id; useCredit(poinType);
+    $('resultBox').innerHTML=msg+'⏳ Upload Thumbnail Studio (dengan hook)...';
+    try{await uploadThumbnail(res.id,thumbBlob); msg+='✅ Thumbnail hook terpasang!<br>';}
+    catch(e){msg+='⚠️ Thumbnail gagal: '+esc(e.message)+'<br>';}
+    $('resultBox').innerHTML=msg+(publishAt?'📅 Terjadwal!':privacy==='public'?'🎉 LIVE!':'🎉 Selesai!');
+    setTimeout(loadAllData,3000);
+   }else{$('resultBox').innerText='❌ Gagal: '+xhr.responseText;}
+   done();
+  };
+  xhr.send(file);
+ }catch(err){$('resultBox').innerText='❌ Error: '+err.message; done();}
+};
+</script>
+
+<script src="/utils/btp-ai-chat.js" defer></script>
+<script src="/utils/points-actions.js" defer></script>
+<script src="/utils/channel-seo.js" defer></script>
+</body>
+</html>

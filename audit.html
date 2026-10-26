@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<script src="/utils/btp-auth-guard.js"></script>
+<script src="/utils/output-language.js"></script>
+<script src="/utils/points-meter.js"></script>
+<link rel="stylesheet" href="/utils/btp-widget-visibility.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audit Video &amp; SEO Score - BosterTubePro</title>
+<link rel="icon" type="image/png" href="/b-logo.png">
+<meta name="color-scheme" content="light">
+<link rel="stylesheet" href="/utils/btp-theme.css">
+<script src="/utils/btp-mobile.js" defer></script>
+<script src="/utils/btp-bottom-nav.js" defer></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="/utils/credit.js"></script>
+<script src="/utils/btp-auth.js"></script>
+<script src="/utils/btp-ai-chat.js" defer></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Anton&display=swap" rel="stylesheet">
+<style>
+body{font-family:'Inter',sans-serif}
+.real{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:800;letter-spacing:.04em;padding:2px 7px;border-radius:999px;background:#DCFCE7;color:#15803D;white-space:nowrap}
+.real::before{content:'';width:6px;height:6px;border-radius:50%;background:#22C55E}
+.pill{padding:8px 16px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid #E5E7EB;background:#fff;color:#4B5563}
+.pill.on{background:#111;color:#fff;border-color:#111}
+.opt{display:flex;gap:8px;align-items:flex-start;border:2px solid #E5E7EB;border-radius:10px;padding:8px;cursor:pointer;font-size:12px;background:#fff}
+.opt.on,.opt:has(input:checked){border-color:#9333EA;background:#F3E8FF}
+.opt input{margin-top:3px;accent-color:#7C5CFF}
+.spin{display:inline-block;animation:sp 1s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+.sk{background:linear-gradient(90deg,#F3F4F6,#E5E7EB,#F3F4F6);background-size:200% 100%;animation:sh 1.2s infinite;border-radius:10px;height:36px}@keyframes sh{to{background-position:-200% 0}}
+/* Keep the audit catalogue compact, independently of Tailwind loading. */
+#list{display:flex;flex-direction:column;gap:24px}
+.video-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+@media(min-width:768px){.video-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.video-section-title{font-size:16px;font-weight:800;color:#111;margin-bottom:10px}
+.video-card{min-height:220px;min-width:0;overflow:hidden;background:#fff;border:1px solid #e5e7eb;border-radius:14px;display:flex;flex-direction:column}
+.video-preview{flex:none;position:relative;display:flex;justify-content:center}
+.video-preview img{width:100%;height:100%;object-fit:cover}
+.video-thumb{position:relative;display:block;overflow:hidden;border-radius:8px;width:100%;aspect-ratio:16/9}
+.video-thumb.is-short{aspect-ratio:9/16;height:320px;max-height:320px;width:auto;max-width:240px;margin:0 auto}
+.video-preview{padding:8px 8px 0;background:#fff}
+.video-duration{position:absolute;bottom:5px;right:7px;background:#181c24;color:#fff;font-size:10px;padding:1px 5px;border-radius:4px}
+.video-info{padding:7px 10px;min-width:0;flex:1;display:flex;flex-direction:column;gap:3px}
+.video-title{font-size:14px;line-height:18px;height:36px;font-weight:600;color:#000;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;overflow-wrap:anywhere}
+.video-meta{font-size:10px;color:#6b7280;line-height:13px}
+.video-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:auto}
+.video-badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;min-width:0;width:100%}
+.video-badges span{font-size:11px;font-weight:700;line-height:16px;padding:4px 8px;border:1px solid;border-radius:6px;white-space:nowrap}
+.video-badges .badge-ok{background:#dcfce7;color:#15803d;border-color:#bbf7d0}
+.video-badges .badge-fix{background:#fee2e2;color:#b91c1c;border-color:#fecaca;font-weight:800}
+.video-open{flex:none;font-size:12px;line-height:18px;font-weight:700;border-radius:8px;background:#000;color:#fff;padding:6px 12px}
+.video-open:hover{background:#1f2937}
+.video-open:focus-visible{outline:2px solid #0284c7;outline-offset:2px}
+.audit-dialog{width:min(1100px,calc(100% - 24px));max-height:90vh;overflow:auto;border:0;border-radius:16px;padding:20px;background:#fff;color:#252d39}
+.audit-dialog::backdrop{background:rgb(18 22 30 / .65)}
+.audit-dialog-heading{display:flex;justify-content:space-between;align-items:start;gap:16px;margin-bottom:16px}
+</style>
+<link rel="stylesheet" href="/utils/btp-header.css">
+<script src="/utils/btp-brand.js" defer></script>
+<script src="/utils/task-ads.js" defer></script>
+</head>
+<body class="bg-[#f5f6ff]">
+<div class="flex flex-col md:flex-row min-h-screen">
+<aside id="btpSidebar" class="w-[260px] max-w-[85vw] bg-[#121214] text-white flex flex-col fixed inset-y-0 left-0 z-50 h-screen overflow-y-auto p-4 -translate-x-full md:translate-x-0 transition-transform duration-200">
+<div class="flex items-center gap-2.5 mb-7 px-2"><div id="brandLogo" class="w-10 h-10 bg-white rounded-lg flex items-center justify-center overflow-hidden shrink-0"><img src="/b-logo.png" width="40" height="40" alt="Logo B merah BosterTubePro" class="w-10 h-10 object-contain"></div><span id="brandName" class="font-bold text-[14px] truncate">BosterTubePro</span></div>
+<nav class="space-y-1">
+<a href="/" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>📊</span> Dashboard</a>
+<a href="/analytics" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>📈</span> Analytics</a>
+<a href="/audit" class="w-full flex items-center gap-3 bg-[#7C5CFF] px-3 py-2.5 rounded-xl text-[13px] font-bold"><span>📄</span> Audit Video</a>
+<a href="/promosi" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>🚀</span> Promosi</a>
+<a href="/tugas" class="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>💼 Tugas Iklan</span><span class="badge-new" style="font-size:10px;background:#e6ddff;color:#6347b5;border-radius:5px;padding:2px 5px">Baru</span><span id="jumlahTugas" class="badge-count" data-task-count style="font-size:10px;white-space:nowrap">… tugas</span></a>
+<a href="/kompetitor" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>👥</span> Kompetitor</a>
+<a href="/pengaturan" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>⚙️</span> Pengaturan</a>
+<a href="/billing" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>💳</span> Harga &amp; Billing</a>
+<a href="/bantuan" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>💬</span> Bantuan &amp; Pengaduan</a>
+<div class="mt-5 p-[1.5px] rounded-xl bg-gradient-to-br from-[#7C5CFF] to-[#FF6BA8]"><button type="button" onclick="location.href='/upload'" class="w-full bg-[#1E1E24] px-3 py-3 rounded-[10px] text-left"><p class="text-[13px] font-bold">🎥 Upload Video </p><p class="text-[11px] text-gray-400">Panjang & Short</p></button></div>
+<div class="mt-3 bg-[#1C1C22] border border-[#2A2A33] rounded-xl p-3"><p class="text-[11px] font-bold text-[#A78BFA]">AI Generator</p><p class="text-[10px] text-gray-400">Judul, deskripsi, thumbnail, tag & hashtag AI 3 pilihan</p></div>
+</nav>
+<div class="mt-auto"><div id="authStatus" class="bg-[#1E1E24] border border-[#2A2A33] px-3 py-2 rounded-xl text-[10px] text-gray-400 mb-3">🔴 Belum Login Google</div><div class="flex items-center gap-3"><div id="profileAvatar" class="w-8 h-8 rounded-full bg-[#2A2A33] overflow-hidden shrink-0"></div><div class="min-w-0"><p id="profileName" class="text-[12px] font-bold truncate">Belum login</p><p id="profileHandle" class="text-[10px] text-gray-400 truncate">Login Google untuk scan channel</p></div></div></div>
+</aside>
+
+<main class="ml-0 md:ml-[260px] flex-1 p-3 md:p-7 min-w-0">
+<section aria-label="BosterTubePro" class="brand-hero"><img src="/b-logo.png" width="32" height="32" alt="Logo B merah BosterTubePro"><div><p class="brand-version">BosterTubePro</p><p class="brand-channel" data-brand-channel>Channel YouTube kamu</p></div></section>
+<div class="flex justify-between items-center mb-6 gap-4">
+ <div class="min-w-0"><h1 class="text-[22px] font-extrabold">Audit Video · Fix All <span class="real align-middle">REAL API</span></h1><p class="text-[13px] text-gray-500">Scan otomatis 20 video terbaru channel kamu. Pilih saran AI (diurutkan dari skor SEO tertinggi), klik Gunakan → tersalin ke clipboard. Generate dan Gunakan Judul/Deskripsi/Tag/Hashtag 2 poin. Thumbnail AI 8 poin, ganti pilihan 3 poin, download 10 poin, set ke YouTube 5 poin. Video private tidak ditampilkan.</p></div>
+ <div class="flex gap-2 items-center shrink-0">
+  <span data-admin-badge hidden class="hidden bg-[#121214] text-yellow-300 border border-yellow-400/40 px-3 py-2.5 rounded-full text-[11px] font-extrabold tracking-wider shrink-0">👑 ADMIN</span>
+  <button id="rescanBtn" class="hidden bg-white border px-4 py-2.5 rounded-full text-[12px] font-bold">🔄 Scan Ulang</button>
+  <button id="loginBtn" class="bg-[#7C5CFF] text-white px-5 py-2.5 rounded-full text-[12px] font-bold">⏳ Memuat Google...</button>
+ </div>
+</div>
+
+<a href="/audit-studio" class="block mb-5 rounded-2xl bg-[#171c28] text-white p-5"><span class="text-xs font-bold text-sky-300">BOSTER PRO STUDIO - YouTube Growth Tools</span><h2 class="text-xl font-bold mt-1">Audit, Perbaiki, dan Tumbuhkan Channel Kamu</h2><p class="text-sm mt-2">Hook 30 Detik • SEO Score • Cek Copyright • Caption Promosi • Peluang CPM &amp; RPM</p></a>
+<p id="statusBar" class="bg-white border rounded-2xl px-4 py-3 text-[12px] text-gray-500 mb-5">Login Google dulu — 20 video terbaru channel langsung di-scan otomatis.</p>
+
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4" id="summary">
+ <button data-f="title" class="sumCard text-left bg-white border rounded-2xl p-4 hover:border-[#7C5CFF]"><p class="text-[11px] text-gray-500">✏️ Judul &lt; 50 karakter</p><p class="text-[26px] font-extrabold text-[#DC2626]" id="cTitle">—</p><p class="text-[10px] text-gray-400">video perlu fix judul</p></button>
+ <button data-f="desc" class="sumCard text-left bg-white border rounded-2xl p-4 hover:border-[#7C5CFF]"><p class="text-[11px] text-gray-500">📝 Deskripsi &lt; 200 karakter</p><p class="text-[26px] font-extrabold text-[#EA580C]" id="cDesc">—</p><p class="text-[10px] text-gray-400">video perlu fix deskripsi</p></button>
+ <button data-f="thumb" class="sumCard text-left bg-white border rounded-2xl p-4 hover:border-[#7C5CFF]"><p class="text-[11px] text-gray-500">🖼️ Thumbnail perlu fix</p><p class="text-[26px] font-extrabold text-[#7C3AED]" id="cThumb">—</p><p class="text-[10px] text-gray-400">resolusi / gelap / kontras rendah</p></button>
+ <button data-f="tag" class="sumCard text-left bg-white border rounded-2xl p-4 hover:border-[#7C5CFF]"><p class="text-[11px] text-gray-500">🏷️ Tag &lt; 5</p><p class="text-[26px] font-extrabold text-[#0891B2]" id="cTag">—</p><p class="text-[10px] text-gray-400">video perlu fix tag</p></button>
+</div>
+
+<div class="flex gap-2 mb-5 flex-wrap" id="filters">
+ <button data-f="all" class="pill on">Semua <span data-n="all"></span></button>
+ <button data-f="title" class="pill">✏️ Judul <span data-n="title"></span></button>
+ <button data-f="desc" class="pill">📝 Deskripsi <span data-n="desc"></span></button>
+ <button data-f="thumb" class="pill">🖼️ Thumbnail <span data-n="thumb"></span></button>
+ <button data-f="tag" class="pill">🏷️ Tag <span data-n="tag"></span></button>
+</div>
+
+<div id="list" class="flex flex-col gap-6"></div>
+<dialog id="auditDialog" class="audit-dialog" aria-labelledby="auditDialogTitle">
+ <div class="audit-dialog-heading"><div><p class="text-xs font-bold text-sky-800">BOSTER PRO STUDIO - YouTube Growth Tools</p><h2 id="auditDialogTitle" class="font-bold mt-2"></h2></div><button type="button" id="closeAudit" class="border rounded-lg px-3 py-2 text-sm">Tutup</button></div>
+ <div id="auditDetail"></div>
+</dialog>
+<footer class="btp-legal" style="margin-top:28px;padding:16px 0 4px;border-top:1px solid rgba(128,128,160,.25);text-align:center;font-size:12px;color:#8b8ba3"><a href="/privacy-policy" style="color:inherit">Kebijakan Privasi</a> | <a href="/terms" style="color:inherit">Syarat Layanan</a> | <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" style="color:inherit">YouTube ToS</a> | <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style="color:inherit">Google Privacy</a><p>Butuh bantuan? Hubungi Admin: <a href="mailto:boosterviewsubsid@gmail.com">boosterviewsubsid@gmail.com</a> · <a href="/bantuan">Bantuan</a></p></footer>
+</main>
+<script src="/utils/points-actions.js" defer></script>
+</div>
+
+<script>
+const CLIENT_ID='708531408468-8ecbt56e9gebgu3oj4ljf5d58e95up9q.apps.googleusercontent.com';
+const SCOPES='https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/yt-analytics-monetary.readonly';
+const YT='https://www.googleapis.com/youtube/v3';
+const MAX_VIDEOS=20;
+// Tarif audit teks terpisah dari Thumbnail Studio.
+const COST={title:2,desc:2,tag:2,hashtag:2,thumb:10,thumbSet:5,refresh:2,thumbRefresh:8};
+const PRICE_TIP='Judul, deskripsi, tag, hashtag hanya 2 Poin! Thumbnail AI tetap 8 Poin karena generate 3 gambar';
+const SEC={title:{label:'✏️ Judul',field:'titles'},desc:{label:'📝 Deskripsi',field:'descs'},thumb:{label:'🖼️ Thumbnail Studio',field:'hooks'},tag:{label:'🏷️ Tag',field:'tags'},hashtag:{label:'#️⃣ Hashtag',field:'hashtags'}};
+let accessToken=null, tokenClient=null, channel=null, videos=[], filter='all', scanning=false;
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>n==null?'—':Number(n).toLocaleString('id-ID');
+function setStatus(t,err){$('statusBar').innerHTML=t;$('statusBar').className='border rounded-2xl px-4 py-3 text-[12px] mb-5 '+(err?'bg-red-50 border-red-200 text-red-600 font-semibold':'bg-white text-gray-500');}
+
+// ===== Poin = saldo boster_poin (credit.js): admin gratis, user login dipotong di server, tamu di browser =====
+const AU_TYPE={title:'au_title',desc:'au_desc',thumb:'au_thumb',tag:'au_tag',hashtag:'au_hashtag',thumbSet:'au_thumbset',refresh:'au_refresh'};
+function getPoin(){return getCredits();}
+function pakaiPoin(k){return useCredit(AU_TYPE[k]);}
+// Saldo & badge ADMIN di header dirender credit.js ([data-credits], [data-admin-badge])
+
+// ===== Google Login (token sama dengan dashboard/analytics) =====
+const loginBtn=$('loginBtn');
+loginBtn.onclick=()=>alert('Google masih dimuat, tunggu sebentar...');
+function onToken(resp){
+ if(resp.error){alert('Login gagal: '+resp.error);return;}
+ accessToken=resp.access_token;
+ try{sessionStorage.setItem('btp_token',JSON.stringify({token:accessToken,exp:Date.now()+(+resp.expires_in||3600)*1000-60000}));}catch(e){}
+ $('authStatus').innerHTML='🟢 Login OK · REAL API';
+ $('authStatus').className='bg-green-900/20 border border-green-400/30 px-3 py-2 rounded-xl text-[10px] text-green-400 mb-3';
+ loginBtn.classList.add('hidden'); $('rescanBtn').classList.remove('hidden');
+ scanChannel();
+}
+function initGoogle(){
+ if(typeof google==='undefined'||!google.accounts||!google.accounts.oauth2){setTimeout(initGoogle,500);return;}
+ tokenClient=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:SCOPES,callback:onToken,
+  error_callback:err=>alert('Login dibatalkan / popup diblokir: '+(err&&err.type?err.type:'unknown'))});
+ loginBtn.onclick=()=>tokenClient.requestAccessToken();
+ loginBtn.innerText='🔐 Login Google';
+}
+try{const t=JSON.parse(sessionStorage.getItem('btp_token')||'null');if(t&&t.token&&t.exp>Date.now())setTimeout(()=>onToken({access_token:t.token,expires_in:Math.round((t.exp-Date.now())/1000)+60}),0);}catch(e){}
+initGoogle();
+$('rescanBtn').onclick=()=>scanChannel();
+
+async function apiGet(url){
+ if(!accessToken) throw new Error('Belum login Google');
+ const res=await fetch(url,{headers:{Authorization:'Bearer '+accessToken}});
+ const json=await res.json().catch(()=>({}));
+ // Token dari project Google lama (#1097258207184, sudah dihapus) = sesi tidak berlaku -> wajib login ulang
+ const stale=res.status===403&&/project.*(deleted|not found)|deleted_client|invalid_client/i.test(String(json.error&&json.error.message||''));
+ if(res.status===401||stale){accessToken=null;try{sessionStorage.removeItem('btp_token');}catch(e){}loginBtn.classList.remove('hidden');throw new Error(stale?'Token Google lama sudah tidak berlaku. Klik Login Google untuk masuk ulang.':'Sesi Google habis, silakan login ulang');}
+ if(!res.ok) throw new Error((json.error&&json.error.message)||('HTTP '+res.status));
+ return json;
+}
+
+// ===== Scan 20 video terbaru (REAL API) =====
+function isoSeconds(iso){const m=String(iso||'').match(/P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);if(!m)return 0;return (+m[1]||0)*86400+(+m[2]||0)*3600+(+m[3]||0)*60+(+m[4]||0);}
+function fmtDuration(sec){const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return (h?h+':'+String(m).padStart(2,'0'):m)+':'+String(s).padStart(2,'0');}
+async function scanChannel(){
+ if(scanning) return; scanning=true;
+ $('list').innerHTML=Array.from({length:4},()=>'<div class="sk" style="height:140px"></div>').join('');
+ try{
+  setStatus('<span class="spin">⏳</span> GET youtube/v3/channels?part=snippet,contentDetails&mine=true ...');
+  const cd=await apiGet(`${YT}/channels?part=snippet,contentDetails&mine=true`);
+  channel=cd.items&&cd.items[0]; if(!channel) throw new Error('Akun Google ini belum punya channel YouTube');
+  const th=(channel.snippet.thumbnails.default||{}).url;
+  $('profileName').innerText=channel.snippet.title;$('profileHandle').innerText=channel.snippet.customUrl||'YouTube Channel';
+  if(th)$('profileAvatar').innerHTML=`<img src="${esc(th)}" class="w-full h-full object-cover" alt="">`;
+  const uploads=channel.contentDetails.relatedPlaylists.uploads;
+  setStatus('<span class="spin">⏳</span> GET youtube/v3/playlistItems (uploads, maxResults=50) ...');
+  const pl=await apiGet(`${YT}/playlistItems?part=snippet,contentDetails,status&maxResults=50&playlistId=${encodeURIComponent(uploads)}`);
+  // Video private tidak dimunculkan (hanya public & unlisted)
+  const ids=(pl.items||[]).filter(notPrivate).map(i=>i.contentDetails.videoId).filter(Boolean);
+  if(!ids.length){videos=[];render();setStatus(`Channel <b>${esc(channel.snippet.title)}</b> belum punya video.`);return;}
+  setStatus('<span class="spin">⏳</span> GET youtube/v3/videos?part=snippet,statistics,contentDetails,status ...');
+  const vd=await apiGet(`${YT}/videos?part=snippet,statistics,contentDetails,status&id=${ids.join(',')}`);
+  const byId=Object.fromEntries((vd.items||[]).filter(notPrivate).map(v=>[v.id,v]));
+  videos=ids.map(id=>byId[id]).filter(Boolean).slice(0,MAX_VIDEOS).map(buildVideo);
+  render();
+  setStatus(`✅ <b>${videos.length} video REAL</b> (public & unlisted, private disembunyikan) dari <b>${esc(channel.snippet.title)}</b> (YouTube Data API v3). Klik Buka Audit untuk melihat detail dan saran AI.`);
+  videos.forEach(analyzeThumb);
+ }catch(e){setStatus('❌ '+esc(e.message),true);$('list').innerHTML='';}
+ finally{scanning=false;}
+}
+function notPrivate(v){const ps=v.privacyStatus||(v.status&&v.status.privacyStatus);const t=(v.snippet&&v.snippet.title)||v.title||'';return ps!=='private'&&t!=='Private video'&&t!=='Deleted video'&&!/^Private\b/.test(t);}
+function buildVideo(raw){
+ const s=raw.snippet, st=raw.statistics||{}, t=s.thumbnails||{};
+ const v={id:raw.id,raw,title:s.title||'',desc:s.description||'',tags:s.tags||[],published:s.publishedAt,
+  views:+st.viewCount||0,likes:st.likeCount!=null?+st.likeCount:null,comments:st.commentCount!=null?+st.commentCount:null,
+  dur:isoSeconds(raw.contentDetails.duration),hasMaxres:!!t.maxres,
+  thumbUrl:(t.maxres||t.standard||t.high||t.medium||t.default||{}).url||'',
+  thumbIssues:[],opts:{},history:{},loading:{},used:{},gen:{},sel:{title:0,desc:0,tag:0,thumb:0},isShort:false,studio:{hook:'',color:'#FFD400',pos:'bottom',bg:'original',style:'bold',size:130}};
+ v.isShort=(v.dur>0&&v.dur<=60)||/#shorts?\b/i.test(v.title);
+ if(!v.hasMaxres) v.thumbIssues.push('Tidak ada versi HD 1280×720 (maxres)');
+ v.issues={title:v.title.length<50||(v.isShort&&trailingTags(v.title).length<3),desc:v.desc.length<200,tag:v.tags.length<5,thumb:v.thumbIssues.length>0};
+ return v;
+}
+// Analisa thumbnail REAL (pixel): kecerahan & kontras dari gambar i.ytimg.com (CORS diizinkan)
+function analyzeThumb(v){
+ const img=new Image(); img.crossOrigin='anonymous';
+ img.onload=()=>{try{
+  const c=document.createElement('canvas');c.width=160;c.height=90;const ctx=c.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0,160,90);
+  const d=ctx.getImageData(0,0,160,90).data;let sum=0,sq=0,n=0;
+  for(let i=0;i<d.length;i+=4){const l=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];sum+=l;sq+=l*l;n++;}
+  const mean=sum/n, sd=Math.sqrt(Math.max(0,sq/n-mean*mean));
+  v.bright=Math.round(mean); v.contrast=Math.round(sd);
+  if(mean<80) v.thumbIssues.push(`Terlalu gelap (kecerahan ${Math.round(mean)}/255)`);
+  if(sd<40) v.thumbIssues.push(`Kontras rendah (${Math.round(sd)})`);
+  v.issues.thumb=v.thumbIssues.length>0; updateCounts(); refreshCardBadges(v);
+ }catch(e){console.info('[Audit] analisa thumb',e.message);}};
+ img.src=(v.raw.snippet.thumbnails.medium||{}).url||v.thumbUrl;
+}
+
+// ===== Render =====
+function counts(){const c={all:videos.length,title:0,desc:0,thumb:0,tag:0};videos.forEach(v=>{for(const k of ['title','desc','thumb','tag']) if(v.issues[k]) c[k]++;});return c;}
+function updateCounts(){const c=counts();$('cTitle').innerText=c.title;$('cDesc').innerText=c.desc;$('cThumb').innerText=c.thumb;$('cTag').innerText=c.tag;document.querySelectorAll('[data-n]').forEach(el=>el.innerText='('+c[el.dataset.n]+')');}
+function setFilter(f){filter=f;document.querySelectorAll('#filters .pill').forEach(b=>b.classList.toggle('on',b.dataset.f===f));render();}
+document.querySelectorAll('#filters .pill, .sumCard').forEach(b=>b.onclick=()=>setFilter(b.dataset.f));
+
+function render(){
+ updateCounts();
+ const list=$('list'); list.innerHTML='';
+ const shown=videos.filter(v=>filter==='all'||v.issues[filter]);
+ if(!shown.length){list.innerHTML=`<div class="bg-white border rounded-2xl p-8 text-center text-[13px] text-gray-500">${videos.length?'Tidak ada video yang perlu fix di filter ini.':'Belum ada data.'}</div>`;return;}
+ // Video Panjang & Video Short dirender di 2 section terpisah, filter berlaku untuk keduanya, tanpa limit.
+ const longVideos=shown.filter(v=>!isShortVideo(v)), shortVideos=shown.filter(isShortVideo);
+ [['Video Panjang',longVideos,'Tidak ada video panjang di filter ini.'],['Video Short',shortVideos,'Tidak ada video Short di filter ini.']].forEach(([label,arr,empty])=>{
+  const sec=document.createElement('section'); sec.setAttribute('aria-label',label);
+  sec.innerHTML=`<h2 class="video-section-title">${label} (${arr.length})</h2><div class="video-grid grid grid-cols-1 md:grid-cols-2 gap-4"></div>`;
+  const grid=sec.querySelector('.video-grid');
+  if(arr.length) arr.forEach(v=>grid.appendChild(cardEl(v)));
+  else grid.innerHTML=`<div class="bg-white border rounded-2xl p-6 text-center text-[13px] text-gray-500" style="grid-column:1/-1">${empty}</div>`;
+  list.appendChild(sec);
+ });
+}
+function isShortVideo(v){return !!v.isShort||(v.dur>0&&v.dur<=60)||/#short/i.test(v.title||'');}
+function visibleSecs(){return ['title','desc','thumb','tag','hashtag'];}
+function cardEl(v){
+ const d=document.createElement('article'); d.className='video-card'; d.dataset.vid=v.id; d.id='card-'+v.id;
+ d.innerHTML=`<a href="https://www.youtube.com/watch?v=${encodeURIComponent(v.id)}" target="_blank" rel="noopener noreferrer" class="video-preview" aria-label="Tonton ${esc(v.title)}"><div class="video-thumb ${isShortVideo(v)?'is-short aspect-[9/16] max-h-[320px] mx-auto':'aspect-video w-full'} overflow-hidden rounded-lg"><img src="${esc((v.raw.snippet.thumbnails[isShortVideo(v)?'high':'medium']||v.raw.snippet.thumbnails.medium||{}).url||v.thumbUrl)}" alt="" loading="lazy" class="w-full h-full object-cover"><span class="video-duration">${fmtDuration(v.dur)}</span></div></a>
+ <div class="video-info"><h2 class="video-title" title="${esc(v.title)}">${esc(v.title)}</h2><p class="video-meta">${fmt(v.views)} views${v.isShort?' · SHORT':''}</p><div class="video-actions"><div class="video-badges" data-badges></div><button type="button" class="video-open" aria-label="Buka Audit: ${esc(v.title)}">Buka Audit</button></div></div>`;
+ badgesHtml(v,d.querySelector('[data-badges]'));
+ d.querySelector('.video-open').onclick=()=>openAudit(v);
+ return d;
+}
+let seoReviewObserver;
+function bindSeoReview(v){
+ seoReviewObserver?.disconnect();
+ const root=$('auditDetail'),panel=document.createElement('section');
+ panel.className='mt-4 border border-blue-200 rounded-xl p-4';
+ panel.innerHTML='<button type="button" data-seo-review class="rounded-lg px-4 py-2 font-bold text-white">Review SEO Video (2 Poin)</button><div data-seo-result role="status" aria-live="polite" class="mt-3 text-sm"></div>';
+ root.append(panel);
+ const button=panel.querySelector('button'),output=panel.querySelector('[data-seo-result]');
+ let busy=false,lastSnapshot='',requestId='',requestSnapshot='';
+ const content=()=>({videoId:v.id,title:(v.opts.title||[])[v.sel.title||0]||'',description:(v.opts.desc||[])[v.sel.desc||0]||'',language:BosterLanguage.get()});
+ const refresh=()=>{
+  const data=content(),snapshot=JSON.stringify(data);
+  if(lastSnapshot!==snapshot){output.replaceChildren();lastSnapshot=snapshot;}
+  const ready=!!data.title.trim()&&!!data.description.trim()&&(v.studio.batches||[]).some(b=>b.images?.length===3);
+  button.disabled=busy||!ready||Object.values(v.loading).some(Boolean)||!!v.studio.galleryBusy;
+  button.title=ready?'':'Selesaikan Judul (2 Poin), Deskripsi (2 Poin), Thumbnail (8 Poin) dulu';
+  button.style.background=button.disabled?'#64748b':'#2563eb';
+  button.textContent=busy?'Menilai SEO…':'Review SEO Video (2 Poin)';
+  button.setAttribute('aria-busy',String(busy));
+ };
+ button.onclick=async()=>{
+  if(button.disabled||busy)return;
+  const data=content(),snapshot=JSON.stringify(data);
+  if(snapshot!==requestSnapshot){requestSnapshot=snapshot;requestId=crypto.randomUUID();}
+  busy=true;refresh();output.textContent='Menilai SEO…';
+  try{
+   const response=await btpApi('/api/audit/review',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...data,requestId})});
+   const result=await response.json().catch(()=>({error:'Respons review tidak valid. Coba lagi.'}));
+   if(!response.ok)throw Error(result.error||result.message||`Review gagal (${response.status})`);
+   localStorage.setItem('boster_poin',String(result.btp_poin));dispatchEvent(new Event('credits-updated'));
+   requestSnapshot='';
+   if(JSON.stringify(content())===snapshot){
+    output.replaceChildren();const score=document.createElement('strong');score.textContent=`✅ Review terkirim! Skor SEO: ${result.score}/100`;output.append(score);
+    for(const text of result.feedback){const line=document.createElement('p');line.textContent=text;output.append(line);}
+    const note=document.createElement('p');note.textContent='Skor checklist SEO, bukan jaminan performa YouTube.';output.append(note);
+   }
+  }catch(e){output.textContent='Gagal review: '+e.message;}
+  finally{busy=false;refresh();}
+ };
+ seoReviewObserver=new MutationObserver(records=>{if(records.some(record=>!panel.contains(record.target)))refresh();});
+ seoReviewObserver.observe(root,{childList:true,subtree:true});refresh();
+}
+function openAudit(v){
+ $('auditDialogTitle').textContent=v.title;
+ const detail=$('auditDetail');
+ detail.innerHTML=`<div id="detail-${esc(v.id)}" data-vid="${esc(v.id)}"><a class="block mb-4 text-sm font-bold text-sky-800" href="/audit-studio?videoId=${encodeURIComponent(v.id)}">Buka Audit Premium →</a>${BosterLanguage.card()}<div class="grid grid-cols-1 lg:grid-cols-2 gap-3">${visibleSecs(v).map(k=>`<div class="border rounded-xl p-3 text-sm flex flex-col gap-2 min-w-0 ${k==='thumb'?'lg:col-span-2':''}" data-sec="${k}"></div>`).join('')}</div></div>`;
+ detail.querySelector('[data-output-language]').addEventListener('change',()=>{
+  v.opts={};v.gen={};v.history={};v.sel={};v.used={};v.outputLanguage=BosterLanguage.get();
+  v.studio.hook='';visibleSecs(v).forEach(k=>renderSec(v,k,detail));
+ });
+ $('auditDialog').showModal();
+ visibleSecs(v).forEach(k=>renderSec(v,k,detail));
+ autoLoad(v);
+ bindSeoReview(v);
+}
+$('closeAudit').onclick=()=>$('auditDialog').close();
+function badgesHtml(v,box){
+ box.innerHTML=Object.entries({title:'Judul',desc:'Deskripsi',tag:'Tag',thumb:'Thumbnail'}).map(([k,label])=>`<span class="${v.issues[k]?'badge-fix bg-red-100 text-red-700 border-red-200':'badge-ok bg-green-100 text-green-700 border-green-200'}" title="Klik Buka Audit untuk lihat detail">${label} ${v.issues[k]?'!':'✓'}</span>`).join('');
+}
+function refreshCardBadges(v){const c=$('card-'+v.id);if(c)badgesHtml(v,c.querySelector('[data-badges]'));const s=secEl(v,'thumb');if(s){s.classList.toggle('border-red-200',v.issues.thumb);s.classList.toggle('bg-red-50/30',v.issues.thumb);const st=s.querySelector('[data-current]');if(st)st.innerHTML=currentInfo(v,'thumb');}}
+
+function currentInfo(v,k){
+ if(k==='hashtag') return 'Hashtag relevan sesuai isi video';
+ if(k==='title'){const sh=v.isShort?trailingTags(v.title).length:null;return `Sekarang: <b>${v.title.length}</b> karakter ${v.title.length<50?'· <span class="text-red-600 font-bold">kurang dari 50</span>':'· OK'}${v.isShort?` · Short: <b>${sh}</b> hashtag${sh<3?' <span class="text-red-600 font-bold">(wajib 3)</span>':''}`:''} · SEO <b>${hitungSkorSEO(v.title,v)}</b>`;}
+ if(k==='desc') return `Sekarang: <b>${v.desc.length}</b> karakter ${v.issues.desc?'· <span class="text-red-600 font-bold">kurang dari 200</span>':'· OK'} · SEO <b>${skorDeskripsi(v.desc,v)}</b>`;
+ if(k==='tag') return `Sekarang: <b>${v.tags.length}</b> tag · ${v.tags.join(', ').length} kar ${v.tags.length?'('+esc(v.tags.slice(0,6).join(', '))+(v.tags.length>6?'…':'')+')':''} ${v.issues.tag?'· <span class="text-red-600 font-bold">kurang dari 5</span>':'· OK'} · SEO <b>${v.tags.length?skorTag(v.tags.join(', '),v):0}</b>`;
+ return v.thumbIssues.length?'<span class="text-red-600 font-bold">'+v.thumbIssues.map(esc).join(' · ')+'</span>':`OK${v.bright!=null?` · kecerahan ${v.bright} · kontras ${v.contrast}`:''}`;
+}
+function secEl(v,k){const c=$('detail-'+v.id);return c&&c.querySelector(`[data-sec="${k}"]`);}
+function optMeta(v,k,o){
+ if(k==='tag'){const t=tagList(o);return `${t.length} tag · ${o.length} kar`;}
+ if(k==='title'&&v.isShort){const h=trailingTags(o).length;return `${o.length} kar · ${h} hashtag`;}
+ return `${o.length} kar`;
+}
+function selHeader(v,k){
+ const o=(v.opts[k]||[])[v.sel[k]||0]; if(!o||k==='thumb') return '';
+ const n=skorSEO(v,k,o);
+ return `<span class="text-[10px] text-gray-500 font-semibold">Pilihan ${(v.sel[k]||0)+1}: ${optMeta(v,k,o)} · <b class="${n>=80?'text-green-600':n>=60?'text-amber-600':'text-red-600'}">SEO ${n}</b></span>`;
+}
+function renderSec(v,k,root){
+ const box=(root||document).querySelector(`[data-vid="${v.id}"] [data-sec="${k}"]`)||secEl(v,k); if(!box) return;
+ const opts=v.opts[k]||[], loading=v.loading[k], name=`r-${v.id}-${k}`, cur=Math.min(v.sel[k]||0,Math.max(0,opts.length-1));
+ v.sel[k]=cur;
+ const optHtml=loading?'<div class="sk"></div><div class="sk"></div><div class="sk"></div>':opts.length?opts.map((o,i)=>`<label class="opt !p-3 !text-sm ${i===cur?'on':''}" data-i="${i}"><input type="radio" name="${name}" value="${i}" ${i===cur?'checked':''}><div class="min-w-0 flex-1"><div class="flex justify-between items-center gap-2 flex-wrap"><span class="text-[11px] font-extrabold text-gray-400">AI PILIHAN ${i+1}${i===0?' · TERBAIK':''}</span><span class="flex items-center gap-1.5"><span class="text-[9px] text-gray-400">${optMeta(v,k,o)}</span>${seoBadge(skorSEO(v,k,o))}</span></div><div ${k==='title'&&v.isShort?'data-title-edit contenteditable="plaintext-only" role="textbox" aria-label="Edit judul Shorts"':''} class="mt-1 whitespace-pre-line break-words text-sm ${k==='desc'?'max-h-[90px] overflow-auto':''}">${esc(o)}</div>${k==='title'&&v.isShort?'<span data-short-tip hidden tabindex="0" title="Saran: Shorts butuh #shorts biar ke-push algoritma" aria-label="Saran: Shorts butuh #shorts biar ke-push algoritma" class="text-[10px] text-gray-500 cursor-help">Saran Shorts ⓘ</span>':''}</div></label>`).join(''):`<button data-act="gen" class="w-full border-2 border-dashed rounded-lg h-8 text-xs font-bold text-gray-500">✨ Generate 3 Pilihan AI (${k==='thumb'?COST.thumbRefresh:COST.refresh} Poin)</button>`;
+ const src=v.gen[k]?(v.gen[k].ai?`<span class="text-[10px] font-bold text-green-600">Saran AI</span>`:'<span class="text-[10px] font-semibold text-gray-500 bg-gray-100 border border-gray-200 px-1.5 rounded">AI Lokal</span>'):'';
+ box.innerHTML=`<div class="flex justify-between items-center gap-2 flex-wrap"><p class="text-[13px] font-extrabold">${SEC[k].label} ${k==='desc'?BosterLanguage.badge(v.outputLanguage||BosterLanguage.get()):''} <span tabindex="0" title="${PRICE_TIP}" class="text-[10px] rounded-full px-2 py-0.5 ${k==='thumb'?'bg-orange-100 text-orange-700':'bg-purple-100 text-purple-700'}">${k==='thumb'?'8 Poin / 10 Poin':'2 Poin'}</span> ${v.issues[k]?'<span class="text-[9px] bg-red-600 text-white px-1.5 py-0.5 rounded-full ml-1">PERLU FIX</span>':'<span class="text-[9px] bg-green-600 text-white px-1.5 py-0.5 rounded-full ml-1">OK</span>'}</p>${src}</div>
+  ${k==='thumb'?'':`<p class="text-[11px] text-gray-500" data-current>${currentInfo(v,k)}</p>`}
+  ${k==='thumb'?'':`<div data-selhead>${selHeader(v,k)}</div>`}
+  ${k==='thumb'?studioHtml(v):''}
+  <div class="${k==='thumb'?(v.studio.editorReady?'grid grid-cols-1 md:grid-cols-3 gap-2':'hidden'):'space-y-2'}" data-opts>${optHtml}</div>
+  <div class="${k==='thumb'&&!v.studio.editorReady?'hidden':'flex flex-wrap gap-2'}">
+   <button data-act="refresh" ${loading?'disabled':''} class="flex-1 bg-white border border-[#7C5CFF] text-[#7C5CFF] h-8 rounded-lg text-xs font-bold disabled:opacity-50">${loading?'<span class="spin">🔄</span> Membuat pilihan...':`${k==='thumb'?'Refresh Hook Teks':'Refresh Banyak Pilihan'} (${k==='thumb'?COST.thumbRefresh:COST.refresh} Poin)`}</button>
+   ${k==='thumb'?`<button data-act="use" class="flex-1 bg-[#7C5CFF] text-white h-8 rounded-lg text-xs font-bold">${v.used.thumb?'✅ ':''}⬇️ Download JPG (${COST.thumb} Poin)</button>
+   <button data-act="ytset" ${accessToken?'':'disabled'} class="flex-1 bg-[#FF0000] text-white h-8 rounded-lg text-xs font-bold disabled:opacity-50">${v.used.thumbSet?'✅ ':''}${v.isShort?'Gunakan sebagai Thumbnail Shorts':'Set ke YouTube'} (${COST.thumbSet} Poin)</button>`
+   :`<button data-act="use" ${loading||!opts.length?'disabled':''} class="flex-1 bg-[#7C5CFF] text-white h-8 rounded-lg text-xs font-bold disabled:opacity-50">${v.used[k]?'✅ Dipakai · ':''}Gunakan (${COST[k]} Poin)</button>`}
+  </div>`;
+ box.querySelectorAll('[data-title-edit]').forEach(editor=>editor.addEventListener('input',()=>{
+  const option=editor.closest('[data-i]'), i=+option.dataset.i, text=editor.textContent.trim();
+  v.opts[k][i]=text;
+  const tags=trailingTags(text).map(t=>t.toLowerCase());
+  option.querySelector('[data-short-tip]').hidden=tags.length>=3&&tags.includes('#shorts');
+  if(i===v.sel[k]){box.querySelector('[data-selhead]').innerHTML=selHeader(v,k);box.querySelector('[data-act="use"]').disabled=!text;}
+ }));
+ // Simpan pilihan user per section (bukan selalu pilihan 1)
+ box.querySelectorAll('[data-opts] input[type=radio]').forEach(r=>r.addEventListener('change',()=>{
+  v.sel[k]=+r.value;
+  box.querySelectorAll('[data-opts] .opt').forEach(l=>l.classList.toggle('on',+l.dataset.i===v.sel[k]));
+  const sh=box.querySelector('[data-selhead]'); if(sh) sh.innerHTML=selHeader(v,k);
+  const use=box.querySelector('[data-act="use"]');
+  if(use&&k==='title'&&v.isShort) use.disabled=!v.opts[k][v.sel[k]].trim();
+ }));
+ box.querySelectorAll(':scope > div > [data-act], [data-opts] [data-act]').forEach(b=>b.onclick=()=>{const a=b.dataset.act;
+  if(a==='use')return k==='thumb'?downloadThumb(v):useOption(v,k);
+  if(a==='ytset')return setYoutubeThumb(v);
+  if(k==='thumb')return a==='refresh'?refreshHooks(v):generate(v,['thumb'],false);
+  generate(v,[k],a==='refresh');});
+ if(k==='thumb') { bindStudio(v,box); bindThumbnailGallery(v,box); box.querySelectorAll('[data-act="use"], [data-act="ytset"]').forEach(b=>{b.disabled=b.disabled||!v.studio.editorReady||!!v.studio.galleryBusy;}); }
+}
+
+// ===== AI REAL: genJudulAI / genDescAI / genTagAI / genThumbHooks =====
+const aiQueue=[];let aiActive=0;
+function aiCall(body){return new Promise((res,rej)=>{aiQueue.push({body,res,rej});pump();});}
+function pump(){while(aiActive<3&&aiQueue.length){const j=aiQueue.shift();aiActive++;
+ fetch('/api/audit/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(j.body)})
+  .then(r=>r.json().then(d=>{if(!r.ok||d.error)throw new Error(d.error||'HTTP '+r.status);return d;})).then(j.res,j.rej)
+  .finally(()=>{aiActive--;pump();});}}
+function videoPayload(v){return {channel:channel?channel.snippet.title:'',title:v.title,description:v.desc,tags:v.tags,duration:fmtDuration(v.dur)};}
+async function aiFields(v,keys){
+ const avoid=keys.flatMap(k=>(v.history[k]||[]).slice(-12));
+ try{const d=await aiCall({language:BosterLanguage.get(),video:videoPayload(v),fields:keys.map(k=>SEC[k].field),avoid});
+  return Object.fromEntries(keys.map(k=>{const arr=(d[SEC[k].field]||[]).filter(Boolean);return [k,arr.length?{ai:true,list:arr}:{ai:false,list:[]}];}));
+ }catch(e){if(globalThis.window?.BTPApiStatus?.isSoftError(e))throw e;console.warn('[Audit] AI gagal:',e.message);alert('Generate gagal. Silakan coba lagi; poin dikembalikan.');return Object.fromEntries(keys.map(k=>[k,{ai:false,list:[]}]));}
+}
+const genJudulAI=v=>aiFields(v,['title']).then(r=>r.title);
+const genDescAI=v=>aiFields(v,['desc']).then(r=>r.desc);
+const genTagAI=v=>aiFields(v,['tag']).then(r=>r.tag);
+const genThumbHooks=v=>aiFields(v,['thumb']).then(r=>r.thumb);
+async function generate(v,keys,isRefresh){
+ keys=keys.filter(k=>!v.loading[k]); if(!keys.length) return;
+ // Generation is charged once by the AI endpoint, including refresh.
+ const cost=keys.includes('thumb')?COST.thumbRefresh:COST.refresh;
+ if(getPoin()<cost&&!isAdmin){showModalPoinHabis(getPoin(),cost);return;}
+ keys.forEach(k=>{v.loading[k]=true;renderSec(v,k);});
+ const languageSelect=$('auditDetail').querySelector('[data-output-language]');if(languageSelect)languageSelect.disabled=true;
+ try {
+ const r=keys.length===1?{[keys[0]]:await ({title:genJudulAI,desc:genDescAI,tag:genTagAI,hashtag:v=>aiFields(v,['hashtag']).then(r=>r.hashtag),thumb:genThumbHooks})[keys[0]](v)}:await aiFields(v,keys);
+ keys.forEach(k=>{
+  let list=r[k].list.slice(0,3);
+  if(k==='title'&&v.isShort) list=list.map(t=>fixShortTitle(v,t).text);
+  // Urutkan pilihan dari skor SEO tertinggi
+  list=list.map(o=>({o,n:skorSEO(v,k,o)})).sort((a,b)=>b.n-a.n).map(x=>x.o);
+  v.opts[k]=list; v.sel[k]=0; v.history[k]=[...(v.history[k]||[]),...list]; v.used[k]=false;
+  v.outputLanguage=BosterLanguage.get();
+  v.gen[k]={ai:r[k].ai,n:(v.gen[k]?v.gen[k].n:0)+1};
+  v.loading[k]=false;
+  if(k==='thumb'&&list[0]) v.studio.hook=list[0];
+  renderSec(v,k);
+ });
+ } catch(e) {if(!globalThis.window?.BTPApiStatus?.isSoftError(e))throw e;} finally {
+ keys.forEach(k=>{v.loading[k]=false;renderSec(v,k);});
+ if(languageSelect)languageSelect.disabled=false;
+ }
+}
+// Saat Buka Audit diklik: generate section yang perlu fix (1 panggilan AI per video)
+function autoLoad(v){/* Generate starts only after the user clicks a priced button. */}
+
+// Template lokal tetap tersedia jika layanan AI gagal.
+function pick(arr,n){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a.slice(0,n);}
+function keywords(v){const STOP=new Set(['dan','yang','di','ke','dari','untuk','the','a','of','video','official','lirik','lyrics','music','lagu']);return [...new Set((v.title+' '+v.tags.join(' ')).toLowerCase().replace(/[^\p{L}\p{N}\s]/gu,' ').split(/\s+/).filter(w=>w.length>2&&!STOP.has(w)))].slice(0,8);}
+// ===== Skor SEO (0-100) untuk tiap pilihan AI =====
+function nicheWords(v){const ch=channel?channel.snippet.title:'';return [...new Set([...keywords(v),...ch.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu,' ').split(/\s+/).filter(w=>w.length>2)])];}
+const hasNiche=(v,t)=>{const low=String(t).toLowerCase();return nicheWords(v).some(w=>low.includes(w));};
+function hitungSkorSEO(judul,v){
+ const t=String(judul||'').trim(), clean=t.replace(/#\S+/g,'').trim(); let n=0;
+ if(t.length>=40&&t.length<=70||(v&&v.isShort&&clean.length>=25&&t.length<=100)) n+=30;
+ if(v&&hasNiche(v,t)) n+=20;
+ if(/viral|20\d\d|shorts|official/i.test(t)) n+=20;
+ if(!/[^\p{L}\p{N}\s|\-–—:!?,.'"()#&/+]/u.test(t)) n+=15;
+ if(clean.split(/\s+/).filter(Boolean).length>5) n+=15;
+ return n;
+}
+function skorDeskripsi(d,v){const t=String(d||'');return (t.length>200?40:t.length>=100?20:0)+(/#[\p{L}\p{N}_]+/u.test(t)?25:0)+(hasNiche(v,t)?20:0)+(/subscribe|langganan|like|komentar|https?:\/\//i.test(t)?15:0);}
+const tagList=o=>String(o).split(',').map(x=>x.trim()).filter(Boolean);
+function skorTag(o,v){
+ const tags=tagList(o), len=String(o).length; if(!tags.length) return 0;
+ const rel=tags.filter(t=>hasNiche(v,t)).length/tags.length;
+ return (tags.length>=5&&tags.length<=15?30:tags.length>=3?15:0)+(len>=80&&len<=500?20:len>=40?10:0)+Math.round(rel*50);
+}
+function skorSEO(v,k,o){return k==='title'?hitungSkorSEO(o,v):k==='desc'?skorDeskripsi(o,v):k==='tag'?skorTag(o,v):k==='thumb'?Math.min(100,(String(o).split(/\s+/).length<=4?40:20)+(/!/.test(o)?20:0)+(hasNiche(v,o)?20:0)+(o.length<=25?20:0)):0;}
+const seoBadge=n=>`<span class="${n>=80?'bg-green-600':n>=60?'bg-amber-500':'bg-red-600'} text-white text-[10px] font-bold px-1.5 py-0.5 leading-none rounded shrink-0">SEO ${n}</span>`;
+
+// ===== Judul Short wajib minimal 3 hashtag di akhir =====
+const trailingTags=t=>((String(t).match(/(?:\s*#[\p{L}\p{N}_]+)+\s*$/u)||[''])[0].match(/#[\p{L}\p{N}_]+/gu)||[]);
+function fixShortTitle(v,t){
+ const original=String(t||'').trim();
+ // Reserve the full hashtag suffix before shortening the title, never cut a hashtag.
+ const chName=(channel?channel.snippet.title:'').toLowerCase().replace(/[^\p{L}\p{N}]/gu,'')||keywords(v)[0]||'channel';
+ const chTag='#'+Array.from(chName).slice(0,40).join('');
+ const tags=['#shorts',chTag].filter((x,i,a)=>a.indexOf(x)===i);
+ const candidates=[...(original.match(/#[\p{L}\p{N}_]+/gu)||[]),'#fyp','#viral'];
+ for(const tag of candidates){
+  const normalized=tag.toLowerCase();
+  if(tags.length===3) break;
+  if(normalized.length<=24&&!tags.includes(normalized)) tags.push(normalized);
+ }
+ const tail=' '+tags.join(' '), limit=100-tail.length;
+ let base=original.replace(/#[\p{L}\p{N}_]+/gu,'').replace(/\s+/g,' ').trim()||'Video terbaru';
+ if(base.length>limit){base=base.slice(0,limit).replace(/[\uD800-\uDBFF]$/u,'').trimEnd();const word=base.lastIndexOf(' ');if(word>=limit/2)base=base.slice(0,word);}
+ const text=base+tail;
+ return {text,fixed:text!==original};
+}
+
+function localGen(v,k){
+ const ch=channel?channel.snippet.title:'Channel Kami', base=v.title.replace(/#\S+/g,'').trim()||'Video Terbaru', kw=keywords(v), seen=new Set(v.history[k]||[]);
+ const pool={
+  title:[`${base} | Lagu Kenangan Terbaik ${ch}`,`${base} - Full Lirik & Penuh Perasaan | ${ch}`,`${base} | Wajib Dengar Sampai Habis`,`Bikin Rindu! ${base} | ${ch}`,`${base} - Versi Terbaik ${new Date().getFullYear()} | ${ch}`,`${base} | Nostalgia yang Menyentuh Hati - ${ch}`],
+  desc:[`${base}\n\nSelamat datang di ${ch}! Video ini menghadirkan ${base} untuk menemani harimu. ${kw.length?'Topik: '+kw.join(', ')+'.':''}\n\n👍 Like, 💬 komentar lagu favoritmu, dan 🔔 subscribe ${ch} untuk video terbaru setiap minggu.\n\n#${kw[0]||'musik'} #${(ch.replace(/[^\p{L}\p{N}]/gu,'')||'channel')} #viral`,`${base}\n\nTonton sampai habis dan tulis di kolom komentar kenangan apa yang muncul saat mendengar video ini. ${ch} rutin upload konten pilihan untuk kamu.\n\n🔔 Aktifkan lonceng notifikasi supaya tidak ketinggalan.\n\n#${kw[1]||'lagu'} #nostalgia #${(ch.replace(/[^\p{L}\p{N}]/gu,'')||'channel')}`,`${base} — persembahan ${ch}.\n\nTerima kasih sudah menonton! Bagikan video ini ke teman dan keluarga yang juga suka. Dukung channel ini dengan like dan subscribe agar kami terus berkarya.\n\n${kw.slice(0,4).map(w=>'#'+w).join(' ')}`],
+  hashtag:[kw.slice(0,5),kw.slice(-5),[...kw.slice(0,3),'youtube']].map(a=>a.map(w=>'#'+w.replace(/[^\p{L}\p{N}_]/gu,'')).join(' ')),
+  tag:[[...kw,ch.toLowerCase(),'lagu kenangan','lagu nostalgia','musik terbaik'],[base.toLowerCase().slice(0,60),...kw.slice(0,4),'video terbaru','viral',ch.toLowerCase()],[...kw.slice(-4),'lagu enak didengar','lagu hits','full album',ch.toLowerCase()]].map(a=>[...new Set(a.filter(Boolean))].join(', ')),
+  thumb:[...pick(kw,3).map((w,i)=>w.toUpperCase()+' '+['BIKIN NAGIH!','WAJIB TONTON!','PALING SERU!'][i]),'WAJIB DENGAR!','BIKIN RINDU','PALING DICARI!','JANGAN SKIP!']
+ }[k];
+ const fresh=pool.filter(x=>!seen.has(x));return pick(fresh.length>=3?fresh:pool,3);
+}
+
+// ===== Gunakan: copy ke clipboard + potong poin REAL localStorage =====
+async function copyText(t){try{await navigator.clipboard.writeText(t);return true;}catch(e){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy');}catch(_){}ta.remove();return ok;}}
+async function recordPreparation(v,k){
+ if(!btpSession()) return false;
+ try{
+  const response=await btpApi('/api/channel-growth',{method:'POST',body:JSON.stringify({videoId:v.id,kind:k})});
+  return response.ok;
+ }catch{return false;}
+}
+async function useOption(v,k){
+ if(k==='thumb') return downloadThumb(v);
+ // Ambil dari index yang dipilih user (state v.sel), bukan selalu index 0
+ const text=(v.opts[k]||[])[v.sel[k]||0]||'';
+ if(!text){alert('Pilih salah satu opsi dulu.');return;}
+ const cost=COST[k], p=getPoin();
+ if(p<cost&&!isAdmin){showModalPoinHabis(p,cost);return;}
+ if(['title','desc','tag','hashtag'].includes(k)){
+  if(!/^[\w-]{11}$/.test(v.id)){setStatus('Upload video dulu sampai ID YouTube muncul.',true);return;}
+  if(v.metadataBusy)return;v.metadataBusy=true;
+  try{
+   const field={title:'title',desc:'description',tag:'tags',hashtag:'hashtags'}[k];
+   const value=k==='tag'?text.split(/[,\n]+/).map(t=>t.trim()).filter(Boolean):text;
+   const response=await btpApi('/api/youtube-audit',{method:'POST',headers:{Authorization:'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({videoId:v.id,[field]:value})});
+   const data=await response.json();if(!response.ok)throw Error(data.error||('YouTube API HTTP '+response.status));
+   v.used[k]=true;if(k==='title')v.title=text;if(k==='desc')v.desc=text;
+   await syncUser().catch(()=>{});renderSec(v,k);
+   youtubeToast(v.id,'✅ '+SEC[k].label+' terpasang ke');
+   setStatus(`✅ ${SEC[k].label} terpasang ke <a target="_blank" rel="noopener" href="https://youtu.be/${v.id}">https://youtu.be/${v.id}</a>`);
+  }catch(e){setStatus('❌ '+esc(e.message),true);}finally{v.metadataBusy=false;}
+  return;
+ }
+
+}
+
+// ===== Thumbnail Studio: generated image gallery and canvas editor =====
+const BG_MODES={original:'Original / Generated',dark:'🌑 Dark',gradient:'🌈 Gradient'};
+const TEXT_STYLES={bold:'💪 Bold',glow:'✨ Glow','3d':'🧊 3D'};
+const TPL_POOL=[
+ {name:'Kuning Bold Pro',bg:'original',style:'bold',color:'#FFD400',pos:'bottom',size:130},
+ {name:'Neon Glow Malam',bg:'dark',style:'glow',color:'#22D3EE',pos:'center',size:140},
+ {name:'3D Merah Viral',bg:'gradient',style:'3d',color:'#FF2D2D',pos:'top',size:125},
+ {name:'Putih 3D Elegan',bg:'dark',style:'3d',color:'#FFFFFF',pos:'bottom',size:120},
+ {name:'Pink Glow Pop',bg:'gradient',style:'glow',color:'#FF4FD8',pos:'center',size:135},
+ {name:'Hijau Bold Kontras',bg:'dark',style:'bold',color:'#4ADE80',pos:'top',size:130},
+ {name:'Oranye 3D Ceria',bg:'original',style:'3d',color:'#FF8A00',pos:'center',size:140},
+ {name:'Kuning Glow Drama',bg:'dark',style:'glow',color:'#FDE047',pos:'bottom',size:125},
+ {name:'Biru Bold Gradient',bg:'gradient',style:'bold',color:'#60A5FA',pos:'bottom',size:135}
+];
+// Kandidat background REAL: Netlify Image CDN (same-origin, 1280×720) → i.ytimg.com langsung (CORS) → medium
+// Short = frame potret 9:16 (1080×1920), Video Panjang = 16:9 (1280×720)
+function thumbSize(v){return isShortVideo(v)?{W:1080,H:1920}:{W:1280,H:720};}
+function thumbCandidates(v){
+ const t=v.raw.snippet.thumbnails||{}, best=(t.maxres||t.standard||t.high||t.medium||{}).url, med=(t.medium||{}).url;
+ const list=[];
+ const {W,H}=thumbSize(v);
+ if(best) list.push('/.netlify/images?url='+encodeURIComponent(best)+`&w=${W}&h=${H}&fit=cover&fm=jpg&q=90`);
+ if(best) list.push(best);
+ if(med) list.push(med);
+ list.push(`https://i.ytimg.com/vi/${encodeURIComponent(v.id)}/hqdefault.jpg`);
+ return [...new Set(list)];
+}
+// bgImg = new Image(); crossOrigin='anonymous'; onload → renderThumb(); src = thumbnail REAL video
+function loadBg(v,onDone){
+ const st=v.studio;
+ if(st.bgImg){onDone&&onDone();return;}
+ (st.bgWaiters=st.bgWaiters||[]).push(onDone);
+ if(st.bgLoading) return; st.bgLoading=true; st.bgError=null;
+ const urls=thumbCandidates(v); let i=0;
+ const finish=()=>{st.bgLoading=false;const w=st.bgWaiters;st.bgWaiters=[];w.forEach(f=>f&&f());};
+ const tryNext=()=>{
+  if(i>=urls.length){st.bgError='Gagal memuat thumbnail REAL';finish();return;}
+  const url=urls[i++], bgImg=new Image();
+  bgImg.crossOrigin='anonymous';
+  bgImg.onload=()=>{if(!bgImg.naturalWidth){tryNext();return;}st.bgImg=bgImg;st.bgSrc=url.startsWith('/.netlify')?'Netlify Image CDN '+thumbSize(v).W+'×'+thumbSize(v).H:bgImg.naturalWidth+'×'+bgImg.naturalHeight+' i.ytimg.com';console.log('[Thumb V7] bg OK',v.id,url);finish();};
+  bgImg.onerror=()=>{console.warn('[Thumb V7] bg gagal',url);tryNext();};
+  bgImg.src=url;
+ };
+ tryNext();
+}
+const IMAGE_STYLES=['Realistic Drama','Cinematic Sedih','Viral Shock'];
+function thumbnailGallery(v){
+ const s=v.studio,batches=s.batches||[],batch=batches.find(b=>b.id===s.activeBatch)||batches[0];
+ const busy=!!s.galleryBusy;
+ const cards=batch?batch.previews.map((url,i)=>`<article class="min-w-0 overflow-hidden rounded-xl border-2 ${s.selectedImage===batch.id+':'+i?'border-[#A78BFA]':'border-gray-700'} bg-[#1C1C22]">
+ <img src="${esc(url)}" alt="Pilihan ${i+1} — ${IMAGE_STYLES[i]} sesuai isi video" class="${isShortVideo(v)?'aspect-[9/16] h-[320px] max-h-[320px] w-auto max-w-[240px] mx-auto':'aspect-video w-full'} block object-cover"/>
+ <div class="p-2"><p class="text-xs font-bold mb-2">Pilihan ${i+1} - ${IMAGE_STYLES[i]}</p><button data-image-choice="${i}" ${busy?'disabled':''} class="w-full rounded-lg bg-[#7C5CFF] px-2 py-2 text-xs font-bold disabled:opacity-50">Pilih Gambar ${i+1} (${batch.selectionIncluded?'Termasuk 8 Poin':batch.selectedIndex===i?'Sudah dipilih': '3 Poin'})</button></div></article>`).join(''):
+ [0,1,2].map(i=>`<div class="${isShortVideo(v)?'aspect-[9/16] h-[320px] max-w-[240px] mx-auto':'aspect-video'} rounded-xl border border-dashed border-gray-600 bg-[#1C1C22] p-4 flex flex-col justify-center ${busy?'animate-pulse':''}"><span class="text-xs text-gray-400">Pilihan ${i+1}</span><strong class="text-sm mt-1">${IMAGE_STYLES[i]}</strong><span class="text-xs text-gray-400 mt-2">${busy?'Membuat gambar sesuai isi video…':'Siap digenerate dari isi video'}</span></div>`).join('');
+ return `<section class="mb-4 border-b border-gray-700 pb-4" aria-label="Pilihan gambar AI"><p class="text-xs tracking-widest text-[#C4B5FD] font-bold">AI GENERATED SESUAI ISI VIDEO</p><h3 class="font-extrabold text-lg mt-1">3 gambar, 3 sudut cerita</h3><p class="text-xs text-gray-400 mt-1 mb-3">Dibuat dengan referensi frame asli untuk mempertahankan wajah pemeran. Ekspresi dan latar diubah AI; kemiripan perlu diperiksa sebelum dipakai. Generate 8 Poin termasuk satu pilihan untuk diedit; ganti pilihan tersimpan 3 Poin. Edit teks gratis.</p>
+ ${(v.thumbIssues||[]).some(t=>/gelap/i.test(t))?`<p class="rounded-lg border border-amber-500/40 bg-amber-500/10 p-2 text-xs text-amber-200 mb-3">${esc(v.thumbIssues.find(t=>/gelap/i.test(t)))} — Disarankan Generate AI</p>`:''}
+ ${batches.length>1?`<label class="block text-xs mb-3">Hasil tersimpan <select data-batch class="bg-[#1C1C22] border border-gray-600 rounded p-1" ${busy?'disabled':''}>${batches.map((b,i)=>`<option value="${b.id}" ${batch.id===b.id?'selected':''}>Generasi ${batches.length-i}</option>`).join('')}</select></label>`:''}
+ <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3" aria-busy="${busy}">${cards}</div>
+ <label class="block text-xs mb-3">Referensi pemeran: pilih video asli (frame detik ke-5) atau frame JPEG/PNG<input data-face-reference type="file" accept="video/mp4,image/jpeg,image/png,image/webp" class="block mt-2" /></label><div class="flex flex-wrap gap-2"><button data-generate-images ${busy?'disabled':''} class="rounded-lg bg-[#7C5CFF] px-3 py-2 text-xs font-bold disabled:opacity-50">${busy?'Memproses…':batch?'Generate Ulang 3 Gambar (8 Poin)':'Generate 3 Gambar AI (8 Poin)'}</button><button data-original-frame ${busy?'disabled':''} class="rounded-lg border border-gray-500 px-3 py-2 text-xs disabled:opacity-50">Pakai Frame Asli Video (Gratis)</button></div>
+ ${s.galleryError?`<p role="alert" class="text-xs text-red-300 mt-2">${esc(s.galleryError)}</p>`:''}
+ ${busy?'<p role="status" class="text-xs text-gray-300 mt-2">Sedang menyiapkan gambar. Tetap buka halaman ini.</p>':''}</section>`;
+}
+async function thumbnailRequest(path,body){
+ const response=await btpApi(path,body?{method:'POST',body:JSON.stringify(body)}:{});
+ const text=await response.text();
+ let json;
+ try {json=JSON.parse(text);} catch {throw new Error('Layanan thumbnail mengembalikan respons non-JSON (HTTP '+response.status+'). Silakan coba lagi.');}
+ if(!response.ok || json.success===false || json.error) throw new Error(json.error||json.message||'Thumbnail belum tersedia');
+ return json;
+}
+async function hydrateThumbnailBatch(batch){
+ const previews=await Promise.all(batch.images.map(async url=>{
+  const r=await btpApi(url);if(!r.ok) throw new Error('Gambar tersimpan belum dapat dimuat. Coba buka ulang studio.');
+  return URL.createObjectURL(await r.blob());
+ }));
+ return {...batch,previews};
+}
+function bindThumbnailGallery(v,box){
+ const s=v.studio;
+ const run=async task=>{
+  if(s.galleryBusy) return;
+  s.galleryBusy=true;s.galleryError='';renderSec(v,'thumb');
+  const languageSelect=$('auditDetail').querySelector('[data-output-language]');if(languageSelect)languageSelect.disabled=true;
+  try{await task();}catch(e){if(globalThis.window?.BTPApiStatus?.isSoftError(e))return;s.galleryError=e.message;}
+  finally{s.galleryBusy=false;if(languageSelect)languageSelect.disabled=false;await syncUser();renderSec(v,'thumb');}
+ };
+ box.querySelector('[data-face-reference]').onchange=async event=>{
+  const file=event.target.files[0];if(!file)return;
+  try {
+   if(file.type.startsWith('image/')) {if(file.size>2*1024*1024)throw Error('Frame maksimal 2MB');v.faceReference=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file);});}
+   else {const url=URL.createObjectURL(file);try {const video=document.createElement('video');video.muted=true;video.src=url;await new Promise((resolve,reject)=>{video.onloadedmetadata=resolve;video.onerror=reject;});await new Promise((resolve,reject)=>{video.onseeked=resolve;video.onerror=reject;video.currentTime=Math.min(5,video.duration/2);});const canvas=document.createElement('canvas');canvas.width=640;canvas.height=Math.round(640*video.videoHeight/video.videoWidth);canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);v.faceReference=canvas.toDataURL('image/jpeg',.85);}finally{URL.revokeObjectURL(url);}}
+   setStatus('Frame referensi pemeran siap. Klik Generate 3 Gambar AI.');
+  }catch{setStatus('Frame tidak terbaca. Pilih video MP4 atau gambar valid.',true);}
+ };
+ box.querySelector('[data-generate-images]').onclick=()=>run(async()=>{
+  const batch=await thumbnailRequest('/api/thumbnail/generate',{videoId:v.id,referenceImage:v.faceReference,isShort:v.isShort,language:BosterLanguage.get(),title:v.title,description:v.desc,transcript:v.transcript||'',analysis:v.analysis||{},category:v.raw?.snippet?.categoryId==='10'?'Musik':(v.raw?.snippet?.categoryId||'Umum'),style:v.analysis?.style_thumbnail||'',count:3});
+  if(batch.hooks?.length){v.opts.thumb=batch.hooks;v.studio.hook=batch.hooks[0];}
+  // Save the paid batch before loading previews so a transient image fetch failure cannot lose it.
+  s.libraryLoaded=false;
+  const hydrated=await hydrateThumbnailBatch(batch);
+  s.batches=[hydrated,...(s.batches||[])].slice(0,6);s.activeBatch=batch.id;s.libraryLoaded=true;
+ });
+ box.querySelector('[data-original-frame]').onclick=()=>run(async()=>{
+  s.bgImg=null;s.imageKind='original';s.selectedImage=null;
+  await new Promise((resolve,reject)=>loadBg(v,()=>s.bgImg?resolve():reject(new Error(s.bgError||'Frame gagal dimuat'))));
+  s.editorReady=true;
+ });
+ const active=(s.batches||[]).find(b=>b.id===s.activeBatch)||(s.batches||[])[0];
+ box.querySelectorAll('[data-image-choice]').forEach(button=>button.onclick=()=>run(async()=>{
+  const index=Number(button.dataset.imageChoice),img=new Image();
+  await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(new Error('Gambar gagal dibuka'));img.src=active.previews[index];});
+  await thumbnailRequest('/api/thumbnail/select',{id:active.id,index});
+  if(active.hooks?.[index]){s.hook=active.hooks[index];v.opts.thumb=active.hooks;}
+  active.selectionIncluded=false;active.selectedIndex=index;
+  s.bgImg=img;s.bgSrc='AI Generated sesuai isi Video';s.imageKind='ai';s.selectedImage=active.id+':'+index;s.editorReady=true;s.bg='original';
+ }));
+ const select=box.querySelector('[data-batch]');if(select)select.onchange=()=>{s.activeBatch=select.value;renderSec(v,'thumb');};
+ if(!s.libraryLoaded&&!s.galleryBusy){
+  s.libraryLoaded=true;
+  run(async()=>{
+   const library=await thumbnailRequest('/api/thumbnail/library?videoId='+encodeURIComponent(v.id));
+   s.batches=await Promise.all(library.batches.map(hydrateThumbnailBatch));
+  });
+ }
+}
+function previewWidth(v,expanded){return isShortVideo(v)?(expanded?'max-w-[240px]':'max-w-[180px]'):(expanded?'max-w-[391px] md:max-w-[569px]':'max-w-[284px] md:max-w-[391px]');}
+function studioHtml(v){const s=v.studio;
+ const sel=(attr,map,cur)=>`<select ${attr} class="bg-black border border-gray-600 px-2 h-8 rounded-lg text-xs w-full min-w-0">${Object.entries(map).map(([k,l])=>`<option value="${k}" ${cur===k?'selected':''}>${l}</option>`).join('')}</select>`;
+ const tpls=(s.tpls||[]).map((t,i)=>`<button data-tpl="${i}" class="h-[60px] max-h-[80px] min-w-0 overflow-hidden text-left bg-[#1C1C22] border ${s.tplName===t.name?'border-[#7C5CFF] bg-[#2A1F4D]':'border-gray-700'} rounded-lg px-2 py-1.5 hover:border-[#7C5CFF]"><span class="block w-full h-1.5 rounded mb-1" style="background:${esc(t.color)}"></span><span class="block text-[10px] font-extrabold truncate">${esc(t.name)}</span><span class="block text-[9px] text-gray-400 truncate">${BG_MODES[t.bg]} · ${TEXT_STYLES[t.style]}</span></button>`).join('');
+ return `<div class="bg-[#0f0f13] rounded-xl p-3 text-white min-w-0">${thumbnailGallery(v)}<div ${s.editorReady?'':'hidden'} data-editor>
+ <div class="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
+ <div class="min-w-0">
+ ${isShortVideo(v)?'<p class="text-[11px] font-bold text-[#C4B5FD] mb-2 text-center">Thumbnail Short - Ukuran 9:16 (1080x1920) - Cek apakah wajah di tengah &amp; teks terbaca di HP</p>':''}
+ <div class="relative mx-auto ${previewWidth(v,s.previewExpanded)}" data-preview>
+ <canvas width="${thumbSize(v).W}" height="${thumbSize(v).H}" class="block ${isShortVideo(v)?'aspect-[9/16] w-full mx-auto':'aspect-video w-full max-h-[220px] md:max-h-[320px]'} h-auto object-cover rounded-xl bg-black" data-canvas></canvas>
+ <button type="button" data-preview-toggle aria-expanded="${!!s.previewExpanded}" aria-label="${s.previewExpanded?'Ciutkan Preview':'Perbesar Preview'}" class="absolute right-2 top-2 rounded-lg bg-black/80 border border-white/30 px-2 py-1.5 text-xs font-semibold text-white hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">${s.previewExpanded?'Ciutkan Preview':'Perbesar Preview'}</button>
+ </div>
+ <p class="text-[10px] text-gray-400 mt-1 break-words" data-bginfo>${s.imageKind==='ai'?'AI Generated sesuai isi Video':s.bgImg?'Frame asli video':'Memuat frame asli video…'}</p>
+ <p class="text-[11px] text-gray-300 mt-1" data-current>${currentInfo(v,'thumb')}</p>
+ </div>
+ <div class="min-w-0 space-y-3">
+ <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2 items-center">
+ <input data-hook aria-label="Teks hook thumbnail" value="${esc(s.hook)}" placeholder="Hook text, contoh: BIKIN RINDU" class="w-full min-w-0 bg-black border border-gray-600 px-2 h-8 rounded-lg text-xs font-extrabold text-yellow-300">
+ <input data-color type="color" value="${esc(s.color)}" class="w-8 h-8 rounded bg-transparent" title="Warna hook">
+ </div>
+ <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+ <label class="text-[11px] text-gray-400">Background${sel('data-bg',BG_MODES,s.bg)}</label>
+ <label class="text-[11px] text-gray-400">Gaya Teks${sel('data-style',TEXT_STYLES,s.style)}</label>
+ <label class="text-[11px] text-gray-400">Posisi${sel('data-pos',{top:'⬆️ Atas',center:'↔️ Tengah',bottom:'⬇️ Bawah'},s.pos)}</label>
+ </div>
+ <label class="text-xs text-gray-400 flex items-center gap-2 min-w-0 bg-[#1C1C22] rounded-lg px-3 py-3">Ukuran <input data-size type="range" min="60" max="200" step="5" value="${s.size}" class="h-1.5 w-full max-w-full min-w-0 flex-1 cursor-pointer accent-[#7C5CFF] [@supports(-webkit-appearance:none)]:appearance-none rounded-full bg-gray-600 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#A78BFA] [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[#A78BFA]"><span data-sizev class="w-7 shrink-0 text-right text-xs tabular-nums">${s.size}</span></label>
+ </div></div>
+ <div class="flex flex-wrap justify-between items-center gap-2 mt-3 mb-2"><p class="text-[11px] font-extrabold">🎨 3 Template Pro</p><button data-act="tpl-refresh" class="min-h-8 text-xs font-bold text-[#A78BFA] border border-[#7C5CFF] rounded-lg px-2">Ganti Template Teks (Gratis)</button></div>
+ <div class="grid grid-cols-[repeat(3,minmax(140px,1fr))] sm:grid-cols-3 gap-3 overflow-x-auto pb-1" data-tpls>${tpls}</div>
+ <p class="text-[10px] text-gray-400 mt-1">Pilih hook AI di bawah → atur gaya → Download JPG ${thumbSize(v).W}×${thumbSize(v).H} (${COST.thumb} Poin) atau Set langsung ke YouTube (${COST.thumbSet} Poin, API thumbnails/set).</p></div></div>`;}
+function wrapLines(ctx,text,maxW){const words=text.split(/\s+/).filter(Boolean),lines=[];let cur='';for(const w of words){const t=cur?cur+' '+w:w;if(ctx.measureText(t).width>maxW&&cur){lines.push(cur);cur=w;}else cur=t;}if(cur)lines.push(cur);return lines;}
+function shade(hex,f){const n=parseInt(String(hex).slice(1),16);if(isNaN(n))return '#000';const c=[n>>16&255,n>>8&255,n&255].map(x=>Math.round(x*f));return `rgb(${c.join(',')})`;}
+function renderThumb(v,canvas){
+ if(!canvas) return;
+ const ctx=canvas.getContext('2d'),{W,H}=thumbSize(v),s=v.studio;
+ ctx.save();ctx.clearRect(0,0,W,H);
+ if(s.bgImg){const img=s.bgImg,sc=Math.max(W/img.naturalWidth,H/img.naturalHeight),dw=img.naturalWidth*sc,dh=img.naturalHeight*sc;ctx.drawImage(img,(W-dw)/2,(H-dh)/2,dw,dh);}
+ else{ctx.fillStyle='#111827';ctx.fillRect(0,0,W,H);ctx.fillStyle='#9CA3AF';ctx.font='bold 40px Inter, sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(s.bgError?'⚠️ '+s.bgError+' — klik untuk coba lagi':'⏳ Memuat frame asli video…',W/2,H/2);ctx.restore();return;}
+ if(s.bg==='dark'){ctx.fillStyle='rgba(0,0,0,.5)';ctx.fillRect(0,0,W,H);const r=ctx.createRadialGradient(W/2,H/2,H*.3,W/2,H/2,W*.75);r.addColorStop(0,'rgba(0,0,0,0)');r.addColorStop(1,'rgba(0,0,0,.6)');ctx.fillStyle=r;ctx.fillRect(0,0,W,H);}
+ else if(s.bg==='gradient'){const g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'rgba(124,58,237,.6)');g.addColorStop(.5,'rgba(219,39,119,.35)');g.addColorStop(1,'rgba(249,115,22,.55)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
+ const text=(s.hook||'').toUpperCase().trim();
+ if(text){
+  let size=s.size;const font=z=>`${z}px Anton, Impact, "Arial Black", sans-serif`;ctx.font=font(size);
+  let lines=wrapLines(ctx,text,W-120);while((lines.length>3||lines.some(l=>ctx.measureText(l).width>W-80))&&size>50){size-=5;ctx.font=font(size);lines=wrapLines(ctx,text,W-120);}
+  const lh=size*1.08,total=lh*lines.length,y0=s.pos==='top'?50+lh/2:s.pos==='center'?(H-total)/2+lh/2:H-50-total+lh/2;
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineJoin='round';
+  lines.forEach((ln,i)=>{const x=W/2,y=y0+i*lh;
+   if(s.style==='glow'){
+    ctx.shadowColor=s.color;ctx.shadowBlur=size*.5;ctx.fillStyle=s.color;for(let k=0;k<3;k++)ctx.fillText(ln,x,y);
+    ctx.shadowBlur=0;ctx.lineWidth=size*.05;ctx.strokeStyle='#fff';ctx.strokeText(ln,x,y);ctx.fillStyle=s.color;ctx.fillText(ln,x,y);
+   }else if(s.style==='3d'){
+    const depth=Math.max(6,Math.round(size*.09));ctx.fillStyle=shade(s.color,.35);
+    for(let d=depth;d>0;d--)ctx.fillText(ln,x+d,y+d);
+    ctx.shadowColor='rgba(0,0,0,.7)';ctx.shadowBlur=25;ctx.shadowOffsetX=depth;ctx.shadowOffsetY=depth;ctx.fillText(ln,x+depth,y+depth);
+    ctx.shadowColor='transparent';ctx.shadowOffsetX=ctx.shadowOffsetY=0;ctx.lineWidth=size*.06;ctx.strokeStyle='#000';ctx.strokeText(ln,x,y);ctx.fillStyle=s.color;ctx.fillText(ln,x,y);
+   }else{
+    ctx.lineWidth=size*.16;ctx.strokeStyle='#000';ctx.shadowColor='rgba(0,0,0,.6)';ctx.shadowBlur=18;ctx.strokeText(ln,x,y);ctx.shadowColor='transparent';ctx.fillStyle=s.color;ctx.fillText(ln,x,y);
+   }
+  });
+ }
+ ctx.restore();
+}
+// 3 hook AI baru dari judul video (pakai history agar tidak mengulang)
+function refreshHooks(v){return generate(v,['thumb'],true);}
+// 3 template pro, refresh = 3 template lain dari pool
+function refreshTemplates(v,silent){
+ const s=v.studio, seen=new Set(s.tplSeen||[]);
+ let fresh=TPL_POOL.filter(t=>!seen.has(t.name)); if(fresh.length<3){s.tplSeen=[];fresh=TPL_POOL.filter(t=>!(s.tpls||[]).some(x=>x.name===t.name));}
+ s.tpls=s.tpls?pick(fresh,3):[TPL_POOL[0],TPL_POOL[8],TPL_POOL[2]]; s.tplSeen=[...(s.tplSeen||[]),...s.tpls.map(t=>t.name)];
+ if(!silent) renderSec(v,'thumb');
+}
+function applyTemplate(v,t){Object.assign(v.studio,{bg:t.bg,style:t.style,color:t.color,pos:t.pos,size:t.size,tplName:t.name});renderSec(v,'thumb');}
+function bindStudio(v,box){
+ const s=v.studio, cv=box.querySelector('[data-canvas]'), q=a=>box.querySelector(a);
+ if(!s.tpls) refreshTemplates(v,true);
+ q('[data-preview-toggle]').onclick=()=>{s.previewExpanded=!s.previewExpanded;const preview=q('[data-preview]'),toggle=q('[data-preview-toggle]');preview.className='relative mx-auto '+previewWidth(v,s.previewExpanded);toggle.textContent=s.previewExpanded?'Ciutkan Preview':'Perbesar Preview';toggle.setAttribute('aria-expanded',String(s.previewExpanded));toggle.setAttribute('aria-label',toggle.textContent);};
+ const redraw=()=>{renderThumb(v,cv);const bi=q('[data-bginfo]');if(bi)bi.innerText=s.imageKind==='ai'?'AI Generated sesuai isi Video':s.bgImg?'Frame asli video':(s.bgError?s.bgError:'Memuat frame asli video…');};
+ q('[data-hook]').oninput=e=>{s.hook=e.target.value;redraw();};
+ q('[data-color]').oninput=e=>{s.color=e.target.value;s.tplName=null;redraw();};
+ q('[data-bg]').onchange=e=>{s.bg=e.target.value;s.tplName=null;redraw();};
+ q('[data-style]').onchange=e=>{s.style=e.target.value;s.tplName=null;redraw();};
+ q('[data-pos]').onchange=e=>{s.pos=e.target.value;redraw();};
+ q('[data-size]').oninput=e=>{s.size=+e.target.value;q('[data-sizev]').innerText=s.size;redraw();};
+ q('[data-act="tpl-refresh"]').onclick=()=>refreshTemplates(v);
+ box.querySelectorAll('[data-tpl]').forEach(b=>b.onclick=()=>applyTemplate(v,s.tpls[+b.dataset.tpl]));
+ box.querySelectorAll('input[type=radio]').forEach(r=>r.addEventListener('change',()=>{s.hook=v.opts.thumb[+r.value];q('[data-hook]').value=s.hook;redraw();}));
+ cv.onclick=()=>{if(s.bgError){s.bgError=null;redraw();loadBg(v,redraw);}};
+ redraw();
+ if(s.editorReady) loadBg(v,()=>{if(cv.isConnected)redraw();});
+ if(document.fonts&&document.fonts.load) document.fonts.load('120px Anton').then(()=>cv.isConnected&&redraw(),()=>{});
+}
+function studioCanvas(v){
+ return new Promise((res,rej)=>loadBg(v,()=>{
+  if(!v.studio.editorReady) return rej(new Error('Pilih gambar AI atau frame asli terlebih dahulu'));
+  if(!v.studio.bgImg) return rej(new Error(v.studio.bgError||'thumbnail belum dimuat'));
+  const cv=document.createElement('canvas');const {W,H}=thumbSize(v);cv.width=W;cv.height=H;renderThumb(v,cv);res(cv);
+ }));
+}
+function safeName(v){return `thumbnail-${v.id}-${(v.studio.hook||'hook').replace(/[^\p{L}\p{N}]+/gu,'-').toLowerCase()}.jpg`;}
+// Download JPG REAL 1280×720 (canvas.toDataURL)
+async function downloadThumb(v){
+ const cost=COST.thumb,p=getPoin();
+ if(p<cost&&!isAdmin){showModalPoinHabis(p,cost);return;}
+ let url;
+ try{const cv=await studioCanvas(v);url=cv.toDataURL('image/jpeg',0.92);}catch(e){alert('Gagal membuat JPG: '+e.message);return;}
+ try{await thumbnailRequest('/api/thumbnail/download',{videoId:v.id});await syncUser();}catch(e){alert('Download gagal: '+e.message);return;}
+ const a=document.createElement('a');a.href=url;a.download=safeName(v);document.body.appendChild(a);a.click();a.remove();
+ if(v.studio.hook) copyText(v.studio.hook);
+ v.used.thumb=true; renderSec(v,'thumb');
+ const logSaved=await recordPreparation(v,'thumb');
+ setStatus(`✅ Thumbnail JPG ${thumbSize(v).W}×${thumbSize(v).H} untuk "<b>${esc(v.title.slice(0,60))}</b>" diunduh. ${isAdmin?'ADMIN gratis, poin tidak dipotong.':`Poin dipotong <b>${cost}</b> → sisa <b>${fmt(p-cost)}</b>.`}${!logSaved?' Log perkembangan belum tersimpan.':''}`);
+}
+function youtubeToast(videoId, text, preview){
+ const old=document.getElementById('youtube-result-toast');if(old)old.remove();
+ const toast=document.createElement('div');toast.id='youtube-result-toast';toast.setAttribute('role','status');toast.style.cssText='position:fixed;bottom:20px;right:20px;z-index:10000;max-width:340px;padding:16px;background:#10251b;color:#b4f5cc;border:1px solid #339966;border-radius:12px';
+ const link=document.createElement('a');link.href='https://youtu.be/'+videoId;link.target='_blank';link.rel='noopener';link.textContent=text+' https://youtu.be/'+videoId;toast.append(link);
+ if(preview){const image=document.createElement('img');image.src=preview+(preview.includes('?')?'&':'?')+'t='+Date.now();image.alt='Preview thumbnail YouTube';image.style.width='100%';toast.append(image);}
+ const close=document.createElement('button');close.textContent='Tutup';close.onclick=()=>toast.remove();toast.append(close);document.body.append(toast);
+}
+// Set thumbnail langsung ke YouTube (POST upload/youtube/v3/thumbnails/set REAL)
+async function setYoutubeThumb(v){
+ const cost=COST.thumbSet,p=getPoin();
+ if(!accessToken){alert('Login Google dulu.');return;}
+ if(!/^[\w-]{11}$/.test(v.id)){setStatus('Upload video dulu sampai ID YouTube muncul.',true);return;}
+ if(v.thumbnailBusy)return;
+ if(p<cost&&!isAdmin){showModalPoinHabis(p,cost);return;}
+ if(!confirm(`Ganti thumbnail video "${v.title.slice(0,80)}" di YouTube dengan desain ini? (${cost} Poin)`)) return;
+ v.thumbnailBusy=true;
+ const btn=secEl(v,'thumb')&&secEl(v,'thumb').querySelector('[data-act="ytset"]'); if(btn){btn.disabled=true;btn.innerHTML='<span class="spin">⏳</span> Upload...';}
+ try{
+  const cv=await studioCanvas(v);
+  let blob=null;for(const q of [0.92,0.85,0.75,0.6]){blob=await new Promise(r=>cv.toBlob(r,'image/jpeg',q));if(blob&&blob.size<2e6)break;}
+  if(!blob) throw new Error('canvas kosong');
+  const res=await btpApi(`/api/youtube-thumbnail?videoId=${encodeURIComponent(v.id)}`,{method:'POST',headers:{Authorization:'Bearer '+accessToken,'Content-Type':'image/jpeg'},body:blob});
+  const json=await res.json().catch(()=>({}));
+  if(res.status===401){accessToken=null;try{sessionStorage.removeItem('btp_token');}catch(e){}loginBtn.classList.remove('hidden');throw new Error('Sesi Google habis, silakan login ulang');}
+  if(!res.ok){const m=(typeof json.error==='string'?json.error:json.error&&json.error.message)||('HTTP '+res.status);throw new Error(res.status===403?m+' (pastikan channel sudah verifikasi fitur thumbnail kustom & login ulang dengan izin upload)':m);}
+  await syncUser().catch(()=>{}); v.used.thumbSet=true;
+  const nt=(json.items&&json.items[0])||{}; const nu=(nt.medium||nt.high||nt.default||{}).url;
+  const card=$('card-'+v.id), im=card&&card.querySelector('a img'); if(im&&nu) im.src=nu+(nu.includes('?')?'&':'?')+'t='+Date.now();
+  if(json.growthRecorded===false) console.info('Thumbnail diterapkan; log perkembangan belum tersimpan.');
+  youtubeToast(v.id,'✅ Thumbnail terpasang ke',nu||`https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`);
+  setStatus(`✅ Thumbnail terpasang ke <a href="https://youtu.be/${v.id}" target="_blank" rel="noopener">https://youtu.be/${v.id}</a><br><a href="https://studio.youtube.com/video/${v.id}/edit" target="_blank" rel="noopener">Cek di YouTube Studio ↗</a><br><img src="${esc(nu||`https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`)}${(nu||'').includes('?')?'&':'?'}t=${Date.now()}" alt="Preview thumbnail YouTube" style="max-width:320px;width:100%">`);
+
+ }catch(e){alert('Gagal set thumbnail YouTube: '+e.message);setStatus('❌ thumbnails/set: '+esc(e.message),true);}
+ v.thumbnailBusy=false;renderSec(v,'thumb');
+}
+</script>
+
+</body>
+</html>

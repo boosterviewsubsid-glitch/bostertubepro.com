@@ -1,0 +1,161 @@
+/* V16: one compact search and a text-only promotion workspace. */
+body.promosi-compact{background:#fafafb;color:#282633}
+.promosi-compact *,.promosi-compact *::before,.promosi-compact *::after{box-sizing:border-box}
+[hidden]{display:none!important}
+body.promosi-compact>div.flex>main.promosi-main{flex:1;min-width:0;padding:16px}
+.promosi-container{width:100%;max-width:1200px;min-width:0;margin-inline:auto;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px}
+.promosi-container>section,.promosi-container>footer{grid-column:1/-1}
+.promosi-heading{display:flex;align-items:center;min-width:0;height:32px}
+.promosi-title{display:flex;align-items:center;gap:8px;min-width:0;width:100%}
+.promosi-title-icon{display:grid;place-items:center;width:28px;height:28px;flex:none;border-radius:8px;background:#ede9f8;color:#7856b7}
+.promosi-title h1{margin:0;font-size:14px;font-weight:800;line-height:20px;letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.promosi-title p{display:none}
+.promosi-toolbar{display:flex;align-items:center}
+.promosi-toolbar>div{gap:6px}
+.promosi-toolbar>div>a,.promosi-toolbar>div>div,.promosi-toolbar [data-admin-badge]{padding:6px 8px;font-size:10px;white-space:nowrap}
+.promosi-search-fields{display:flex;flex-direction:column;gap:4px;min-width:0}
+.promosi-search-row{display:flex;gap:6px;min-width:0}
+.promosi-search-row input{flex:1 1 0!important;min-width:0;height:36px;font-size:12px;background:white;border:1px solid #ded7e9;padding:0 10px}
+.promosi-search-row button{height:36px;padding:0 10px;white-space:nowrap;font-size:11px}
+.promosi-empty,#psFetch{margin:0;font-size:10px;line-height:14px;color:#81768c}
+#psFetch:empty{display:none}
+.promosi-result{background:white;border:1px solid #e4deec;border-radius:12px;padding:12px;min-width:0}
+.video-summary{display:flex;gap:10px;align-items:center;margin-bottom:10px;min-width:0}
+.video-summary img{width:80px;height:45px;object-fit:cover;border-radius:6px;flex:none}
+.video-summary>div{min-width:0}
+.video-summary h2{margin:0;font-size:13px;line-height:18px;font-weight:700;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.video-summary p{margin:2px 0 0;font-size:11px;line-height:14px;color:#766b82;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.promo-actions{display:flex;flex-wrap:nowrap;gap:4px;overflow-x:auto;min-width:0;scrollbar-width:thin}
+.promo-actions button{height:28px;flex:1 0 auto;display:flex;align-items:center;justify-content:center;padding:0 8px;border:1px solid #e4ddef;background:#faf8fe;border-radius:999px;color:#674499;font-size:11px;font-weight:600;white-space:nowrap;transition:background .15s}
+.promo-actions button:hover{background:#ede6f8}
+.promo-actions button[aria-pressed=true]{background:#7953b4;border-color:#7953b4;color:white}
+#psHasil{padding:10px 0 0;min-width:0}
+#psHasil h3{font-size:11px;line-height:16px;margin-bottom:6px}
+.promo-text{display:block;width:100%;height:112px;resize:none;padding:8px 10px;border:1px solid #e4deec;border-radius:8px;background:#fdfcfe;color:#37303f;font-size:12px;line-height:18px;margin-bottom:6px}
+#psHasil button{height:28px;padding:0 12px;border-radius:7px;font-size:11px;font-weight:700;color:#674499}
+.promosi-compact .section-iklan-tugas{width:100%;max-width:none;margin:0;padding:0;border:0;background:transparent;min-width:0}
+.promosi-compact .section-iklan-tugas h2{font-size:13px;line-height:18px;margin:0 0 6px;font-weight:800}
+.agency-gate{position:relative;min-width:0}
+.agency-lock{position:relative;z-index:1;display:grid;grid-template-columns:20px minmax(0,1fr) auto;align-items:center;gap:8px;height:80px;padding:12px;background:#faf5ff;border:1px solid #e9d5ff;border-radius:12px;color:#7953b4}
+.agency-lock-copy{min-width:0}
+.agency-lock strong{display:block;font-size:13px;font-weight:700;line-height:18px}
+.promosi-compact .agency-lock p{font-size:11px;line-height:15px;color:#8b719e;margin:2px 0 0}
+.agency-lock a{display:flex;align-items:center;justify-content:center;height:32px;padding:0 10px;border-radius:7px;background:#7953b4;color:white;font-size:11px;font-weight:600;white-space:nowrap}
+.agency-lock a:hover{background:#684399}
+#agencyFields{border:0;padding:0;margin:0;display:grid;gap:8px;min-width:0}
+.promosi-compact .form-iklan{gap:8px;margin:0}
+.agency-gate:has(#agencyFields:disabled){height:80px;overflow:hidden;border-radius:12px}
+.agency-gate:has(#agencyFields:disabled) .form-iklan{position:absolute;inset:0;opacity:.3;pointer-events:none;overflow:hidden}
+/* Keep disabled controls visible through a soft lock surface. */
+.agency-gate:has(#agencyFields:disabled) .agency-lock{background:rgba(250,245,255,.94)}
+.promosi-container:has(#hasilOtomatis[hidden]) #agencyFields:not(:disabled){display:none}
+.promosi-compact .form-iklan label{font-size:11px;line-height:16px;color:#595265}
+.promosi-compact .form-iklan input,.promosi-compact .form-iklan select{height:32px;min-width:0;padding:0 8px;font-size:12px}
+.promosi-compact .form-iklan textarea{height:48px;min-height:48px;max-height:48px;resize:none;padding:6px 8px;font-size:12px;line-height:18px;display:block;margin-top:2px}
+.iklan-copy-fields,.promosi-compact .iklan-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.iklan-copy-fields>div,.promosi-compact .iklan-options label{min-width:0}
+.promosi-compact .iklan-options select{margin-top:2px}
+.promosi-compact .form-iklan small{font-size:10px;line-height:14px}
+.iklan-budget{display:flex;align-items:center;gap:8px;font-size:11px;color:#777080}
+#iklanTotal{padding:3px 8px;font-size:11px;border-radius:6px;background:#ede6fb;color:#7044ae;white-space:nowrap}
+.promosi-compact #btnPasangIklan{min-height:32px;padding:6px 10px;font-size:11px;line-height:16px;border-radius:8px;background:#7553b8}
+#iklanMessage:empty{display:none}
+.promosi-compact #iklanMessage{font-size:11px;line-height:16px;margin:4px 0}
+.own-ads{font-size:10px;line-height:14px;margin-top:6px;color:#766b82}
+.own-ads summary{cursor:pointer;font-weight:600}
+.own-ads summary span{font-weight:400}
+#ownAds{overflow-wrap:anywhere}
+.promosi-compact #ownAds p{font-size:11px;margin:0;padding:6px 0}
+.promosi-compact .btp-legal{margin-top:0!important;padding:0!important;border:0!important;font-size:9px!important;line-height:12px;overflow-wrap:anywhere}
+@media(min-width:768px){.promosi-compact #btpSidebar{width:220px;max-width:220px}.promosi-main{margin-left:220px;width:calc(100% - 220px)}}
+@media(max-width:639px){.promosi-container{column-gap:6px}.promosi-title-icon{display:none}.promosi-title h1{font-size:12px}.promosi-toolbar>div>a,.promosi-toolbar>div>div{padding:6px;font-size:9px}.refresh-label{display:none}.promo-actions button{font-size:10px;padding:0 6px}.agency-lock{grid-template-columns:20px minmax(0,1fr);grid-template-rows:28px 32px;gap:4px 8px;padding:8px 12px}.agency-lock-copy strong{font-size:12px;line-height:14px}.promosi-compact .agency-lock p{font-size:9px;line-height:12px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.agency-lock a{grid-column:1/-1;justify-self:start;font-size:10px}.promosi-compact .btp-legal{font-size:8px!important}}
+/* Compact the editor while keeping every advertising control accessible. */
+.promo-text{height:80px}
+.promosi-compact .form-iklan textarea{height:36px;min-height:36px;max-height:36px;padding:4px 8px;line-height:16px}
+.promosi-compact .form-iklan select{height:28px;font-size:11px}
+#agencyFields{gap:6px}
+.iklan-submit-row{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0}
+.iklan-budget{gap:4px;flex-wrap:wrap;font-size:10px}
+.iklan-budget>span{display:none}
+.promosi-compact #btnPasangIklan{font-size:10px;min-height:28px;padding:4px 8px}
+.iklan-terms{font-size:10px;line-height:14px;color:#81768c}
+.iklan-terms summary{cursor:pointer}
+@media(min-width:1024px){.promosi-container:has(#hasilOtomatis:not([hidden])):has(#agencyFields:not(:disabled)){grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}.promosi-container:has(#agencyFields:not(:disabled)) #hasilOtomatis:not([hidden]){grid-column:1}.promosi-container:has(#hasilOtomatis:not([hidden])):has(#agencyFields:not(:disabled)) #iklan-tugas{grid-column:2}.promosi-container:has(#agencyFields:not(:disabled)) .agency-lock{grid-template-columns:20px minmax(0,1fr)}}
+/* Text-only editor: compact controls, scrollable copy, no image preview. */
+#psHasil{display:flex;flex-direction:column;align-items:stretch;gap:6px}
+.promo-controls{display:flex;flex-wrap:wrap;gap:6px}
+.promo-controls label{display:flex;align-items:center;gap:4px;font-size:10px;color:#766b82;min-width:0}
+.promo-controls select,.promo-controls input{height:26px;max-width:100%;min-width:0;border:1px solid #e4deec;border-radius:6px;background:white;padding:0 6px;font-size:11px;color:#37303f}
+.promo-controls .promo-link{flex:1 1 240px}
+.promo-link input{flex:1;width:100px}
+#psHasil .promo-text{height:54px;margin:0;background:white;resize:vertical;min-height:54px}
+.promo-result-actions{display:flex;align-items:center;justify-content:flex-end;gap:6px}
+.promo-result-actions span{margin-right:auto;color:#766b82;font-size:10px}
+.promo-controls select:focus-visible,.promo-controls input:focus-visible,.promo-text:focus-visible{outline:2px solid #7953b4;outline-offset:2px}
+@media(max-width:639px){.promo-result-actions span{display:none}.promo-controls label{flex:1 1 130px}.promo-controls select{flex:1;width:100px}}
+@media(max-width:639px){.promo-actions{gap:3px}.promo-actions button{font-size:9px;padding:0 4px}.promosi-compact .form-iklan label{font-size:10px;white-space:nowrap}}
+@media(max-width:359px){.promo-actions button{padding-inline:1px}}
+/* V17: a 148px text card; all configuration stays in the right panel. */
+.promosi-result{padding:4px;align-self:start}
+.video-summary{gap:6px;margin-bottom:2px;height:34px}
+.video-summary img{width:60px;height:34px}
+.video-summary h2{font-size:12px;line-height:14px;-webkit-line-clamp:1}
+.video-summary p{font-size:10px;line-height:12px;margin-top:1px}
+.promo-actions button{height:24px;flex:0 0 auto;padding:0 8px;font-size:10px;background:white;font-weight:500}
+#psHasil{padding-top:2px;gap:2px}
+#psHasil .promo-text{height:54px;min-height:54px;max-height:54px;resize:none;padding:3px 6px;font-size:11px;line-height:14px}
+#psHasil button{height:20px;padding:0 6px;font-size:10px}
+.promo-result-actions{height:20px;gap:4px}
+#promoOptions:empty{display:none}
+#promoOptions{margin-bottom:8px;padding:8px;border:1px solid #e4deec;border-radius:8px;background:white}
+@media(min-width:1024px){.promosi-container:has(#hasilOtomatis:not([hidden])){grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}.promosi-container #hasilOtomatis:not([hidden]){grid-column:1}.promosi-container:has(#hasilOtomatis:not([hidden])) #iklan-tugas{grid-column:2}}
+/* Promotion workflow: a single search, small action icons, and no social image previews. */
+.video-search-input{position:relative;flex:1;min-width:0}
+.video-search-input>input{width:100%}
+#videoSuggestions{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:30;background:white;border:1px solid #e4deec;border-radius:10px;box-shadow:0 8px 24px #28263318;max-height:310px;overflow:auto;padding:4px}
+#videoSuggestions button{display:flex;width:100%;height:auto;min-height:48px;text-align:left;align-items:center;gap:8px;padding:6px;border-radius:6px;background:white;white-space:normal}
+#videoSuggestions button:hover,#videoSuggestions button:focus-visible{background:#f4f0fa;outline:2px solid #7953b4;outline-offset:-2px}
+#videoSuggestions img{width:40px;height:30px;object-fit:cover;flex:none;border-radius:4px}
+#videoSuggestions span{min-width:0}
+#videoSuggestions strong{font-size:12px;font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#videoSuggestions small{display:block;font-size:10px;color:#766b82}
+#videoSuggestions p{font-size:12px;padding:10px}
+.promosi-result{padding:12px}
+.video-summary{height:auto;min-height:45px;margin-bottom:10px;gap:10px}
+.video-summary img{width:80px;height:45px}
+.video-summary h2{-webkit-line-clamp:2}
+.promo-actions{display:flex;flex-wrap:wrap;gap:8px;overflow:visible}
+.promo-actions button{height:30px;gap:5px;padding:0 10px;font-size:11px}
+.promo-actions img{width:16px;height:16px;flex:none;object-fit:contain}
+.promo-actions button[data-ps=ads]{background:#dc2626;border-color:#dc2626;color:white}
+.promo-actions button:disabled{opacity:.4;cursor:not-allowed}
+.promo-actions button:focus-visible{outline:2px solid #7953b4;outline-offset:2px}
+#psHasil .promo-text.ads-copy{height:190px;min-height:190px;max-height:260px;resize:vertical}
+#psHasil:has(.ads-copy) .promo-result-actions{height:auto;min-height:28px;flex-wrap:wrap}
+#psHasil [data-psx=open-ads]{background:#dc2626;color:white;border-color:#dc2626}
+/* Interest recommendations remain text-only and usable on small screens. */
+.youtuber-targeting{margin-top:10px;padding:12px;border:1px solid #e4deec;border-radius:10px;background:#faf8fe;min-width:0;overflow-wrap:anywhere}
+.youtuber-target-badge{display:inline-block;padding:4px 7px;border-radius:6px;background:#eee8f5;color:#674499;font-size:10px;line-height:15px}
+#psHasil .youtuber-targeting h3{margin:10px 0 6px;font-size:12px;line-height:18px;font-weight:700}
+.youtuber-targeting p{margin:6px 0;font-size:11px;line-height:16px;color:#595265}
+.youtuber-targeting h4,.youtuber-targeting label{display:block;margin:10px 0 5px;font-size:11px;font-weight:700}
+.youtuber-targeting ul{display:flex;flex-wrap:wrap;gap:4px;padding:0;margin:0;list-style:none}
+.youtuber-targeting li{padding:3px 7px;border:1px solid #e4deec;border-radius:6px;background:white;font-size:10px;line-height:15px}
+#psHasil .promo-text.targeting-copy{height:250px;min-height:160px;max-height:500px;resize:vertical;padding:8px;line-height:17px}
+.youtuber-targeting .promo-result-actions{height:auto;min-height:28px;flex-wrap:wrap}
+#psHasil .youtuber-targeting button{height:auto;min-height:28px;white-space:normal}
+.youtuber-targeting .targeting-note{font-size:10px;line-height:15px;color:#766b82}
+/* Modal pasang tugas: 600px, judul & feedback vertikal full width, satu harga 5 Poin/review */
+.review-install-dialog{width:min(600px,calc(100% - 24px));min-width:0;padding:24px}
+.review-install-dialog .iklan-copy-fields{display:block;width:100%}
+.review-install-dialog .iklan-copy-fields>div{display:block;width:100%}
+.review-install-dialog .iklan-copy-fields>div+div{margin-top:20px}
+.review-install-dialog .iklan-copy-fields textarea{display:block;width:100%;box-sizing:border-box;max-height:none;padding:10px 12px;font-size:14px;line-height:20px;resize:vertical}
+.review-install-dialog #judulIklan{height:80px;min-height:80px}
+.review-install-dialog #deskripsiIklan{height:120px;min-height:120px}
+.review-install-dialog .iklan-jumlah{margin:20px 0 4px}
+.review-install-dialog .iklan-jumlah select{width:100%;height:auto;padding:8px 10px;font-size:14px}
+.iklan-jumlah-note{margin:0 0 12px;font-size:11px;color:#6b6b7b}
+.review-install-dialog .iklan-total-badge{display:inline-block;padding:4px 10px;border-radius:999px;background:#f5f2ff;border:1px solid #7c5cff;color:#5b3fd6;font-size:14px}
+.review-install-dialog .iklan-submit-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.review-install-dialog #btnPasangIklan{min-height:40px;padding:8px 16px;font-size:13px;background:#7c5cff;color:white}

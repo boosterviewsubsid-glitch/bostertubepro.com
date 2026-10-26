@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<script src="/utils/btp-auth-guard.js"></script>
+<script src="/utils/points-meter.js"></script>
+<link rel="stylesheet" href="/utils/btp-widget-visibility.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tugas - BosterTubePro</title>
+<link rel="icon" type="image/png" href="/b-logo.png">
+<meta name="color-scheme" content="light">
+<link rel="stylesheet" href="/utils/btp-theme.css">
+<script src="/utils/btp-mobile.js" defer></script>
+<script src="/utils/btp-bottom-nav.js" defer></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="/utils/credit.js?v=verified-admin-20261021"></script>
+<script src="/utils/btp-auth.js"></script>
+<script src="/utils/btp-ai-chat.js" defer></script>
+<script src="/utils/btp-page.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>body{font-family:'Inter',sans-serif}</style>
+<link rel="stylesheet" href="/utils/btp-header.css">
+<script src="/utils/btp-brand.js" defer></script>
+<link rel="stylesheet" href="/utils/review-missions.css">
+<script src="/utils/review-missions.js" defer></script>
+<link rel="stylesheet" href="/utils/task-ads.css">
+<script src="/utils/task-ads.js?v=other-owner-only-20261021" defer></script>
+</head>
+<body class="bg-[#f5f6ff]">
+<div class="flex flex-col md:flex-row min-h-screen">
+<aside id="btpSidebar" class="w-[260px] max-w-[85vw] bg-[#121214] text-white flex flex-col fixed inset-y-0 left-0 z-50 h-screen overflow-y-auto p-4 -translate-x-full md:translate-x-0 transition-transform duration-200">
+<div class="flex items-center gap-2.5 mb-7 px-2"><div id="brandLogo" class="w-10 h-10 bg-white rounded-lg flex items-center justify-center overflow-hidden shrink-0"><img src="/b-logo.png" width="40" height="40" alt="Logo B merah BosterTubePro" class="w-10 h-10 object-contain"></div><span id="brandName" class="font-bold text-[14px] truncate">BosterTubePro</span></div>
+<nav class="space-y-1">
+<a href="/" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>📊</span> Dashboard</a>
+<a href="/analytics" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>📈</span> Analytics</a>
+<a href="/audit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>📄</span> Audit Video</a>
+<a href="/promosi" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>🚀</span> Promosi</a>
+<a href="/tugas" class="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white" aria-current="page" style="background:#6c5ce7;color:white"><span>💼 Tugas Iklan</span><span class="badge-new" style="font-size:10px;background:#e6ddff;color:#6347b5;border-radius:5px;padding:2px 5px">Baru</span><span id="jumlahTugas" class="badge-count" data-task-count style="font-size:10px;white-space:nowrap">… tugas</span></a>
+<a href="/kompetitor" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>👥</span> Kompetitor</a>
+<a href="/pengaturan" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>⚙️</span> Pengaturan</a>
+<a href="/billing" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>💳</span> Harga &amp; Billing</a>
+<a href="/bantuan" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>💬</span> Bantuan &amp; Pengaduan</a>
+<div class="mt-5 p-[1.5px] rounded-xl bg-gradient-to-br from-[#7C5CFF] to-[#FF6BA8]"><button type="button" onclick="location.href='/upload'" class="w-full bg-[#1E1E24] px-3 py-3 rounded-[10px] text-left"><p class="text-[13px] font-bold">🎥 Upload Video </p><p class="text-[11px] text-gray-400">Panjang & Short</p></button></div>
+<div class="mt-3 bg-[#1C1C22] border border-[#2A2A33] rounded-xl p-3"><p class="text-[11px] font-bold text-[#A78BFA]">AI Generator</p><p class="text-[10px] text-gray-400">Judul, deskripsi, thumbnail, tag & hashtag AI 3 pilihan</p></div>
+</nav>
+<div class="mt-auto"><div id="authStatus" class="bg-[#1E1E24] border border-[#2A2A33] px-3 py-2 rounded-xl text-[10px] text-gray-400 mb-3">🔴 Belum Login Google</div><div class="flex items-center gap-3"><div id="profileAvatar" class="w-8 h-8 rounded-full bg-[#2A2A33] overflow-hidden shrink-0"></div><div class="min-w-0"><p id="profileName" class="text-[12px] font-bold truncate">Belum login</p><p id="profileHandle" class="text-[10px] text-gray-400 truncate">Login Google untuk data channel</p></div></div></div>
+</aside>
+<main class="ml-0 md:ml-[260px] flex-1 p-3 md:p-7 min-w-0">
+<section aria-label="BosterTubePro" class="brand-hero"><img src="/b-logo.png" width="32" height="32" alt="Logo B merah BosterTubePro"><div><p class="brand-version">BosterTubePro</p><p class="brand-channel" data-brand-channel>Channel YouTube kamu</p></div></section>
+<header class="task-heading"><span class="review-kicker">MARKETPLACE KREATOR</span><h1>💼 Tugas Iklan Tersedia — Dapat Poin</h1><p>Khusus member Agency Rp499.000 - Maksimal 3 review per hari </p><a href="/promosi#iklan-tugas">Pasang iklan untuk channel kamu →</a></header><section id="barLangganan" aria-labelledby="taskPackageHeading"><div class="subscription-copy"><span class="agency-diamond" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12l4 6-10 12L2 9zM2 9h20M8 3l4 18 4-18"/></svg></span><div><b id="taskPackageHeading">Menjadi berlangganan Rp499.000</b><div class="subscription-note">Misi review &amp; pasang iklan hanya untuk member Agency Rp499.000</div></div></div><a href="/billing#plans">Berlangganan Rp499.000</a></section><p id="taskMessage" role="status" aria-live="polite">Memuat tugas…</p><p class="review-note">Tugas klik iklan Adsense dilarang Google dan akan dihapus. Jika suka, pertimbangkan untuk subscribe. Poin hanya untuk review jujur, bukan untuk subscribe.</p><strong id="taskBalance" aria-live="polite">Saldo Poin Kamu: …</strong><div id="listTugas" class="task-grid"></div><section id="reviewMissions" class="review-panel" aria-labelledby="reviewHeading">
+<div id="misi-review"></div><span class="review-kicker">BELAJAR SESAMA KREATOR</span>
+<a href="/riwayat-review">Lihat riwayat review kamu →</a><h2 id="reviewHeading">Misi Harian · 30–150 Poin <span id="reviewSubscriptionBadge" class="review-subscription-badge">Khusus Agency</span></h2>
+<p>Review thumbnail dan judul selama 60 detik, lalu bagikan feedback jujur. Reward 10, 20, atau 50 poin sesuai iklan, maksimal 3 review per hari. Khusus member berlangganan Agency Rp499.000.</p>
+<div class="review-meta"><button id="reviewStart" type="button" class="subscription-locked">Berlangganan Rp499.000 Dulu</button><strong id="reviewProgress">Memuat progres harian…</strong></div>
+<p id="reviewMessage" role="status" aria-live="polite"></p><p id="loginWarning" class="review-note" style="display:none;">Belum terhubung? <a href="/pengaturan" style="text-decoration:underline">Login dan hubungkan channel YouTube</a>.</p>
+<div id="reviewWork" hidden>
+<div class="review-material"><img id="reviewThumbnail" alt="Thumbnail video yang direview"><div><p class="review-kicker">BAHAN REVIEW</p><h3 id="reviewTitle"></h3><p id="reviewTask"></p><p id="reviewTimer" class="review-timer" role="timer"></p><p>Perhatikan keterbacaan thumbnail dan kejelasan judul. Scroll setidaknya 50% halaman sebelum mengirim feedback.</p><button id="reviewWatch" type="button">Buka video opsional</button></div></div>
+<div id="reviewPlayer"></div>
+<p class="review-note">Poin diberikan untuk aktivitas review di BosterTubePro, bukan untuk menonton, like, subscribe, atau menambah metrik YouTube. Memutar video sepenuhnya opsional dan tidak memengaruhi poin. Embed privasi tetap dapat menghasilkan view; kami tidak menjamin bagaimana YouTube menghitungnya.</p>
+<p id="reviewScrollStatus" role="status" aria-live="polite"></p><form id="reviewForm" novalidate><fieldset id="reviewQuestions" hidden><legend>Feedback kamu</legend><label>Rating <select name="rating" required><option value="">Pilih 1–5</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label><label>Thumbnail video ini menarik? <select name="thumbnail" required><option value="">Pilih jawaban</option><option value="yes">Ya</option><option value="no">Tidak</option></select></label><label>Feedback jujur minimal 15 kata unik, spesifik untuk judul/thumbnail ini. Jangan gunakan template atau menyalin reviewer lain. <textarea name="suggestion" required maxlength="2000" placeholder="Jelaskan bagian yang jelas, bagian yang perlu diperbaiki, dan saran konkret kamu."></textarea></label><p class="review-storage-note">✓ Feedback kamu akan disimpan di BosterTubePro untuk membantu kreator memperbaiki judul &amp; thumbnail. Tidak akan diposting otomatis ke komentar YouTube (untuk menjaga kepatuhan YouTube).</p><button id="reviewClaim" type="submit">Submit Review · Poin Masuk Saldo</button></fieldset></form>
+</div>
+</section><footer class="btp-legal" style="margin-top:28px;padding:16px 0 4px;border-top:1px solid rgba(128,128,160,.25);text-align:center;font-size:12px;color:#8b8ba3"><a href="/privacy-policy" style="color:inherit">Kebijakan Privasi</a> | <a href="/terms" style="color:inherit">Syarat Layanan</a> | <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" style="color:inherit">YouTube ToS</a> | <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style="color:inherit">Google Privacy</a><p>Butuh bantuan? Hubungi Admin: <a href="mailto:boosterviewsubsid@gmail.com">boosterviewsubsid@gmail.com</a> · <a href="/bantuan">Bantuan</a></p><p><a href="/bantuan?tab=pengaduan">Atau Kirim Pengaduan Langsung di sini</a></p></footer>
+</main>
+</div>
+</body></html>

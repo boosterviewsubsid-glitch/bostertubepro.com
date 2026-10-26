@@ -1,0 +1,44 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aktivasi Sultan · BosterTubePro</title><link rel="icon" href="/b-logo.png"><link rel="stylesheet" href="/utils/support.css"><script src="/utils/credit.js"></script><script src="/utils/btp-auth.js" defer></script><style>.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:14px;border:1px solid #e5e7eb;border-radius:12px;margin:8px 0}.row button{margin-left:6px}.gold{background:linear-gradient(135deg,#f59e0b,#fde047);color:#422006;font-weight:800;border:0}input{width:100%;box-sizing:border-box}label{display:block;margin:12px 0}</style></head><body><main><nav><a href="/">Dashboard</a><a href="/admin/tambah-poin">Tambah Poin Manual</a><a href="/settings/laporan">Laporan</a></nav><p class="eyebrow">BOSTERTUBEPRO / ADMIN</p><h1>Aktivasi Paket SULTAN</h1><p>Cek transfer BCA/Mandiri Rp 1.500.000 ($93) dulu, lalu klik "Aktifkan 30 Hari". User dapat 15.000 Poin dan akses Unlimited 30 hari.</p><p id="status" role="status">Memeriksa akses admin…</p>
+<section id="workspace" hidden>
+<h2>Menunggu Aktivasi</h2><div id="pending" aria-live="polite"></div>
+<h2>Aktifkan Manual via Email</h2><form id="manual"><label>Email user<input id="email" type="email" required maxlength="254"></label><label>Referensi transfer (opsional)<input id="referensi" maxlength="500" placeholder="Contoh: BCA 25/10 a.n. Budi"></label><button class="gold" type="submit">Aktifkan 30 Hari</button></form>
+<p id="result" role="status"></p>
+<h2>Sultan Aktif</h2><div id="active"></div>
+</section></main>
+<script>
+(() => {
+ const el = id => document.getElementById(id);
+ const date = v => new Date(v).toLocaleString('id-ID');
+ async function api(url, options) { const r = await btpApi(url, options), data = await r.json(); if (!r.ok) { const e = Error(data.error || 'Permintaan gagal'); e.status = r.status; throw e; } return data; }
+ async function act(payload, button) {
+  if (payload.action === 'activate' && !confirm('Transfer sudah dicek? Aktifkan Sultan 30 hari untuk ' + (payload.label || payload.user_email) + '?')) return;
+  button.disabled = true; el('result').textContent = 'Memproses…';
+  try {
+   const { label, ...body } = payload;
+   const d = await api('/api/admin/sultan', { method: 'POST', body: JSON.stringify({ ...body, request_id: crypto.randomUUID() }) });
+   el('result').textContent = payload.action === 'activate' ? `Berhasil. ${d.email} Sultan aktif sampai ${date(d.expiresAt)} · Saldo ${Number(d.btp_poin).toLocaleString('id-ID')} Poin.` : 'Permintaan ditolak.';
+   await load();
+  } catch (e) { el('result').textContent = e.message; } finally { button.disabled = false; }
+ }
+ function row(text, buttons) {
+  const div = document.createElement('div'), p = document.createElement('span'), box = document.createElement('span');
+  div.className = 'row'; p.textContent = text; box.append(...buttons); div.append(p, box); return div;
+ }
+ function btn(label, cls, onclick) { const b = document.createElement('button'); b.type = 'button'; b.textContent = label; if (cls) b.className = cls; b.onclick = () => onclick(b); return b; }
+ async function load() {
+  const d = await api('/api/admin/sultan');
+  el('pending').replaceChildren(...(d.pending.length ? d.pending.map(u => row(`${u.email} · diminta ${date(u.sultan_requested_at)}`, [
+   btn('Aktifkan 30 Hari', 'gold', b => act({ action: 'activate', user_id: u.user_id, label: u.email }, b)),
+   btn('Tolak', '', b => act({ action: 'reject', user_id: u.user_id }, b)),
+  ])) : [document.createTextNode('Belum ada permintaan Sultan.')]));
+  el('active').replaceChildren(...(d.active.length ? d.active.map(u => row(`${u.email} · aktif sampai ${date(u.plan_expires_at)}`, [
+   btn('Perpanjang 30 Hari', 'gold', b => act({ action: 'activate', user_id: u.user_id, label: u.email }, b)),
+  ])) : [document.createTextNode('Belum ada Sultan aktif.')]));
+ }
+ el('manual').onsubmit = e => { e.preventDefault(); act({ action: 'activate', user_email: el('email').value.trim(), referensi: el('referensi').value.trim() }, e.submitter); };
+ (async () => {
+  try { await load(); el('status').textContent = 'Akses admin terverifikasi.'; el('workspace').hidden = false; }
+  catch (e) { el('status').textContent = e.status === 403 ? '403 Forbidden — akses khusus admin terdaftar.' : e.message; }
+ })();
+})();
+</script></body></html>

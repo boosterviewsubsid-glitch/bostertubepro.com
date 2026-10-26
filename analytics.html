@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<script src="/utils/btp-auth-guard.js"></script>
+<script src="/utils/points-meter.js"></script>
+<link rel="stylesheet" href="/utils/btp-widget-visibility.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics - BosterTubePro</title>
+<link rel="icon" type="image/png" href="/b-logo.png">
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="/utils/btp-theme.css">
+<script src="/utils/btp-mobile.js" defer></script>
+<script src="/utils/btp-bottom-nav.js" defer></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+// Dark mode: localStorage btp_theme ("dark" | "light", sama dengan Pengaturan > Tampilan & Kompetitor), default Light
+tailwind.config={darkMode:'class'};
+if(localStorage.getItem('btp_theme')==='dark')document.documentElement.classList.add('dark');
+</script>
+<script src="/utils/credit.js"></script>
+<script src="/utils/btp-auth.js"></script>
+<script src="/utils/btp-ai-chat.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>body{font-family:'Inter',sans-serif}:root{--text-primary:#111827;--text-secondary:#4B5563}
+.dark{--text-primary:#F9FAFB;--text-secondary:#D1D5DB}
+.btp-analytics main h3,.btp-analytics main h1{color:var(--text-primary)}
+.real{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:800;letter-spacing:.04em;padding:3px 8px;border-radius:999px;background:#16A34A;color:#fff;white-space:nowrap;box-shadow:0 1px 2px rgba(0,0,0,.15)}.real::before{content:'';width:6px;height:6px;border-radius:50%;background:#fff}.real.est{background:#D97706;color:#fff}.real.est::before{background:#fff}.real.err{background:#DC2626;color:#fff}.real.err::before{background:#fff}
+html.dark,html.dark body{background:#111827;color:#f3f4f6;color-scheme:dark}
+html.dark input,html.dark select,html.dark textarea{background-color:#1f2937;color:#f3f4f6}
+.dark .real{background:#22C55E;color:#fff}
+/* Ruang bawah supaya chat bubble & kartu terakhir tidak mepet taskbar / bottom nav HP */
+body.btp-analytics{padding-bottom:100px!important}
+body.btp-analytics.btp-has-bottom-nav{padding-bottom:calc(100px + env(safe-area-inset-bottom))!important}
+.dark .real.err{background:#EF4444;color:#fff}
+.dark .real.est{background:#F59E0B;color:#fff}</style>
+<link rel="stylesheet" href="/utils/btp-header.css">
+<script src="/utils/btp-brand.js" defer></script>
+<script src="/utils/task-ads.js" defer></script>
+</head>
+<body class="btp-analytics bg-[#f5f6ff] dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+<div class="flex flex-col md:flex-row min-h-screen">
+<aside id="btpSidebar" class="w-[260px] max-w-[85vw] bg-[#121214] text-white flex flex-col fixed inset-y-0 left-0 z-50 h-screen overflow-y-auto p-4 -translate-x-full md:translate-x-0 transition-transform duration-200">
+<div class="flex items-center gap-2.5 mb-7 px-2"><div id="brandLogo" class="w-10 h-10 bg-white rounded-lg flex items-center justify-center overflow-hidden shrink-0"><img src="/b-logo.png" width="40" height="40" alt="Logo B merah BosterTubePro" class="w-10 h-10 object-contain"></div><span id="brandName" class="font-bold text-[14px] truncate">BosterTubePro</span></div>
+<nav class="space-y-1">
+<a href="/" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>📊</span> Dashboard</a>
+<a href="/analytics" class="w-full flex items-center gap-3 bg-[#7C5CFF] px-3 py-2.5 rounded-xl text-[13px] font-bold"><span>📈</span> Analytics</a>
+<a href="/audit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>📄</span> Audit Video</a>
+<a href="/promosi" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>🚀</span> Promosi</a>
+<a href="/tugas" class="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>💼 Tugas Iklan</span><span class="badge-new" style="font-size:10px;background:#e6ddff;color:#6347b5;border-radius:5px;padding:2px 5px">Baru</span><span id="jumlahTugas" class="badge-count" data-task-count style="font-size:10px;white-space:nowrap">… tugas</span></a>
+<a href="/kompetitor" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>👥</span> Kompetitor</a>
+<a href="/pengaturan" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>⚙️</span> Pengaturan</a>
+<a href="/billing" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>💳</span> Harga &amp; Billing</a>
+<a href="/bantuan" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white"><span>💬</span> Bantuan &amp; Pengaduan</a>
+<div class="mt-5 p-[1.5px] rounded-xl bg-gradient-to-br from-[#7C5CFF] to-[#FF6BA8]"><button type="button" onclick="location.href='/upload'" class="w-full bg-[#1E1E24] px-3 py-3 rounded-[10px] text-left"><p class="text-[13px] font-bold">🎥 Upload Video </p><p class="text-[11px] text-gray-400">Panjang & Short</p></button></div>
+<div class="mt-3 bg-[#1C1C22] border border-[#2A2A33] rounded-xl p-3"><p class="text-[11px] font-bold text-[#A78BFA]">AI Generator</p><p class="text-[10px] text-gray-400">Judul, deskripsi, thumbnail, tag & hashtag AI 3 pilihan</p></div>
+</nav>
+<div class="mt-auto"><div id="authStatus" class="bg-[#1E1E24] border border-[#2A2A33] px-3 py-2 rounded-xl text-[10px] text-gray-400 mb-3">🔴 Belum Login Google</div><div class="flex items-center gap-3"><div id="profileAvatar" class="w-8 h-8 rounded-full bg-[#2A2A33] overflow-hidden shrink-0"></div><div class="min-w-0"><p id="profileName" class="text-[12px] font-bold truncate">Belum login</p><p id="profileHandle" class="text-[10px] text-gray-400 truncate">Login Google untuk data channel</p></div></div></div>
+</aside>
+
+<main class="ml-0 md:ml-[260px] flex-1 p-3 md:p-7 pb-20 md:pb-20 min-w-0">
+<section aria-label="BosterTubePro" class="brand-hero"><img src="/b-logo.png" width="32" height="32" alt="Logo B merah BosterTubePro"><div><p class="brand-version">BosterTubePro</p><p class="brand-channel" data-brand-channel>Channel YouTube kamu</p></div></section>
+<div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4 md:mb-6 gap-3 md:gap-4">
+ <div class="flex items-center gap-3 min-w-0"><img id="channelThumb" class="hidden w-12 h-12 rounded-full object-cover" alt=""><div class="min-w-0"><h1 id="channelTitle" class="text-[18px] md:text-[22px] font-extrabold break-words md:truncate">Analytics Lengkap <span class="real align-middle">REAL API</span></h1><p id="channelSub" class="text-[12px] md:text-[13px] text-gray-600 dark:text-gray-300">Login Google untuk mengambil data channel kamu langsung dari YouTube API</p></div></div>
+ <div class="flex flex-col md:flex-row md:items-center gap-2 w-full md:w-auto md:shrink-0"><div class="flex items-center gap-2"><span data-admin-badge hidden class="hidden bg-[#121214] text-yellow-300 border border-yellow-400/40 px-3 py-2.5 rounded-full text-[11px] font-extrabold tracking-wider shrink-0">👑 ADMIN</span></div><button id="themeToggle" type="button" onclick="toggleTheme()" class="w-full md:w-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-2.5 rounded-full text-[14px] leading-none" title="Ganti Light/Dark Mode" aria-label="Ganti Light/Dark Mode">🌙</button><a href="/" class="w-full md:w-auto text-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-2.5 rounded-full text-[12px] font-bold">← Dashboard</a><button id="loginBtn" class="w-full md:w-auto bg-[#7C5CFF] text-white px-5 py-2.5 rounded-full text-[12px] font-bold">⏳ Memuat Google...</button><button id="refreshBtn" class="hidden w-full md:w-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-2.5 rounded-full text-[12px] font-bold">🔄 Refresh</button></div>
+</div>
+
+<div id="monetizationStatus" class="mb-5 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 p-3 rounded-xl text-sm break-words">⏳ Cek status monetisasi via REAL YouTube Analytics API (estimatedRevenue) setelah login...</div>
+
+<div id="statusBar" class="hidden mb-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl px-4 py-3 text-[12px] font-semibold text-gray-600 dark:text-gray-300"></div>
+
+<!-- Channel REAL -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
+ <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-3 md:p-5"><div class="flex justify-between items-center"><p class="text-[11px] text-gray-600 dark:text-gray-300">Subscriber</p><span class="real">REAL API</span></div><p id="chSubs" class="text-[20px] md:text-[24px] font-extrabold break-words text-gray-900 dark:text-white">—</p><p class="text-[10px] text-gray-600 dark:text-gray-300">channels.statistics.subscriberCount</p></div>
+ <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-3 md:p-5"><div class="flex justify-between items-center"><p class="text-[11px] text-gray-600 dark:text-gray-300">Video</p><span class="real">REAL API</span></div><p id="chVideos" class="text-[20px] md:text-[24px] font-extrabold break-words text-gray-900 dark:text-white">—</p><p class="text-[10px] text-gray-600 dark:text-gray-300">channels.statistics.videoCount</p></div>
+ <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-3 md:p-5"><div class="flex justify-between items-center"><p class="text-[11px] text-gray-600 dark:text-gray-300">Total Views</p><span class="real">REAL API</span></div><p id="chViews" class="text-[20px] md:text-[24px] font-extrabold break-words text-gray-900 dark:text-white">—</p><p class="text-[10px] text-gray-600 dark:text-gray-300">channels.statistics.viewCount</p></div>
+ <div id="earningsLifetime" class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-3 md:p-5" style="display:none"></div>
+</div>
+
+<!-- Grid utama: grafik (2 kolom) + sidebar dinamis kanan (1 kolom). Semua data dari channel yang sedang login (channel==MINE) -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
+<div class="lg:col-span-2 min-w-0 space-y-5">
+<!-- Period tabs -->
+<div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-3 md:p-5">
+ <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+  <div class="flex items-center gap-2"><h3 class="font-bold text-[13px] md:text-[14px]">Performa per Periode</h3><span class="real">REAL API</span></div>
+  <div id="periodTabs" class="flex flex-wrap gap-1 bg-gray-100 dark:bg-gray-700 p-1 rounded-full"></div>
+ </div>
+ <p id="queryInfo" class="text-[10px] text-gray-600 dark:text-gray-300 font-mono break-all mb-4">—</p>
+ <div class="grid grid-cols-2 xl:grid-cols-4 gap-3 mb-5">
+  <div class="bg-[#F5F3FF] dark:bg-gray-700/60 rounded-xl p-4"><p class="text-[11px] text-gray-600 dark:text-gray-300">Views</p><p id="pViews" class="text-[18px] md:text-[20px] font-extrabold break-words text-gray-900 dark:text-white">—</p><p id="pViewsSub" class="text-[10px] text-gray-600 dark:text-gray-300"></p></div>
+  <div class="bg-[#F5F3FF] dark:bg-gray-700/60 rounded-xl p-4"><p class="text-[11px] text-gray-600 dark:text-gray-300">Watch Time</p><p id="pWatch" class="text-[18px] md:text-[20px] font-extrabold break-words text-gray-900 dark:text-white">—</p><p id="pWatchSub" class="text-[10px] text-gray-600 dark:text-gray-300"></p></div>
+  <div class="bg-[#F5F3FF] dark:bg-gray-700/60 rounded-xl p-4"><p class="text-[11px] text-gray-600 dark:text-gray-300">Subs Bersih</p><p id="pSubs" class="text-[18px] md:text-[20px] font-extrabold break-words text-gray-900 dark:text-white">—</p><p id="pSubsSub" class="text-[10px] text-gray-600 dark:text-gray-300"></p></div>
+  <div class="bg-[#F5F3FF] dark:bg-gray-700/60 rounded-xl p-4"><p class="text-[11px] text-gray-600 dark:text-gray-300">Likes / Komentar</p><p id="pEngage" class="text-[18px] md:text-[20px] font-extrabold break-words text-gray-900 dark:text-white">—</p></div>
+  <div id="earningsPeriodBox" class="bg-[#FFFBEB] dark:bg-amber-900/30 rounded-xl p-4" style="display:none"><p class="text-[11px] text-gray-600 dark:text-gray-300">Earnings <span class="text-[9px] text-gray-600 dark:text-gray-300">estimatedRevenue</span></p><p id="pEarn" class="text-[18px] md:text-[20px] font-extrabold break-words text-gray-900 dark:text-white">—</p><p id="pEarnSub" class="text-[10px] text-gray-600 dark:text-gray-300"></p></div>
+ </div>
+ <div id="syncNotice" role="status" class="hidden mb-4"></div>
+ <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+  <div class="bg-white dark:bg-gray-800 rounded-xl"><div class="flex justify-between items-center mb-2"><p id="viewsChartTitle" class="text-[12px] font-bold">Views</p><span id="viewsChartSrc" class="text-[10px] text-gray-600 dark:text-gray-300 font-mono">data.rows</span></div><div class="relative h-[200px] md:h-[240px]"><canvas id="viewsChart"></canvas><div data-nodata class="hidden absolute inset-0 flex items-center justify-center text-[12px] font-semibold text-gray-600 dark:text-gray-300">📊 Belum ada data</div></div></div>
+  <div class="bg-white dark:bg-gray-800 rounded-xl"><div class="flex justify-between items-center mb-2"><p id="watchChartTitle" class="text-[12px] font-bold">Watch Time (menit)</p><span id="watchChartSrc" class="text-[10px] text-gray-600 dark:text-gray-300 font-mono">data.rows</span></div><div class="relative h-[200px] md:h-[240px]"><canvas id="watchChart"></canvas><div data-nodata class="hidden absolute inset-0 flex items-center justify-center text-[12px] font-semibold text-gray-600 dark:text-gray-300">📊 Belum ada data</div></div></div>
+ </div>
+ <details class="mt-4"><summary class="text-[11px] font-bold text-gray-600 dark:text-gray-300 cursor-pointer">Lihat data.rows mentah dari API</summary><div class="overflow-auto max-h-[260px] mt-2"><table class="w-full text-[11px]"><thead id="rawHead" class="text-left text-gray-600 dark:text-gray-300"></thead><tbody id="rawBody"></tbody></table></div></details>
+</div>
+
+<!-- Jam Seluruhnya: breakdown Video Panjang / Shorts / Promosi / Live (lifetime channel login) -->
+<div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-3 md:p-5">
+ <div class="flex flex-wrap justify-between items-center gap-2 mb-3"><div class="flex items-center gap-2"><h3 class="font-bold text-[13px] md:text-[14px]">Jam Tonton Seluruhnya <span class="text-gray-600 dark:text-gray-300 font-semibold">·</span></h3><span class="real">REAL API</span></div><span id="breakdownSrc" class="text-[10px] text-gray-600 dark:text-gray-300 font-mono">—</span></div>
+ <p id="breakdownTotal" class="text-[22px] md:text-[26px] font-extrabold text-gray-900 dark:text-white">—</p>
+ <div id="breakdownBar" class="flex h-2 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-700 mt-3 mb-1.5"></div>
+ <p id="breakdownLegend" class="text-[10px] text-gray-600 dark:text-gray-300 mb-3"></p>
+ <div id="breakdownList" class="grid grid-cols-2 xl:grid-cols-4 gap-3"><p class="text-[12px] text-gray-600 dark:text-gray-300 col-span-full">Login Google untuk menghitung jam tonton channel kamu.</p></div>
+ <p id="breakdownNote" class="text-[10px] text-gray-600 dark:text-gray-300 mt-3"></p>
+</div>
+
+</div>
+
+<!-- Sidebar kanan dinamis -->
+<aside class="space-y-5 min-w-0">
+ <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-3 md:p-5">
+  <div class="flex justify-between items-center mb-3"><h3 class="font-bold text-[13px]">Video Terbaru</h3><span class="real">REAL API</span></div>
+  <div id="latestVideos" class="space-y-3"><p class="text-[12px] text-gray-600 dark:text-gray-300">Login Google dulu.</p></div>
+  <a id="allVideosLink" href="#" target="_blank" rel="noopener" class="hidden mt-3 block text-center text-[12px] font-bold text-[#7C5CFF] hover:underline"></a>
+ </div>
+ <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-3 md:p-5">
+  <div class="flex justify-between items-center mb-3"><h3 class="font-bold text-[13px]">Jam Layak Monetisasi</h3><span class="real">REAL API</span></div>
+  <div id="monetHours"><p class="text-[12px] text-gray-600 dark:text-gray-300">Login Google dulu.</p></div>
+ </div>
+ <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-3 md:p-5">
+  <div class="flex justify-between items-center mb-3"><h3 class="font-bold text-[13px]">Audien Negara</h3><span class="real">REAL API</span></div>
+  <p class="text-[10px] text-gray-600 dark:text-gray-300 font-mono mb-3">dimensions=country · sort=-views</p>
+  <div id="countryList"><p class="text-[12px] text-gray-600 dark:text-gray-300">Login Google dulu.</p></div>
+ </div>
+ <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-3 md:p-5">
+  <div class="flex justify-between items-center mb-3"><h3 class="font-bold text-[13px]">Audien Jenis Kelamin</h3><span class="real">REAL API</span></div>
+  <p class="text-[10px] text-gray-600 dark:text-gray-300 font-mono mb-3">dimensions=gender · viewerPercentage</p>
+  <div id="genderBox"><p class="text-[12px] text-gray-600 dark:text-gray-300">Login Google dulu.</p></div>
+  <div class="mt-4 pt-3 border-t dark:border-gray-700"><p class="text-[11px] font-bold mb-2">Umur &amp; Jenis Kelamin</p><div id="ageGender"><p class="text-[12px] text-gray-600 dark:text-gray-300">Login Google dulu.</p></div></div>
+ </div>
+</aside>
+</div>
+
+<!-- Top videos (data-ai-autohide: widget Tanya AI otomatis minimize saat area ini di-scroll) -->
+<div data-ai-autohide class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-3 md:p-5">
+ <div class="flex flex-wrap justify-between items-center gap-1 mb-4"><div class="flex items-center gap-2"><h3 class="font-bold text-[14px]">Top Videos</h3><span class="real">REAL API</span></div><span class="text-[10px] text-gray-600 dark:text-gray-300">playlistItems (uploads) + videos.statistics</span></div>
+ <div class="hidden md:grid grid-cols-12 text-[10px] font-bold text-gray-600 dark:text-gray-300 px-2 pb-2 border-b dark:border-gray-700"><div class="col-span-6">VIDEO</div><div class="col-span-2 text-right">VIEWS</div><div class="col-span-1 text-right">LIKES</div><div class="col-span-1 text-right">KOMEN</div><div class="col-span-2 text-right est-earnings-col" style="display:none">EST. EARNINGS</div></div>
+ <div id="topVideos"><p class="text-[12px] text-gray-600 dark:text-gray-300 p-3">Belum ada data. Login Google dulu.</p></div>
+</div>
+<p class="text-[10px] text-gray-600 dark:text-gray-300 mt-4">Catatan: YouTube Analytics API biasanya punya jeda data 1–3 hari, jadi periode pendek bisa bernilai 0 walau ada penonton. Earnings hanya ditampilkan dari REAL API estimatedRevenue (tanpa hitungan RPM manual), dan hanya jika channel sudah monetisasi (YPP) serta izin data pendapatan YouTube diberikan saat login.</p>
+<footer class="btp-legal" style="margin-top:28px;padding:16px 0 4px;border-top:1px solid rgba(128,128,160,.25);text-align:center;font-size:12px;color:#8b8ba3"><a href="/privacy-policy" style="color:inherit">Kebijakan Privasi</a> | <a href="/terms" style="color:inherit">Syarat Layanan</a> | <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" style="color:inherit">YouTube ToS</a> | <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style="color:inherit">Google Privacy</a><p>Butuh bantuan? Hubungi Admin: <a href="mailto:boosterviewsubsid@gmail.com">boosterviewsubsid@gmail.com</a> · <a href="/bantuan">Bantuan</a></p><p style="margin-top:6px;font-size:10px;opacity:.75">Powered by Netlify</p></footer>
+</main>
+</div>
+
+<script>
+const CLIENT_ID='708531408468-8ecbt56e9gebgu3oj4ljf5d58e95up9q.apps.googleusercontent.com';
+// SCOPES REAL: youtube.readonly + yt-analytics.readonly + youtube.upload + yt-analytics-monetary.readonly (wajib untuk estimatedRevenue)
+const MONETARY_SCOPE='https://www.googleapis.com/auth/yt-analytics-monetary.readonly';
+const SCOPES='https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly https://www.googleapis.com/auth/youtube.upload '+MONETARY_SCOPE;
+const YT='https://www.googleapis.com/youtube/v3', YTA='https://youtubeanalytics.googleapis.com/v2/reports';
+let accessToken=null, tokenClient=null, channel=null, currentPeriod='28d', charts={}, lastChart=null, monetized=false, uploads=[], genderChart=null, lastGender=null;
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>n==null||n===''?'—':Number(n).toLocaleString('id-ID');
+const usd=n=>'$'+(Number(n)||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const pad=n=>String(n).padStart(2,'0');
+const ymd=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x;};
+const firstOfMonth=(d,back=0)=>new Date(d.getFullYear(),d.getMonth()-back,1);
+function bestThumb(t){t=t||{};return (t.medium||t.high||t.default||{}).url||'';}
+function setStatus(html,type){const b=$('statusBar');if(!html){b.classList.add('hidden');return;}b.classList.remove('hidden');b.className='mb-5 border rounded-2xl px-4 py-3 text-[12px] font-semibold '+(type==='error'?'bg-red-50 border-red-200 text-red-600 dark:bg-red-950/40 dark:border-red-900 dark:text-red-300':'bg-white text-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300');b.innerHTML=html;}
+
+// ===== Periode: semua dihitung dari tanggal hari ini =====
+const PERIODS={
+ '60m':{label:'60 Menit',dim:'day',realtime:3600e3,range:()=>[new Date(),new Date()]},
+ '48h':{label:'48 Jam',dim:'day',realtime:48*3600e3,range:()=>[addDays(new Date(),-2),new Date()]},
+ '7d':{label:'7 Hari',dim:'day',range:()=>[addDays(new Date(),-6),new Date()]},
+ '28d':{label:'28 Hari',dim:'day',range:()=>[addDays(new Date(),-27),new Date()]},
+ '90d':{label:'90 Hari',dim:'day',range:()=>[addDays(new Date(),-89),new Date()]},
+ 'monthly':{label:'Bulanan',dim:'month',range:()=>[firstOfMonth(new Date(),11),firstOfMonth(new Date())]},
+ 'yearly':{label:'Tahunan',dim:'month',groupYear:true,range:()=>{const now=new Date();let s=channel&&channel.snippet.publishedAt?new Date(channel.snippet.publishedAt):firstOfMonth(now,59);const min=new Date(now.getFullYear()-9,0,1);if(s<min)s=min;return [new Date(s.getFullYear(),s.getMonth(),1),firstOfMonth(now)];}}
+};
+const METRICS='views,estimatedMinutesWatched,subscribersGained,subscribersLost,likes,comments';
+$('periodTabs').innerHTML=Object.entries(PERIODS).map(([k,p])=>`<button data-p="${k}" class="px-3 py-1.5 rounded-full text-[11px] font-bold">${p.label}</button>`).join('');
+function paintTabs(){document.querySelectorAll('#periodTabs button').forEach(b=>b.className='px-3 py-1.5 rounded-full text-[11px] font-bold '+(b.dataset.p===currentPeriod?'bg-black text-white dark:bg-white dark:text-gray-900':'text-gray-500 dark:text-gray-300'));}
+document.querySelectorAll('#periodTabs button').forEach(b=>b.onclick=()=>{currentPeriod=b.dataset.p;paintTabs();if(accessToken)loadPeriod();});
+paintTabs();
+
+// ===== Light/Dark Mode (toggle 🌙/☀️ di navbar kanan atas, disimpan di localStorage btp_theme) =====
+const isDark=()=>document.documentElement.classList.contains('dark');
+function paintThemeToggle(){$('themeToggle').innerText=isDark()?'☀️':'🌙';}
+function setTheme(theme){
+ document.documentElement.classList.toggle('dark',theme==='dark');
+ paintThemeToggle();
+ if(lastChart) drawCharts(...lastChart);
+ drawGender();
+}
+function toggleTheme(){const t=isDark()?'light':'dark';localStorage.setItem('btp_theme',t);setTheme(t);}
+window.addEventListener('storage',e=>{if(e.key==='btp_theme')setTheme(e.newValue==='dark'?'dark':'light');});
+paintThemeToggle();
+
+// ===== Google Login (GIS Token Client) =====
+const loginBtn=$('loginBtn');
+loginBtn.onclick=()=>alert('Google masih dimuat, tunggu sebentar...');
+function onToken(resp){
+ if(resp.error){alert('Login gagal: '+resp.error);return;}
+ accessToken=resp.access_token;
+ try{sessionStorage.setItem('btp_token',JSON.stringify({token:accessToken,exp:Date.now()+(+resp.expires_in||3600)*1000-60000}));}catch(e){}
+ $('authStatus').innerHTML='🟢 Login OK · REAL API';
+ $('authStatus').className='bg-green-900/20 border border-green-400/30 px-3 py-2 rounded-xl text-[10px] text-green-400 mb-3';
+ loginBtn.classList.add('hidden'); $('refreshBtn').classList.remove('hidden');
+ loadAll();
+}
+function initGoogle(){
+ if(typeof google==='undefined'||!google.accounts||!google.accounts.oauth2){setTimeout(initGoogle,500);return;}
+ tokenClient=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:SCOPES,callback:onToken,
+  error_callback:err=>alert('Login dibatalkan / popup diblokir: '+(err&&err.type?err.type:'unknown'))});
+ loginBtn.onclick=()=>tokenClient.requestAccessToken();
+ loginBtn.innerText='🔐 Login Google';
+}
+// Pakai token dari dashboard jika masih berlaku di sesi ini
+try{const t=JSON.parse(sessionStorage.getItem('btp_token')||'null');if(t&&t.token&&t.exp>Date.now())setTimeout(()=>onToken({access_token:t.token,expires_in:Math.round((t.exp-Date.now())/1000)+60}),0);}catch(e){}
+initGoogle();
+$('refreshBtn').onclick=()=>accessToken?loadAll():tokenClient&&tokenClient.requestAccessToken();
+
+async function apiGet(url){
+ if(!accessToken) throw new Error('Belum login Google');
+ const res=await fetch(url,{headers:{Authorization:'Bearer '+accessToken}});
+ const json=await res.json().catch(()=>({}));
+ // Token dari project Google lama (#1097258207184, sudah dihapus) = sesi tidak berlaku -> wajib login ulang
+ const stale=res.status===403&&/project.*(deleted|not found)|deleted_client|invalid_client/i.test(String(json.error&&json.error.message||''));
+ if(res.status===401||stale){accessToken=null;try{sessionStorage.removeItem('btp_token');}catch(e){}loginBtn.classList.remove('hidden');throw new Error(stale?'Token Google lama sudah tidak berlaku. Klik Login Google untuk masuk ulang.':'Sesi Google habis, silakan login ulang');}
+ if(!res.ok) throw new Error((json.error&&json.error.message)||('HTTP '+res.status));
+ return json;
+}
+const report=(start,end,dims,metrics)=>apiGet(`${YTA}?ids=channel==MINE&startDate=${ymd(start)}&endDate=${ymd(end)}&metrics=${metrics}${dims?'&dimensions='+dims+'&sort='+dims:''}`);
+
+// ===== Channel REAL =====
+async function fetchChannel(){
+ const data=await apiGet(`${YT}/channels?part=statistics,snippet,contentDetails&mine=true`);
+ const ch=data.items&&data.items[0];
+ if(!ch) throw new Error('Akun Google ini belum punya channel YouTube');
+ channel=ch;
+ const sn=ch.snippet, st=ch.statistics, thumb=bestThumb(sn.thumbnails);
+ $('channelTitle').innerHTML=`${esc(sn.title)} · Analytics <span class="real align-middle">REAL API</span>`;
+ $('channelSub').innerText=`${sn.customUrl?sn.customUrl+' · ':''}${fmt(st.subscriberCount)} subscriber · ${fmt(st.videoCount)} video (REAL API)`;
+ $('profileName').innerText=sn.title; $('profileHandle').innerText=sn.customUrl||'YouTube Channel';
+ if(thumb){$('channelThumb').src=thumb;$('channelThumb').classList.remove('hidden');$('profileAvatar').innerHTML=`<img src="${esc(thumb)}" class="w-full h-full object-cover" alt="">`;}
+ $('chSubs').innerText=st.hiddenSubscriberCount?'Disembunyikan':fmt(st.subscriberCount);
+ $('chVideos').innerText=fmt(st.videoCount);
+ $('chViews').innerText=fmt(st.viewCount);
+ document.title="Analytics - BosterTubePro";
+}
+
+// ===== Uploads REAL: playlistItems uploads + videos statistics (50 terbaru channel login) =====
+async function fetchUploads(){
+ const pl=await apiGet(`${YT}/playlistItems?part=contentDetails&maxResults=50&playlistId=${encodeURIComponent(channel.contentDetails.relatedPlaylists.uploads)}`);
+ const ids=(pl.items||[]).map(i=>i.contentDetails.videoId).filter(Boolean);
+ if(!ids.length){uploads=[];return;}
+ const vd=await apiGet(`${YT}/videos?part=snippet,statistics,contentDetails,liveStreamingDetails&id=${ids.join(',')}`);
+ uploads=(vd.items||[]).map(videoInfo).sort((a,b)=>new Date(b.date)-new Date(a.date));
+}
+function videoInfo(v){const st=v.statistics||{};return {id:v.id,title:v.snippet.title,thumb:bestThumb(v.snippet.thumbnails),date:v.snippet.publishedAt,views:+st.viewCount||0,likes:st.likeCount,comments:st.commentCount,secs:isoSecs(v.contentDetails&&v.contentDetails.duration),live:!!(v.liveStreamingDetails&&v.liveStreamingDetails.actualStartTime)};}
+// ISO 8601 (PT1H2M3S) -> detik
+function isoSecs(d){const m=/P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/.exec(d||'')||[];return (+m[1]||0)*86400+(+m[2]||0)*3600+(+m[3]||0)*60+(+m[4]||0);}
+const shortDate=d=>new Date(d).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+function renderTopVideos(){
+ if(!uploads.length){$('topVideos').innerHTML='<p class="text-[12px] text-gray-600 dark:text-gray-300 p-3">Channel ini belum punya video. (REAL API)</p>';return;}
+ const list=uploads.slice().sort((a,b)=>b.views-a.views).slice(0,10);
+ $('topVideos').innerHTML=list.map((v,i)=>`<a href="https://youtu.be/${esc(v.id)}" target="_blank" class="grid grid-cols-12 items-center gap-y-1 px-2 py-2 rounded-xl hover:bg-[#F5F3FF] dark:hover:bg-gray-700 text-[12px] border-b dark:border-gray-700 md:border-0">
+  <div class="col-span-12 md:col-span-6 flex items-center gap-3 min-w-0"><span class="w-5 text-gray-600 dark:text-gray-300 font-bold shrink-0">${i+1}</span><img src="${esc(v.thumb)}" class="w-16 h-9 md:w-20 md:h-11 rounded object-cover bg-gray-100 dark:bg-gray-700 shrink-0" alt="" loading="lazy"><div class="min-w-0"><p class="font-bold line-clamp-2 md:truncate text-gray-900 dark:text-white">${esc(v.title)}</p><p class="text-[11px] font-medium text-gray-700 dark:text-gray-300">${shortDate(v.date)} · <span class="real">REAL API</span></p></div></div>
+  <div class="col-span-3 md:col-span-2 md:text-right font-bold"><span class="md:hidden font-normal">👁 </span>${fmt(v.views)}</div><div class="col-span-3 md:col-span-1 md:text-right"><span class="md:hidden">👍 </span>${fmt(v.likes)}</div><div class="col-span-3 md:col-span-1 md:text-right"><span class="md:hidden">💬 </span>${fmt(v.comments)}</div><div class="col-span-3 md:col-span-2 text-right font-bold text-amber-600 est-earnings-col" data-vid="${esc(v.id)}" style="display:${monetized?'block':'none'}">⏳</div></a>`).join('');
+ if(monetized) fetchVideoRevenue(list.map(v=>v.id));
+}
+// Sidebar: 5 video terbaru + jumlah total video dari channels.statistics.videoCount
+function renderLatest(){
+ const total=+channel.statistics.videoCount||0, link=$('allVideosLink');
+ $('latestVideos').innerHTML=uploads.length?uploads.slice(0,5).map(v=>`<a href="https://youtu.be/${esc(v.id)}" target="_blank" class="flex gap-3 items-center min-w-0 p-2 rounded-lg bg-white dark:bg-gray-800 hover:bg-[#F5F3FF] dark:hover:bg-gray-700"><img src="${esc(v.thumb)}" class="w-24 h-[54px] rounded-lg object-cover bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-700 shrink-0" alt="" loading="lazy"><div class="min-w-0"><p class="text-sm font-bold line-clamp-2 text-gray-900 dark:text-white">${esc(v.title)}</p><p class="text-xs font-medium text-gray-700 dark:text-gray-300 mt-1 flex items-center gap-1"><svg class="w-4 h-4 shrink-0 text-gray-900 dark:text-gray-100" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 5C6.5 5 2.7 9.1 1.5 12c1.2 2.9 5 7 10.5 7s9.3-4.1 10.5-7C21.3 9.1 17.5 5 12 5Zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg><span class="text-gray-900 dark:text-gray-100">${fmt(v.views)}</span> · ${shortDate(v.date)}</p></div></a>`).join(''):'<p class="text-[12px] text-gray-600 dark:text-gray-300">Channel ini belum punya video.</p>';
+ link.href=`https://www.youtube.com/channel/${encodeURIComponent(channel.id)}/videos`;
+ link.innerText=`Lihat semua ${fmt(total)} video →`;
+ link.classList.toggle('hidden',!total);
+}
+
+// estimatedRevenue REAL per video (hanya jika channel sudah monetisasi)
+async function fetchVideoRevenue(ids){
+ const cells=[...document.querySelectorAll('#topVideos .est-earnings-col')];
+ try{
+  const start=lifetimeStart();
+  const r=await apiGet(`${YTA}?ids=channel==MINE&startDate=${ymd(start)}&endDate=${ymd(new Date())}&metrics=estimatedRevenue&dimensions=video&filters=video==${ids.join(',')}&sort=-estimatedRevenue&maxResults=50`);
+  const map={}; (r.rows||[]).forEach(row=>map[row[0]]=+row[1]||0);
+  cells.forEach(c=>c.innerText=usd(map[c.dataset.vid]||0));
+ }catch(e){
+  cells.forEach(c=>c.innerText='—');
+  console.info('[Analytics REAL API] estimatedRevenue per video tidak tersedia:',e.message);
+ }
+}
+
+// ===== Cek monetisasi REAL (estimatedRevenue sejak awal channel) =====
+const lifetimeStart=()=>{let s=channel&&channel.snippet.publishedAt?new Date(channel.snippet.publishedAt):new Date(2006,0,1);if(s<new Date(2006,0,1))s=new Date(2006,0,1);return s;};
+function hideEarnings(){
+ $('earningsLifetime').style.display='none';
+ $('earningsPeriodBox').style.display='none';
+ document.querySelectorAll('.est-earnings-col').forEach(el=>el.style.display='none');
+}
+function setMonetizationStatus(html,cls){$('monetizationStatus').innerHTML=html;$('monetizationStatus').className=cls+' mb-5 w-full p-3 rounded-xl text-sm break-words';}
+const RED='bg-red-50 border border-red-200 text-red-700 dark:bg-red-950/40 dark:border-red-900 dark:text-red-300', GREEN='bg-green-50 border border-green-200 text-green-700 dark:bg-green-950/40 dark:border-green-900 dark:text-green-300', YELLOW='bg-yellow-50 border border-yellow-200 text-yellow-800 dark:bg-yellow-950/40 dark:border-yellow-900 dark:text-yellow-200';
+async function checkMonetizationReal(){
+ monetized=false;
+ const startDate=ymd(lifetimeStart()), today=ymd(new Date());
+ const url=`${YTA}?ids=channel==MINE&startDate=${startDate}&endDate=${today}&metrics=estimatedRevenue,estimatedRpm,estimatedCpm`;
+ try{
+  const res=await fetch(url,{headers:{Authorization:'Bearer '+accessToken}});
+  const data=await res.json().catch(()=>({}));
+  console.log('REAL monetization check',data);
+  if(res.status===401){hideEarnings();setMonetizationStatus('🟡 Sesi Google habis, silakan login ulang untuk cek monetisasi',YELLOW);return false;}
+  if(data.error){
+   hideEarnings();
+   const msg=String(data.error.message||'').toLowerCase();
+   const reasons=(data.error.errors||[]).map(e=>String(e.reason||'').toLowerCase()).join(' ');
+   if(msg.includes('insufficient')||msg.includes('scope')||reasons.includes('insufficient')){
+    // Token lama tanpa izin data pendapatan -> belum bisa dipastikan
+    setMonetizationStatus('🟡 Izin data pendapatan (yt-analytics-monetary.readonly) belum diberikan, jadi status monetisasi belum bisa dicek. <button id="monetaryLoginBtn" class="underline font-bold">Login ulang & izinkan data pendapatan</button>',YELLOW);
+    const b=$('monetaryLoginBtn'); if(b) b.onclick=()=>tokenClient&&tokenClient.requestAccessToken({prompt:'consent'});
+    return false;
+   }
+   // 403 / forbidden / not eligible / monetization = BELUM MONETISASI
+   setMonetizationStatus('🔴 Belum Monetisasi - Syarat: 1000 subs & 4000 jam. Earnings akan muncul otomatis setelah monetisasi disetujui YouTube (REAL API)',RED);
+   return false;
+  }
+  const row=data.rows&&data.rows[0];
+  const total=row?+row[0]||0:0, rpm=row?+row[1]||0:0, cpm=row?+row[2]||0:0;
+  if(total>0){
+   // SUDAH MONETISASI - earnings REAL dari API
+   monetized=true;
+   $('earningsLifetime').style.display='block';
+   $('earningsLifetime').innerHTML=`<div class="flex justify-between items-center"><p class="text-[11px] text-gray-600 dark:text-gray-300">Earnings (lifetime)</p><span class="real">REAL API estimatedRevenue</span></div><p class="text-[20px] md:text-[24px] font-extrabold break-words text-gray-900 dark:text-white">${usd(total)}</p><p class="text-[10px] text-green-600">REAL dari youtubeanalytics API • RPM ${usd(rpm)} • CPM ${usd(cpm)}</p>`;
+   document.querySelectorAll('.est-earnings-col').forEach(el=>el.style.display='block');
+   setMonetizationStatus(`🟢 Sudah Monetisasi - Earnings REAL: ${usd(total)} | RPM REAL: ${usd(rpm)} | CPM REAL: ${usd(cpm)}`,GREEN);
+   return true;
+  }
+  // Tidak ada revenue = belum monetisasi / baru monetisasi
+  hideEarnings();
+  setMonetizationStatus('🔴 Belum Monetisasi - Belum ada data estimatedRevenue dari YouTube. Syarat: 1000 subs & 4000 jam. Earnings akan muncul otomatis setelah monetisasi disetujui YouTube (REAL API)',RED);
+  return false;
+ }catch(e){
+  console.error('Monetization check error',e);
+  hideEarnings();
+  setMonetizationStatus('🟡 Gagal cek monetisasi: '+esc(e.message)+' — earnings disembunyikan',YELLOW);
+  return false;
+ }
+}
+
+// ===== Notice sinkronisasi (data.rows kosong / sebagian belum tersinkron) =====
+function showSync(mode,missing){
+ const box=$('syncNotice');
+ if(!mode){box.classList.add('hidden');box.innerHTML='';return;}
+ const realtime=mode==='realtime';
+ const title=realtime?'YouTube butuh 1-3 hari sinkronisasi untuk channel ini. Menampilkan data realtime sementara.':`${missing} titik waktu terakhir masih disinkronkan YouTube (ditandai garis putus-putus).`;
+ const skeleton=realtime?'<div class="space-y-1.5 animate-pulse mt-2" aria-hidden="true"><div class="h-2 rounded bg-gray-200 dark:bg-gray-600 w-3/4"></div><div class="h-2 rounded bg-gray-200 dark:bg-gray-600 w-1/2"></div></div><p class="text-[10px] text-gray-600 dark:text-gray-300 mt-2">Sumber realtime: youtube/v3 channels.statistics + videos.statistics</p>':'';
+ box.innerHTML=`<div class="bg-gray-50 dark:bg-gray-700/40 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0"></span><p class="text-[12px] font-semibold text-gray-700 dark:text-gray-200">${esc(title)}</p></div>${skeleton}</div>`;
+ box.classList.remove('hidden');
+}
+function setChartTitles(realtime){
+ $('viewsChartTitle').innerText=realtime?'Views per video terbaru (realtime)':'Views';
+ $('watchChartTitle').innerText=realtime?'Likes per video terbaru (realtime)':'Watch Time (menit)';
+ $('viewsChartSrc').innerText=$('watchChartSrc').innerText=realtime?'videos.statistics':'data.rows';
+}
+
+// ===== Snapshot realtime per channel (localStorage) untuk menghitung kenaikan 60 menit / 48 jam =====
+const snapKey=()=>'btp_snap_'+channel.id;
+function readSnaps(){try{return JSON.parse(localStorage.getItem(snapKey())||'[]');}catch(e){return [];}}
+function recordSnapshot(){
+ const st=channel.statistics, now=Date.now();
+ const snaps=readSnaps().filter(x=>now-x.t<50*3600e3);
+ snaps.push({t:now,v:+st.viewCount||0,s:+st.subscriberCount||0});
+ try{localStorage.setItem(snapKey(),JSON.stringify(snaps.slice(-300)));}catch(e){}
+}
+function snapshotDelta(win){
+ const snaps=readSnaps(), now=Date.now(), cur=snaps[snaps.length-1];
+ const base=snaps.find(x=>now-x.t<=win);
+ if(!cur||!base||cur.t-base.t<60e3) return null;
+ return {views:cur.v-base.v,subs:cur.s-base.s,since:base.t};
+}
+
+// Fallback realtime (REAL youtube/v3) saat YouTube Analytics belum punya baris data
+function showRealtime(p,start,end){
+ const st=channel.statistics, win=p.realtime||(addDays(end,1)-start);
+ const delta=snapshotDelta(win), since=delta&&new Date(delta.since).toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+ const recent=uploads.slice(0,10).reverse();
+ $('pViews').innerText=delta?(delta.views>=0?'+':'')+fmt(delta.views):fmt(st.viewCount);
+ $('pViewsSub').innerText=delta?`realtime sejak ${since}`:'total realtime (channels.statistics)';
+ $('pWatch').innerText='Sinkronisasi'; $('pWatchSub').innerText='YouTube Analytics 1–3 hari';
+ const subs=st.hiddenSubscriberCount?null:+st.subscriberCount;
+ $('pSubs').innerText=delta&&subs!=null?(delta.subs>0?'+':'')+fmt(delta.subs):subs==null?'Disembunyikan':fmt(subs);
+ $('pSubsSub').innerText=delta?`realtime sejak ${since}`:'total subscriber realtime';
+ $('pEngage').innerText=`${fmt(recent.reduce((t,v)=>t+(+v.likes||0),0))} / ${fmt(recent.reduce((t,v)=>t+(+v.comments||0),0))}`;
+ setChartTitles(true);
+ const cut=t=>t.length>18?t.slice(0,17)+'…':t;
+ drawCharts(recent.map(v=>cut(v.title)),recent.map(v=>v.views),recent.map(v=>+v.likes||0));
+ showSync('realtime');
+}
+
+// ===== Periode REAL dari YouTube Analytics API =====
+async function loadPeriod(){
+ const key=currentPeriod, p=PERIODS[key], [start,end]=p.range(), dim=p.dim;
+ ['pViews','pWatch','pSubs','pEngage','pEarn'].forEach(id=>$(id).innerText='⏳');
+ ['pViewsSub','pWatchSub','pSubsSub','pEarnSub'].forEach(id=>$(id).innerText='');
+ showSync(null);
+ let data;
+ try{data=await report(start,end,dim,METRICS);}
+ catch(e){
+  if(key!==currentPeriod) return;
+  ['pViews','pWatch','pSubs','pEngage','pEarn'].forEach(id=>$(id).innerText='—');
+  $('queryInfo').innerHTML=`<span class="real err">API ERROR</span> ${esc(e.message)}`;
+  setChartTitles(false); drawCharts([],[],[]); renderRaw(null); return;
+ }
+ if(key!==currentPeriod) return;
+ const hourNote=p.realtime?' · granularitas terkecil YouTube Analytics = hari, kenaikan per jam dari snapshot realtime':'';
+ $('queryInfo').innerHTML=`GET youtubeanalytics/v2/reports · ids=channel==MINE (${esc(channel.id)}) · dimensions=${dim} · startDate=${ymd(start)} · endDate=${ymd(end)} · metrics=${METRICS}${hourNote}`;
+
+ const cols=(data.columnHeaders||[]).map(c=>c.name), ix=n=>cols.indexOf(n);
+ let rows=data.rows||[];
+ if(p.groupYear){
+  const byYear={};
+  rows.forEach(r=>{const y=String(r[0]).slice(0,4);byYear[y]=byYear[y]||[y,...r.slice(1).map(()=>0)];r.slice(1).forEach((v,i)=>byYear[y][i+1]+=+v||0);});
+  rows=Object.values(byYear).sort((a,b)=>a[0].localeCompare(b[0]));
+ }
+ renderRaw({cols:p.groupYear?['year',...cols.slice(1)]:cols,rows});
+ const sum=n=>rows.reduce((s,r)=>s+(+r[ix(n)]||0),0);
+ const views=sum('views'), mins=sum('estimatedMinutesWatched'), gained=sum('subscribersGained'), lost=sum('subscribersLost');
+ // data.rows kosong (channel baru / jeda YouTube 24-48 jam) -> fallback REAL youtube/v3, tanpa box error
+ if(!rows.length||!(views||mins||gained||lost)){showRealtime(p,start,end);$('earningsPeriodBox').style.display='none';return;}
+ setChartTitles(false);
+ $('pViews').innerText=fmt(views);
+ $('pWatch').innerText=fmt(Math.round(mins/60*10)/10)+' jam';
+ const net=gained-lost; $('pSubs').innerText=(net>0?'+':'')+fmt(net); $('pSubsSub').innerText=`+${fmt(gained)} / -${fmt(lost)}`;
+ $('pEngage').innerText=`${fmt(sum('likes'))} / ${fmt(sum('comments'))}`;
+ if(p.realtime){const d=snapshotDelta(p.realtime);if(d)$('pViewsSub').innerText=`realtime: ${d.views>=0?'+':''}${fmt(d.views)} sejak ${new Date(d.since).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}`;}
+ if(monetized) fetchRevenue(key,start,end,p.dim); else $('earningsPeriodBox').style.display='none';
+
+ const label=r=>{const v=String(r[0]);if(dim==='month')return new Date(v+'-01T00:00:00').toLocaleDateString('id-ID',{month:'short',year:'numeric'});if(p.groupYear)return v;return new Date(v+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'});};
+ // Grafik harian: tanggal yang tidak ada di data.rows (atau barisnya 0 semua) = "Tidak ada data" (null), bukan 0
+ let chartRows=rows.map(r=>[r[0],+r[ix('views')]||0,+r[ix('estimatedMinutesWatched')]||0]);
+ if(dim==='day'){
+  const byDate={}; chartRows.forEach(r=>byDate[r[0]]=r);
+  chartRows=[];
+  for(let d=new Date(start);ymd(d)<=ymd(end);d=addDays(d,1)){const r=byDate[ymd(d)];chartRows.push(r&&(r[1]||r[2])?r:[ymd(d),null,null]);}
+  while(chartRows.length&&chartRows[chartRows.length-1][1]==null) chartRows.pop(); // jeda data 1–3 hari di ujung
+ }
+ drawCharts(chartRows.map(p.groupYear?r=>String(r[0]):label),chartRows.map(r=>r[1]),chartRows.map(r=>r[2]));
+ const missing=chartRows.filter(r=>r[1]==null).length;
+ if(missing) showSync('partial',missing);
+}
+
+// estimatedRevenue REAL per periode (tanpa RPM manual). Error 403 = belum monetisasi -> sembunyikan box
+async function fetchRevenue(key,start,end,dim){
+ const box=$('earningsPeriodBox');
+ box.style.display='block'; $('pEarn').innerText='⏳'; $('pEarnSub').innerText='';
+ const earnUrl=`${YTA}?ids=channel==MINE&startDate=${ymd(start)}&endDate=${ymd(end)}&metrics=estimatedRevenue,estimatedRpm,estimatedCpm,views&dimensions=${dim}&sort=${dim}`;
+ try{
+  const r=await apiGet(earnUrl);
+  if(key!==currentPeriod) return;
+  const rows=r.rows||[];
+  const rev=rows.reduce((t,x)=>t+(+x[1]||0),0), v=rows.reduce((t,x)=>t+(+x[4]||0),0);
+  const cpms=rows.map(x=>+x[3]||0).filter(Boolean);
+  const rpm=v?rev/v*1000:0, cpm=cpms.length?cpms.reduce((a,b)=>a+b,0)/cpms.length:0;
+  $('pEarn').innerText=usd(rev);
+  $('pEarnSub').innerText=`REAL API • RPM ${usd(rpm)} • CPM ${usd(cpm)}`;
+ }catch(e){
+  if(key!==currentPeriod) return;
+  box.style.display='none';
+  console.info('[Analytics REAL API] estimatedRevenue periode tidak tersedia:',e.message);
+ }
+}
+
+// Tandai titik tanpa data (null) dengan garis putus-putus
+const noDataPlugin={id:'noData',afterDatasetsDraw(chart){
+ const data=chart.data.datasets[0]&&chart.data.datasets[0].data||[], {ctx,chartArea:a,scales:{x}}=chart;
+ ctx.save();ctx.setLineDash([3,3]);ctx.strokeStyle=isDark()?'#4B5563':'#D1D5DB';
+ data.forEach((v,i)=>{if(v!=null)return;const px=x.getPixelForValue(i);ctx.beginPath();ctx.moveTo(px,a.top);ctx.lineTo(px,a.bottom);ctx.stroke();});
+ ctx.restore();
+}};
+function drawCharts(labels,views,mins){
+ lastChart=[labels,views,mins];
+ const tick=isDark()?'#D1D5DB':'#374151', grid=isDark()?'#374151':'#E5E7EB', line=isDark()?'#60A5FA':'#3B82F6';
+ const common={responsive:true,maintainAspectRatio:false,spanGaps:false,interaction:{mode:'index',intersect:false},
+  plugins:{legend:{display:false},tooltip:{yAlign:'bottom',caretPadding:6,callbacks:{label:c=>c.raw==null?'Tidak ada data':`${c.dataset.label}: ${fmt(c.raw)}`}}},
+  scales:{x:{grid:{display:false},ticks:{color:tick,font:{size:10},maxRotation:0,autoSkip:true}},y:{beginAtZero:true,ticks:{color:tick,precision:0,font:{size:10}},grid:{color:grid}}}};
+ Object.values(charts).forEach(c=>c.destroy());
+ document.querySelectorAll('[data-nodata]').forEach(el=>el.classList.toggle('hidden',!!labels.length));
+ charts.views=new Chart($('viewsChart'),{type:'line',data:{labels,datasets:[{label:'Views (REAL API)',data:views,borderColor:line,pointBackgroundColor:line,backgroundColor:isDark()?'rgba(96,165,250,.18)':'rgba(59,130,246,.12)',fill:true,tension:.3,pointRadius:labels.length>40?0:3,borderWidth:2}]},options:common,plugins:[noDataPlugin]});
+ charts.watch=new Chart($('watchChart'),{type:'bar',data:{labels,datasets:[{label:'Menit tonton (REAL API)',data:mins,backgroundColor:'#FF6BA8',borderRadius:4}]},options:common,plugins:[noDataPlugin]});
+}
+function renderRaw(d){
+ if(!d){$('rawHead').innerHTML='';$('rawBody').innerHTML='';return;}
+ $('rawHead').innerHTML='<tr>'+d.cols.map(c=>`<th class="py-1 pr-3">${esc(c)}</th>`).join('')+'</tr>';
+ $('rawBody').innerHTML=d.rows.length?d.rows.map(r=>'<tr class="border-t dark:border-gray-700">'+r.map(v=>`<td class="py-1 pr-3 font-mono">${esc(v)}</td>`).join('')+'</tr>').join(''):`<tr><td class="py-2 text-gray-600 dark:text-gray-300" colspan="${d.cols.length}">rows: [] (kosong dari API)</td></tr>`;
+}
+
+// ===== Jam tonton per tipe konten (channel login) =====
+// Utama: dimensions=creatorContentType. Fallback: dimensions=video + durasi videos.contentDetails (<=60 dtk = Shorts)
+async function contentMinutes(start,end){
+ const base=`${YTA}?ids=channel==MINE&startDate=${ymd(start)}&endDate=${ymd(end)}&metrics=views,estimatedMinutesWatched`;
+ const out={vod:0,shorts:0,live:0,other:0,perVideo:null};
+ try{
+  const r=await apiGet(`${base}&dimensions=creatorContentType`);
+  (r.rows||[]).forEach(([type,,m])=>{m=+m||0;if(type==='VIDEO_ON_DEMAND')out.vod+=m;else if(type==='SHORTS')out.shorts+=m;else if(type==='LIVE_STREAM')out.live+=m;else out.other+=m;});
+  out.src='dimensions=creatorContentType';
+  return out;
+ }catch(e){console.info('[Analytics REAL API] creatorContentType tidak tersedia, pakai durasi video:',e.message);}
+ const rows=[];
+ for(let i=1;i<=1001;i+=200){
+  const r=await apiGet(`${base}&dimensions=video&sort=-estimatedMinutesWatched&maxResults=200&startIndex=${i}`);
+  rows.push(...(r.rows||[])); if((r.rows||[]).length<200) break;
+ }
+ const info={}; uploads.forEach(v=>info[v.id]=v);
+ const missing=rows.map(r=>r[0]).filter(id=>!info[id]);
+ for(let i=0;i<missing.length;i+=50){
+  const vd=await apiGet(`${YT}/videos?part=snippet,statistics,contentDetails,liveStreamingDetails&id=${missing.slice(i,i+50).join(',')}`);
+  (vd.items||[]).forEach(v=>info[v.id]=videoInfo(v));
+ }
+ rows.forEach(([id,,m])=>{m=+m||0;const v=info[id];if(!v)out.other+=m;else if(v.live)out.live+=m;else if(v.secs<=60)out.shorts+=m;else out.vod+=m;});
+ out.src=`dimensions=video (${fmt(rows.length)} video) + contentDetails.duration`;
+ return out;
+}
+
+// Promosi BosterTubePro: watch time dari views hasil promosi (views_gained) × menit/view video tsb, hanya video milik channel login
+async function promoMinutes(start,end){
+ const res=await fetch('/api/promotions',{credentials:'same-origin'});
+ if(!res.ok) return null;
+ const promos=(await res.json().catch(()=>({}))).promotions||[];
+ const gained={}; promos.forEach(x=>{if(x.video_id)gained[x.video_id]=Math.max(gained[x.video_id]||0,+x.views_gained||0);});
+ let ids=Object.keys(gained).filter(id=>gained[id]>0);
+ if(!ids.length) return {minutes:0,videos:0};
+ const own=await apiGet(`${YT}/videos?part=snippet&id=${ids.slice(0,50).join(',')}`);
+ ids=(own.items||[]).filter(v=>v.snippet.channelId===channel.id).map(v=>v.id);
+ if(!ids.length) return {minutes:0,videos:0};
+ const r=await apiGet(`${YTA}?ids=channel==MINE&startDate=${ymd(start)}&endDate=${ymd(end)}&metrics=views,estimatedMinutesWatched&dimensions=video&filters=video==${ids.join(',')}&sort=-views&maxResults=50`);
+ let minutes=0;
+ (r.rows||[]).forEach(([id,v,m])=>{v=+v||0;m=+m||0;if(v)minutes+=m*Math.min(1,gained[id]/v);});
+ return {minutes,videos:ids.length};
+}
+
+const hrs=m=>Math.round((m||0)/60*10)/10;
+const pct=(a,b)=>b?Math.round(a/b*1000)/10:0;
+async function loadWatchHours(){
+ $('breakdownTotal').innerText='⏳'; $('monetHours').innerHTML='<p class="text-[12px] text-gray-600 dark:text-gray-300">⏳ Menghitung...</p>';
+ const today=new Date();
+ // A. Jam layak monetisasi: 365 hari terakhir, video publik panjang + live (Shorts tidak dihitung YouTube untuk 4000 jam)
+ const monet=contentMinutes(addDays(today,-365),today).then(m=>{
+  const h=hrs(m.vod+m.live), p=Math.min(100,pct(h,4000));
+  const st=channel.statistics, subs=st.hiddenSubscriberCount?null:+st.subscriberCount||0, ps=subs==null?0:Math.min(100,pct(subs,1000));
+  const bar=(v,c)=>`<div class="h-2.5 rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden"><div class="h-full rounded-full" style="width:${v}%;background:${c}"></div></div>`;
+  $('monetHours').innerHTML=`<p class="text-[20px] font-extrabold text-gray-900 dark:text-white">${fmt(h)}<span class="text-[13px] text-gray-600 dark:text-gray-300 font-bold">/4.000 jam</span> <span class="text-[12px] text-[#7C5CFF]">(${p.toLocaleString('id-ID')}%)</span></p>${bar(p,'#7C5CFF')}<p class="text-[10px] text-gray-600 dark:text-gray-300 mt-1 mb-3">365 hari terakhir · video panjang + live (Shorts tidak dihitung)</p><p class="text-[13px] font-bold">${subs==null?'Subscriber disembunyikan':`${fmt(subs)}<span class="text-[11px] text-gray-600 dark:text-gray-300">/1.000 subscriber</span> <span class="text-[11px] text-[#FF6BA8]">(${ps.toLocaleString('id-ID')}%)</span>`}</p>${bar(ps,'#FF6BA8')}`;
+ }).catch(e=>{$('monetHours').innerHTML=`<p class="text-[12px] text-gray-600 dark:text-gray-300">Belum bisa dihitung: ${esc(e.message)}</p>`;});
+ // B. Jam seluruhnya (sejak channel dibuat) + breakdown
+ const start=lifetimeStart();
+ const total=Promise.all([contentMinutes(start,today),promoMinutes(start,today).catch(()=>null)]).then(([m,promo])=>{
+  const all=m.vod+m.shorts+m.live+m.other, promoM=promo?Math.min(promo.minutes,all):0;
+  // Promosi = bagian dari video panjang/shorts, jadi dipisahkan dari video panjang agar total tetap sama
+  const vod=Math.max(0,m.vod-promoM);
+  const parts=[['Video Panjang',vod,'#7C5CFF'],['Shorts',m.shorts,'#FF6BA8'],['Promosi',promoM,'#F59E0B'],['Live',m.live,'#22C55E']];
+  if(m.other) parts.push(['Lainnya',m.other,'#9CA3AF']);
+  $('breakdownTotal').innerHTML=`${fmt(hrs(all))} jam <span class="text-[12px] font-semibold text-gray-600 dark:text-gray-300">(${fmt(Math.round(all))} menit)</span>`;
+  const pp=v=>pct(v,all).toLocaleString('id-ID');
+  $('breakdownBar').innerHTML=all?parts.map(([n,v,c])=>v?`<div style="width:${pct(v,all)}%;background:${c}" title="${n} ${pp(v)}%"></div>`:'').join(''):'';
+  $('breakdownLegend').innerHTML=parts.map(([n,v,c])=>`<span class="inline-flex items-center gap-1 mr-3 whitespace-nowrap"><span class="w-2 h-2 rounded-sm" style="background:${c}"></span>${n==='Video Panjang'?'Panjang':n} ${pp(v)}%</span>`).join('');
+  $('breakdownList').innerHTML=parts.map(([n,v,c])=>`<div class="bg-gray-50 dark:bg-gray-700/40 rounded-xl p-3 border-l-4" style="border-left-color:${c}"><p class="text-[11px] text-gray-600 dark:text-gray-300">${n}</p><p class="text-[15px] font-extrabold text-gray-900 dark:text-white whitespace-nowrap">${fmt(hrs(v))} jam <span class="text-[11px] font-semibold text-gray-600 dark:text-gray-300">(${pp(v)}%)</span></p></div>`).join('');
+  $('breakdownSrc').innerText=m.src;
+  $('breakdownNote').innerText=`Sejak ${shortDate(start)} · ${fmt(channel.statistics.videoCount)} video. `+(promo?`Promosi = watch time dari views hasil promosi BosterTubePro (${fmt(promo.videos)} video channel ini).`:'Promosi: login BosterTubePro untuk menghitung jam dari promosi kamu.')+(all?'':' YouTube Analytics belum punya data jam tonton (sinkronisasi 1–3 hari untuk channel baru).');
+ }).catch(e=>{$('breakdownTotal').innerText='—';$('breakdownList').innerHTML=`<p class="text-[12px] text-gray-600 dark:text-gray-300 col-span-full">Belum bisa dihitung: ${esc(e.message)}</p>`;});
+ await Promise.all([monet,total]);
+}
+
+// ===== Audien negara, gender, umur (sejak channel dibuat, channel login) =====
+const flag=c=>/^[A-Z]{2}$/.test(c||'')?String.fromCodePoint(...[...c].map(x=>127397+x.charCodeAt(0))):'🌐';
+let regionNames=null; try{regionNames=new Intl.DisplayNames(['id'],{type:'region'});}catch(e){}
+const countryName=c=>{try{return regionNames&&regionNames.of(c)||c;}catch(e){return c;}};
+const GENDER={male:['Laki-laki','#3B82F6','♂️'],female:['Perempuan','#EC4899','♀️'],user_specified:['Unknown','#9CA3AF','⚪']};
+const genderRows=(rows,views)=>rows.map(([g,p])=>{const [n,c,i]=GENDER[g]||[g,'#9CA3AF','⚪'];p=+p||0;return `<div class="mb-2"><p class="text-[12px] text-gray-900 dark:text-gray-100"><span class="font-bold">${i} ${esc(n)}:</span> <b style="color:${c}">${p.toLocaleString('id-ID',{maximumFractionDigits:1})}%</b> <span class="text-gray-600 dark:text-gray-300">(${fmt(Math.round(views*p/100))} views)</span></p><div class="h-1.5 rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden mt-1"><div class="h-full rounded-full" style="width:${p}%;background:${c}"></div></div></div>`;}).join('');
+async function loadAudience(){
+ const start=lifetimeStart(), end=new Date(), base=`${YTA}?ids=channel==MINE&startDate=${ymd(start)}&endDate=${ymd(end)}`;
+ const empty=t=>`<p class="text-[12px] text-gray-600 dark:text-gray-300">${t}</p>`;
+ ['countryList','genderBox','ageGender'].forEach(id=>$(id).innerHTML=empty('⏳ Mengambil data...'));
+ let totalViews=0;
+ const country=apiGet(`${base}&metrics=views,estimatedMinutesWatched&dimensions=country&sort=-views&maxResults=250`).then(r=>{
+  const rows=r.rows||[]; totalViews=rows.reduce((t,x)=>t+(+x[1]||0),0);
+  const row=(f,n,v,p,h,dim)=>`<div class="mb-2.5${dim?' opacity-90':''}"><p class="text-[12px] leading-snug text-gray-900 dark:text-gray-100"><span class="font-bold">${f} ${esc(n)}:</span> ${fmt(v)} views <b class="text-[#7C5CFF]">(${p.toLocaleString('id-ID')}%)</b> <span class="text-gray-600 dark:text-gray-300">- ${hrs(h).toLocaleString('id-ID')} jam</span></p><div class="h-1.5 rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden mt-1"><div class="h-full bg-[#7C5CFF] rounded-full" style="width:${p}%"></div></div></div>`;
+  if(!rows.length||!totalViews){
+   const c=(channel.snippet&&channel.snippet.country)||'ID';
+   $('countryList').innerHTML=`<p class="text-[11px] font-semibold text-gray-600 dark:text-gray-300 mb-2 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>Menunggu sinkronisasi 1-3 hari</p>`+row(flag(c),countryName(c),0,0,0,true)+`<p class="text-[10px] text-gray-600 dark:text-gray-300">Top Negara · total 0 views (YouTube Analytics belum sinkron)</p>`;
+   return;
+  }
+  $('countryList').innerHTML=`<p class="text-[11px] font-bold text-gray-600 dark:text-gray-300 mb-2">Top Negara:</p>`+rows.slice(0,5).map(([c,v,m])=>row(flag(c),countryName(c),+v,pct(+v,totalViews),+m)).join('')+`<p class="text-[10px] text-gray-600 dark:text-gray-300">Total ${fmt(totalViews)} views dari ${fmt(rows.length)} negara (sejak channel dibuat)</p>`;
+ }).catch(e=>{$('countryList').innerHTML=empty('Belum bisa diambil: '+esc(e.message));});
+ // Demografi hanya tersedia sebagai viewerPercentage -> jumlah views = persen × total views channel
+ const gender=apiGet(`${base}&metrics=viewerPercentage&dimensions=gender`);
+ const ageGender=apiGet(`${base}&metrics=viewerPercentage&dimensions=ageGroup,gender`);
+ await country;
+ const views=totalViews||+channel.statistics.viewCount||0;
+ await gender.then(r=>{
+  const rows=(r.rows||[]).filter(x=>+x[1]>0);
+  if(!rows.length){
+   lastGender=null;
+   $('genderBox').innerHTML=`<div class="flex items-center gap-4 mb-3"><div class="w-[84px] h-[84px] rounded-full border-[12px] border-gray-200 dark:border-gray-700 animate-pulse shrink-0" aria-hidden="true"></div><div><p class="text-[12px] font-semibold text-gray-600 dark:text-gray-300 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>Menunggu sinkronisasi 1-3 hari</p><p class="text-[11px] text-gray-600 dark:text-gray-300 mt-1">Butuh minimal 10 penonton login untuk tampil gender (YouTube policy)</p></div></div><div class="opacity-90">${genderRows([['male',0],['female',0],['user_specified',0]],0)}</div>`;
+   return;
+  }
+  lastGender=rows;
+  $('genderBox').innerHTML=`<div class="relative h-[130px] mb-3"><canvas id="genderChart"></canvas></div>`+genderRows(rows,views)+`<p class="text-[10px] text-gray-600 dark:text-gray-300">Jumlah views = persentase × ${fmt(views)} total views</p>`;
+  drawGender();
+ }).catch(e=>{$('genderBox').innerHTML=empty('Belum bisa diambil: '+esc(e.message));});
+ await ageGender.then(r=>{
+  const rows=r.rows||[];
+  if(!rows.some(x=>+x[2]>0)){$('ageGender').innerHTML=empty('YouTube belum menampilkan data umur untuk channel ini.');return;}
+  const ages={}; rows.forEach(([a,g,p])=>{ages[a]=ages[a]||{};ages[a][g]=+p||0;});
+  $('ageGender').innerHTML='<div class="space-y-2">'+Object.keys(ages).sort().map(a=>{const m=ages[a].male||0,f=ages[a].female||0,o=ages[a].user_specified||0,t=m+f+o;return `<div class="grid grid-cols-12 items-center gap-2 text-[11px]"><span class="col-span-3 sm:col-span-2 font-bold">${esc(a.replace('age',''))}</span><div class="col-span-6 sm:col-span-8 flex h-2.5 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-700"><div style="width:${m}%;background:#3B82F6"></div><div style="width:${f}%;background:#EC4899"></div><div style="width:${o}%;background:#9CA3AF"></div></div><span class="col-span-3 sm:col-span-2 text-right"><b>${t.toLocaleString('id-ID',{maximumFractionDigits:1})}%</b> <span class="text-gray-600 dark:text-gray-300">≈${fmt(Math.round(views*t/100))}</span></span></div>`;}).join('')+'</div><p class="text-[10px] text-gray-600 dark:text-gray-300 mt-3"><span class="text-[#3B82F6]">■</span> Laki-laki · <span class="text-[#EC4899]">■</span> Perempuan · <span class="text-gray-600 dark:text-gray-300">■</span> Lainnya · ≈ jumlah views</p>';
+ }).catch(e=>{$('ageGender').innerHTML=empty('Belum bisa diambil: '+esc(e.message));});
+}
+function drawGender(){
+ if(genderChart){genderChart.destroy();genderChart=null;}
+ const el=$('genderChart'); if(!el||!lastGender) return;
+ genderChart=new Chart(el,{type:'doughnut',data:{labels:lastGender.map(([g])=>(GENDER[g]||[g])[0]),datasets:[{data:lastGender.map(x=>+x[1]),backgroundColor:lastGender.map(([g])=>(GENDER[g]||[0,'#9CA3AF'])[1]),borderColor:isDark()?'#1f2937':'#fff',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.label}: ${(+c.raw).toLocaleString('id-ID',{maximumFractionDigits:1})}%`}}}}});
+}
+
+async function loadAll(){
+ setStatus('⏳ Mengambil data REAL dari YouTube API...');
+ $('topVideos').innerHTML='<p class="text-[12px] text-gray-600 dark:text-gray-300 p-3">⏳ Mengambil data REAL dari YouTube API...</p>';
+ try{
+  await fetchChannel();
+  recordSnapshot();
+  await checkMonetizationReal();
+  try{await fetchUploads();renderTopVideos();renderLatest();}
+  catch(e){uploads=[];['topVideos','latestVideos'].forEach(id=>$(id).innerHTML=`<p class="text-[12px] text-red-500 p-3">${esc(e.message)}</p>`);}
+  await Promise.all([loadPeriod(),loadWatchHours(),loadAudience()]);
+  setStatus('');
+ }catch(e){setStatus('❌ Gagal mengambil data YouTube: '+esc(e.message),'error');}
+}
+</script>
+
+</body>
+</html>

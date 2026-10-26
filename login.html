@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - BosterTubePro</title>
+<link rel="icon" href="/b-logo.png">
+<link rel="stylesheet" href="/utils/btp-theme.css">
+<script src="/utils/credit.js"></script>
+<script src="/utils/btp-auth.js"></script>
+<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f5f6ff;color:#192a37;font-family:system-ui,sans-serif}main{margin:24px;padding:36px;max-width:380px;background:white;border:1px solid #dbe2ec;border-radius:20px}img{width:48px;height:48px}h1{font-size:26px}p{line-height:1.6;color:#607080}button{width:100%;padding:14px;border:0;border-radius:12px;background:#9333ea;color:white;font:inherit;font-weight:700;cursor:pointer}a{display:block;margin-top:20px;color:#456a66}button:focus-visible,a:focus-visible{outline:3px solid #a78bfa;outline-offset:4px}</style>
+</head>
+<body><main>
+<img src="/b-logo.png" alt="BosterTubePro">
+<h1>Silakan Login</h1>
+<p style="margin:0 0 4px;color:#192a37;font-weight:800">BOSTERTUBEPRO STUDIO - Youtube Growth Tools</p>
+<p style="margin:0 0 8px;color:#9333ea;font-weight:700;font-size:14px">MENINGKATKAN ALOGARITMA TANPA MELANGGAR ATURAN YOUTUBE</p>
+<p>SEO Score, Analisis Data, Cek Copyright, Audit Channel, Caption Promosi, Saran Teman, Upload Video Lengkap, Peluang CPM &amp; RPM dan lainnya.</p>
+<p id="loginMsg" role="alert" hidden style="color:#b91c1c"></p>
+<button type="button" onclick="BTPAuth.login()">Login dengan Google</button>
+<p style="font-size:12px;text-align:center"><a href="/privacy-policy" style="display:inline;margin:0">Kebijakan Privasi</a> · <a href="/terms" style="display:inline;margin:0">Syarat Layanan</a></p>
+<script>
+// Sudah login: langsung ke halaman tujuan. Gagal login Google: tampilkan pesannya.
+(function(){var next=new URLSearchParams(location.search).get("next")||"/";if(localStorage.getItem("btp_session")){location.replace(/^\/(?!\/)/.test(next)?next:"/");return;}var m=BTPAuth.loginMessage();if(m&&m.indexOf("err:")===0){var el=document.getElementById("loginMsg");el.textContent="Login gagal: "+m.slice(4);el.hidden=false;}})();
+</script>
+</main></body>
+</html>

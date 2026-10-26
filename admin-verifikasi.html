@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verifikasi Pembayaran - BosterTubePro</title><link rel="icon" href="/b-logo.png">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f5f9;color:#202333;font:15px system-ui,sans-serif}main{max-width:1200px;margin:56px auto;padding:24px}header{display:flex;justify-content:space-between;align-items:center;gap:20px}h1{font-size:28px;margin:8px 0}p{color:#606778;line-height:1.6}a{color:#6240d5}form{display:flex;gap:12px;margin:28px 0}input,button{font:inherit;border-radius:9px;padding:12px 16px}input{border:1px solid #cbd0dc;min-width:260px}button{background:#6842d8;color:white;border:0;cursor:pointer}button:disabled{opacity:.5;cursor:wait}button.reject{background:#fff;color:#b42331;border:1px solid #edc5ca;margin-left:8px}.table{overflow:auto;border:1px solid #e0e3eb;background:white;border-radius:14px}table{border-collapse:collapse;width:100%;text-align:left}th,td{padding:16px;border-bottom:1px solid #edf0f5;font-size:13px}th{color:#697184;background:#fafbfc;white-space:nowrap}.ref{font-family:monospace;overflow-wrap:anywhere}#notifications p{background:#fff8dc;border-left:3px solid #dcab30;padding:12px;color:#634c16}#status{min-height:24px}td:last-child{white-space:nowrap}@media(max-width:650px){main{margin:16px auto;padding:16px}form,header{flex-direction:column;align-items:stretch}input{min-width:0}}
+</style>
+</head>
+<body><main>
+<header><div><small>BOOSTERTUBEPRO / ADMIN</small><h1>Verifikasi pembayaran</h1></div><a href="/pengaturan">Kembali ke Pengaturan</a></header>
+<p>Periksa dana masuk Shopee Merchant NMID ID1026619617164. Poin QRIS hanya masuk melalui webhook pembayaran terautentikasi.</p>
+<form id="auth"><input id="key" type="password" placeholder="Kunci Admin" aria-label="Kunci Admin" autocomplete="off"><button>Muat transaksi</button></form>
+<p id="status" role="status" aria-live="polite">Masukkan kunci admin untuk membuka antrean.</p>
+<div id="notifications" aria-label="Pemberitahuan konfirmasi"></div>
+<div class="table"><table><thead><tr><th>Ref</th><th>Email</th><th>Total pembayaran</th><th>Waktu klik confirm</th><th>Status</th><th>Tindakan</th></tr></thead><tbody id="rows"></tbody></table></div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+let loading = false, refreshTimer;
+async function api(body) {
+ const r = await fetch('/api/qris-topup' + (body ? '' : '?admin=1'), {method:body?'POST':'GET',cache:'no-store',headers:{'Content-Type':'application/json','x-admin-key':$('key').value,'x-btp-session':localStorage.getItem('btp_session')||''},...(body?{body:JSON.stringify(body)}:{})});
+ const d = await r.json(); if(!r.ok) throw new Error(d.error || 'Permintaan gagal'); return d;
+}
+async function load() {
+ if(loading)return; loading=true; clearTimeout(refreshTimer);
+ try {
+  const d=await api(); $('rows').replaceChildren(); $('notifications').replaceChildren();
+  for(const p of d.pending){
+   if(p.notification){const note=document.createElement('p');note.textContent=p.notification;$('notifications').append(note);}
+   const row=document.createElement('tr');
+   for(const value of [p.order_id,p.email,'Rp'+Number(p.total_amount).toLocaleString('id-ID'),p.confirm_clicked_at?new Date(p.confirm_clicked_at).toLocaleString('id-ID'):'—',p.status]){const cell=document.createElement('td');cell.textContent=value;row.append(cell);}
+   row.firstChild.className='ref';const actions=document.createElement('td');
+   for(const [action,label] of [['reject','Reject']]){const b=document.createElement('button');b.type='button';b.textContent=label;b.className=action==='reject'?'reject':'';b.onclick=async()=>{actions.querySelectorAll('button').forEach(x=>x.disabled=true);try{await api({action,order_id:p.order_id});await load();}catch(e){$('status').textContent=e.message;actions.querySelectorAll('button').forEach(x=>x.disabled=false);}};actions.append(b);}
+   row.append(actions);$('rows').append(row);
+  }
+  $('status').textContent=d.pending.length?d.pending.length+' transaksi menunggu pemeriksaan.':'Tidak ada transaksi menunggu.';
+  refreshTimer=setTimeout(load,15000);
+ }catch(e){$('status').textContent=e.message;}finally{loading=false;}
+}
+if(localStorage.getItem('btp_session'))load();
+$('auth').onsubmit=e=>{e.preventDefault();load();};
+window.addEventListener('pagehide',()=>clearTimeout(refreshTimer));
+</script></body></html>

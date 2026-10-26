@@ -1,0 +1,47 @@
+/* Keep the platform badge hidden without hiding the chat launcher. */
+.netlify-ask-widget,
+[data-netlify-ask] {
+  display: none !important;
+}
+
+/* Floating "Powered by Netlify" badge covered the chat bubble; the text lives in the footer instead. */
+#nl-badge-frame,
+#nl-hud-frame {
+  display: none !important;
+}
+
+/* Shared by the dashboard and every static application route. */
+#btpAi {
+  display: block !important;
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  z-index: 9999 !important;
+}
+#btpAi .ai-fab {
+  display: flex !important;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(to right, #9333ea, #2563eb);
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 25%);
+}
+#btpAi .ai-fab span { color: white; font-size: 24px; }
+#btpAi .ai-panel {
+  position: fixed;
+  bottom: 96px;
+  right: 24px;
+  width: min(384px, calc(100vw - 48px));
+  height: 500px;
+  max-height: calc(100dvh - 120px);
+  background: white;
+  border-radius: 16px;
+  z-index: 9999;
+}
+#btpAi button:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+}
