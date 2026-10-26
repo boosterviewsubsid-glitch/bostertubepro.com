@@ -1,6 +1,8 @@
 [build]
-  command = "pnpm run build"
-  publish = "dist"
+  # Repo ini berisi file statis yang sudah di-build (tanpa package.json), jadi tidak ada build command;
+  # root repo langsung dipublish.
+  command = ""
+  publish = "."
   functions = "netlify/functions"
   # Build UNLOCKED 2026-10-17 untuk publish fix kuota + rotasi API key.
   # Untuk lock lagi (hemat credits), tambahkan kembali:
